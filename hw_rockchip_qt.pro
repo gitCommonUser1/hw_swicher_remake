@@ -239,6 +239,7 @@ HEADERS += \
     patternparameters.h \
     pipparameters.h \
     preview.h \
+    profile_include.h \
     program.h \
     regexp.h \
     resizeparameters.h \

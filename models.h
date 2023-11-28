@@ -21,7 +21,7 @@ public:
     void setEngine(QQmlApplicationEngine *engine){
         m_engine = engine;
     }
-    void changeLanguage();
+    void changeLanguage(int language = -1);
     std::map<QString,QString>languages;
 
     //key press and release

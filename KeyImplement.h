@@ -11,6 +11,7 @@
 #include "messagedialogcontrol.h"
 #include "regexp.h"
 #include "ndi.h"
+#include "xmlprocessor.h"
 
 #include <QTimer>
 

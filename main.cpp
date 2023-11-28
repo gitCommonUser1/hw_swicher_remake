@@ -42,6 +42,7 @@
 #include "ndi.h"
 #include "device_info.h"
 #include "ndi_license.h"
+#include "gostreamsystem.h"
 
 
 Models *models;
@@ -54,6 +55,7 @@ MyProvider *myProvider;
 KeyboardEvent *keyboardEvent;
 MessageDialogControl *messageDialogControl;
 Ndi *ndi;
+Profile *profile;
 bool g_running = true;
 
 bool init_settings_is_ok = false;
@@ -461,9 +463,14 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("ndi",ndi);
     engine.rootContext()->setContextProperty("ndiListModelItem",ndi->ndiListModelItem());
 
+    profile = new Profile;
     //控制
     Control control;
     engine.rootContext()->setContextProperty("control",&control);
+
+
+    //调试用，正式版本删除
+    models->changeLanguage(0);
 
     //init color
     //这里必须调用一次，初始化后color应该是绿色，否则颜色不对

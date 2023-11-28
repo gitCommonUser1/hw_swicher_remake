@@ -85,6 +85,7 @@ bool Settings::isKeyPatternSelect()
     }
 }
 
+
 Settings::Settings(QObject *parent) : QObject(parent)
 {
     QDir dir (DATA_PATH);
@@ -2513,18 +2514,18 @@ void Settings::init_menuData()
     //必须先new再初始化数据
     new_menuData();
 
-    for(int i = 0;i < m_listFirst.size();++i)
-    {
-        for(int j = 0;j < m_listFirst[i]->second.size();++j)
-        {
-            for(int k = 0;k < m_listFirst[i]->second[j]->third.size();++k)
-            {
-                auto var = getIniValue(m_listFirst[i]->ss_name,m_listFirst[i]->second[j]->ss_name,m_listFirst[i]->second[j]->third[k]->ss_name);
-                if(!var.isNull())
-                    m_listFirst[i]->second[j]->third[k]->current = var;
-            }
-        }
-    }
+//    for(int i = 0;i < m_listFirst.size();++i)
+//    {
+//        for(int j = 0;j < m_listFirst[i]->second.size();++j)
+//        {
+//            for(int k = 0;k < m_listFirst[i]->second[j]->third.size();++k)
+//            {
+//                auto var = getIniValue(m_listFirst[i]->ss_name,m_listFirst[i]->second[j]->ss_name,m_listFirst[i]->second[j]->third[k]->ss_name);
+//                if(!var.isNull())
+//                    m_listFirst[i]->second[j]->third[k]->current = var;
+//            }
+//        }
+//    }
 }
 
 void Settings::init_keyData()
@@ -2712,21 +2713,12 @@ void Settings::setMenuDHCPNetworksecondayDNS(QString dns)
     emit thirdMenuValueChanged(MENU_FIRST_SETTING,SETTING_NETWORK,NETWORK_SECONDAY_DNS);
 }
 
-bool Settings::setMenuValue(int first, int second, int third, QVariant value)
+void Settings::setMenuValue(int first, int second, int third, QVariant value)
 {
-    if(first < 0 || first >= m_listFirst.size())
-        return false;
-    if(second < 0 || second >= m_listFirst[first]->second.size())
-        return false;
-    if(third < 0 || third >= m_listFirst[first]->second[second]->third.size())
-        return false;
     if(!m_listFirst[first]->second[second]->third[third]->setValue(value))
     {
-        setIniValue(first,second,third);
         emit thirdMenuValueChanged(first,second,third);
-        return true;
     }
-    return false;
 }
 
 QVariant Settings::getMenuValue(int first, int second, int third)

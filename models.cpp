@@ -27,6 +27,7 @@
 #include "include/hdmi_out.h"
 #include <QTranslator>
 #include "ndi_license.h"
+#include "profile_include.h"
 
 extern Settings *settings;
 extern LeftMenuModel *leftMenuModel;
@@ -36,6 +37,7 @@ extern struct fpga_t g_fpga;
 extern MyProvider *myProvider;
 extern Media_sd *media_sd;
 extern bool init_settings_is_ok;
+extern Profile *profile;
 
 Models::Models(QObject *parent) : QObject(parent)
 {
@@ -97,137 +99,27 @@ void Models::init_connect()
 
     //pip
 
-
-//    //
-//    //audio
-//    connect(this,&Models::audioVolumn,this,&Models::setAudioVolumn);
-//    connect(this,&Models::audioDelay,this,&Models::setAudioDelay);
-//    connect(this,&Models::audioEnable,this,&Models::setAudioEnable);
-//    connect(this,&Models::aFV,this,&Models::setAFV);
-//    connect(this,&Models::audioOn,this,&Models::setAudioOn);
-//    connect(this,&Models::audioMonitorLevel,this,&Models::setAudioMonitorLevel);
-//    connect(this,&Models::audioMonitorSource,this,&Models::setAudioMonitorSource);
-//    connect(this,&Models::dSKSource,this,&Models::setDSKSource);
-//    connect(this,&Models::dSKMask,this,&Models::setDSKMask);
-//    connect(this,&Models::dSKRate,this,&Models::setDSKRate);
-//    connect(this,&Models::dSKCtrl,this,&Models::setDSKCtrl);
-//    connect(this,&Models::dSKGain,this,&Models::setDSKGain);
-//    connect(this,&Models::dSKClip,this,&Models::setDSKClip);
-//    connect(this,&Models::colorYCbCr,this,&Models::setColorYCbCr);
-//    connect(this,&Models::superSourceCtrl,this,&Models::setSuperSourceCtrl);
-//    connect(this,&Models::superSourceSource,this,&Models::setSuperSourceSource);
-//    connect(this,&Models::superSourceYPosition,this,&Models::setSuperSourceYPosition);
-//    connect(this,&Models::superSourceMask1Position,this,&Models::setSuperSourceMask1Position);
-//    connect(this,&Models::superSourceMask2Position,this,&Models::setSuperSourceMask2Position);
-//    connect(this,&Models::superSourceBoard1,this,&Models::setSuperSourceBoard1);
-//    connect(this,&Models::superSourceBoard2,this,&Models::setSuperSourceBoard2);
-//    connect(this,&Models::superSourceBoardColor1,this,&Models::setSuperSourceBoardColor1);
-//    connect(this,&Models::superSourceBoardColor2,this,&Models::setSuperSourceBoardColor2);
-//    connect(this,&Models::keyType,this,&Models::setKeyType);
-//    connect(this,&Models::lumaKeySource,this,&Models::setLumaKeySource);
-//    connect(this,&Models::lumaKeyCtrl,this,&Models::setLumaKeyCtrl);
-//    connect(this,&Models::lumaKeyPosition,this,&Models::setLumaKeyPosition);
-//    connect(this,&Models::lumaKeyClip,this,&Models::setLumaKeyClip);
-//    connect(this,&Models::lumaKeyGain,this,&Models::setLumaKeyGain);
-//    connect(this,&Models::lumaKeyResizeSize,this,&Models::setLumaKeyResizeSize);
-//    connect(this,&Models::lumaKeyResizePosition,this,&Models::setLumaKeyResizePosition);
-//    connect(this,&Models::keyPatternSource,this,&Models::setKeyPatternSource);
-//    connect(this,&Models::keyPatternWipePattern,this,&Models::setKeyPatternWipePattern);
-//    connect(this,&Models::keyPatternResizeSize,this,&Models::setKeyPatternResizeSize);
-//    connect(this,&Models::keyPatternResizePosition,this,&Models::setKeyPatternResizePosition);
-//    connect(this,&Models::keyPatternWipePosition,this,&Models::setKeyPatternWipePosition);
-//    connect(this,&Models::keyPatternWipeSoftness,this,&Models::setKeyPatternWipeSoftness);
-//    connect(this,&Models::keyPatternWipeSize,this,&Models::setKeyPatternWipeSize);
-//    connect(this,&Models::keyPatternMask,this,&Models::setKeyPatternMask);
-//    connect(this,&Models::chromaKeySource,this,&Models::setChromaKeySource);
-//    connect(this,&Models::chromaKeyCtrl,this,&Models::setChromaKeyCtrl);
-//    connect(this,&Models::chromaKeyCtrlSample,this,&Models::setChromaKeyCtrlSample);
-//    connect(this,&Models::chromaKeyMask,this,&Models::setChromaKeyMask);
-//    connect(this,&Models::chromaKeyResizeSize,this,&Models::setChromaKeyResizeSize);
-//    connect(this,&Models::chromaKeyResizePosition,this,&Models::setChromaKeyResizePosition);
-//    connect(this,&Models::chromaKeyProfile,this,&Models::setChromaKeyProfile);
-//    connect(this,&Models::chromakeySMPPosition,this,&Models::setChromaKeySMPPosition);
-//    connect(this,&Models::pipSource,this,&Models::setPipSource);
-//    connect(this,&Models::pipSize,this,&Models::setPipSize);
-//    connect(this,&Models::pipCtrl,this,&Models::setPipCtrl);
-//    connect(this,&Models::pipPosition,this,&Models::setPipPosition);
-//    connect(this,&Models::pipMask,this,&Models::setPipMask);
-//    connect(this,&Models::pipBoard,this,&Models::setPipBoard);
-//    connect(this,&Models::pipColor,this,&Models::setPipColor);
-//    connect(this,&Models::ftbRate,this,&Models::setFtbRate);
-//    connect(this,&Models::ftbAFV,this,&Models::setFtbAFV);
-//    connect(this,&Models::mixRate,this,&Models::setMixRate);
-//    connect(this,&Models::dipSource,this,&Models::setDipSource);
-//    connect(this,&Models::dipRate,this,&Models::setDipRate);
-//    connect(this,&Models::transitionWipeRate,this,&Models::setTransitionWipeRate);
-//    connect(this,&Models::transitionWipePattern,this,&Models::setTransitionWipePattern);
-//    connect(this,&Models::transitionWipePosition,this,&Models::setTransitionWipePosition);
-//    connect(this,&Models::transitionWipeSoftness,this,&Models::setTransitionWipeSoftness);
-//    connect(this,&Models::transitionWipeBoard,this,&Models::setTransitionWipeBoard);
-//    connect(this,&Models::transitionWipeFillSource,this,&Models::setTransitionWipeFillSource);
-//    connect(this,&Models::stillSelection,this,&Models::setStillSelection);
-
-//    connect(this,&Models::record,this,&Models::setRecord);
-//    connect(this,&Models::play,this,&Models::setPlay);
-//    connect(this,&Models::playNext,this,&Models::setPlayNext);
-//    connect(this,&Models::playPrevious,this,&Models::setPlayPrevious);
-
-//    connect(this,&Models::auxSource,this,&Models::setAuxSource);
-//    connect(this,&Models::srcSelection,this,&Models::setSrcSelection);
-//    connect(this,&Models::mvMeter,this,&Models::setMvMeter);
-//    connect(this,&Models::mvLayout,this,&Models::setMvLayout);
-//    connect(this,&Models::market,this,&Models::setMarket);
-
-//    connect(this,&Models::micInput,this,&Models::setMicInput);
-
-//    connect(this,&Models::outFormat,this,&Models::setOutFormat);
-//    connect(this,&Models::outSource,this,&Models::setOutSource);
-//    connect(this,&Models::colorSpace,this,&Models::setColorSpace);
-
-//    connect(this,&Models::quality,this,&Models::setQuality);
-
-//    connect(this,&Models::protocol,this,&Models::setProtocol);
-//    connect(this,&Models::network,this,&Models::setNetwork);
-
-//    connect(this,&Models::platform,this,&Models::setPlatform);
-//    connect(this,&Models::streamKey,this,&Models::setStreamKey);
-//    connect(this,&Models::loadStreamKey,this,&Models::setLoadStreamKey);
-//    connect(this,&Models::liveStatus,this,&Models::setLiveStatus);
-//    connect(this,&Models::streamOutput,this,&Models::setStreamOutput);
-
-//    connect(this,&Models::srcName,this,&Models::setSrcName);
-
-//    //playback
-//    connect(this,&Models::playbackMode,this,&Models::setPlaybackMode);
-
-//    connect(this,&Models::buttonBrightness,this,&Models::setButtonBrightness);
-
-//    //macro function
-//    connect(this,&Models::pgmIndex,this,&Models::setPgmIndex);
-//    connect(this,&Models::pvwIndex,this,&Models::setPvwIndex);
-//    connect(this,&Models::cutTransition,this,&Models::setCutTransition);
-//    connect(this,&Models::autoTransition,this,&Models::setAutoTransition);
-//    connect(this,&Models::ftb,this,&Models::setFtb);
-//    connect(this,&Models::prev,this,&Models::setPrev);
-//    connect(this,&Models::transitionIndex,this,&Models::setTransitionIndex);
-//    connect(this,&Models::transitionPosition,this,&Models::setTransitionPosition);
-//    connect(this,&Models::transitionSource,this,&Models::setTransitionSource);
-//    connect(this,&Models::mSleep,this,&Models::setMSleep);
-//    connect(this,&Models::keyOnAir,this,&Models::setKeyOnAir);
-//    connect(this,&Models::dskOnAir,this,&Models::setDskOnAir);
+    //
 }
 
 
 //改动菜单结构，语言切换这里需要修改
-void Models::changeLanguage()
+void Models::changeLanguage(int language_index)
 {
+    int index = 0;
+
+    if(language_index = -1)
+        index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_LANGUAGE]->third[SETTING_LANGUAGE_LANGUAGE]->current.toInt();
+    else
+        index = language_index;
+
     static QTranslator * translator = nullptr;
     if(!translator){
         translator = new QTranslator();
     }
     qApp->removeTranslator(translator);
 
-    int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_LANGUAGE]->third[SETTING_LANGUAGE_LANGUAGE]->current.toInt();
+
     QString language;
     switch (index) {
     case LANGUAGE_ENGLISH:
@@ -700,14 +592,6 @@ void Models::menuKnob(int value)
         double current = settings->listFirst()[first]->second[second]->third[third]->current.toDouble();
         double step = settings->listFirst()[first]->second[second]->third[third]->step.toDouble();
         double finalValue = dround(current + value * step,2);
-        double max = settings->listFirst()[first]->second[second]->third[third]->max.toDouble();
-        double min = settings->listFirst()[first]->second[second]->third[third]->min.toDouble();
-        if(finalValue <= min)
-            finalValue = min;
-        if(finalValue >= max)
-            finalValue = max;
-        if(current == finalValue)
-            return ;
         // doWork
         settings->listFirst()[first]->second[second]->third[third]->doWork(finalValue);
         return ;
@@ -3332,64 +3216,90 @@ void Models::macroExport()
 
 void Models::setColorBackHue(int colorIndex, int hue)
 {
-    int third = 0;
-    if(colorIndex == COLOR_BACK_COLOR1)
-        third = COLORBACK1_HUE;
-    else if(colorIndex == COLOR_BACK_COLOR2)
-        third = COLORBACK2_HUE;
-    if(!settings->setMenuValue(MENU_FIRST_COLOR_BACK,colorIndex,third,hue))
-        return ;
-    setColorBack(colorIndex);
+    ColorBack *m_colorBack = nullptr;
+    if(colorIndex == ColorBacks::COLOR1)
+    {
+        m_colorBack = profile->colorBacks()->colorBack1();
+    }
+    else if(colorIndex == ColorBacks::COLOR2)
+    {
+        m_colorBack = profile->colorBacks()->colorBack2();
+    }
+    if(m_colorBack != nullptr)
+    {
+        if(m_colorBack->hue() != hue)
+        {
+            m_colorBack->setHue(hue);
+            return ;
+        }
+        setColorBack(colorIndex);
+    }
 }
 
 void Models::setColorBackSaturation(int colorIndex, int saturation)
 {
-    int third = 0;
-    if(colorIndex == COLOR_BACK_COLOR1)
-        third = COLORBACK1_SATURATION;
-    else if(colorIndex == COLOR_BACK_COLOR2)
-        third = COLORBACK2_SATURATION;
-    if(!settings->setMenuValue(MENU_FIRST_COLOR_BACK,colorIndex,third,saturation))
-        return ;
-    setColorBack(colorIndex);
+    ColorBack *m_colorBack = nullptr;
+    if(colorIndex == ColorBacks::COLOR1)
+    {
+        m_colorBack = profile->colorBacks()->colorBack1();
+    }
+    else if(colorIndex == ColorBacks::COLOR2)
+    {
+        m_colorBack = profile->colorBacks()->colorBack2();
+    }
+    if(m_colorBack != nullptr)
+    {
+        if(m_colorBack->saturation() != saturation)
+        {
+            m_colorBack->setSaturation(saturation);
+            return ;
+        }
+        setColorBack(colorIndex);
+    }
 }
 
 void Models::setColorBackBrightness(int colorIndex, int brightness)
 {
-    int third = 0;
-    if(colorIndex == COLOR_BACK_COLOR1)
-        third = COLORBACK1_BRIGHTNESS;
-    else if(colorIndex == COLOR_BACK_COLOR2)
-        third = COLORBACK2_BRIGHTNESS;
-    if(!settings->setMenuValue(MENU_FIRST_COLOR_BACK,colorIndex,third,brightness))
-        return ;
-    setColorBack(colorIndex);
+
+    ColorBack *m_colorBack = nullptr;
+    if(colorIndex == ColorBacks::COLOR1)
+    {
+        m_colorBack = profile->colorBacks()->colorBack1();
+    }
+    else if(colorIndex == ColorBacks::COLOR2)
+    {
+        m_colorBack = profile->colorBacks()->colorBack2();
+    }
+    if(m_colorBack != nullptr)
+    {
+        if(m_colorBack->brightness() != brightness)
+        {
+            m_colorBack->setBrightness(brightness);
+            return ;
+        }
+        setColorBack(colorIndex);
+    }
 }
 
 void Models::setColorBack(int colorIndex)
 {
-
     int hue = 0;
     int saturation = 0;
     int brightness = 0;
     int fpga_value_y = -1;
     int fpga_value_c = -1;
-    if(colorIndex == COLOR_BACK_COLOR1){
-        hue = settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[colorIndex]->third[COLORBACK1_HUE]->current.toInt();
-        saturation = settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[colorIndex]->third[COLORBACK1_SATURATION]->current.toInt();
-        brightness = settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[colorIndex]->third[COLORBACK1_BRIGHTNESS]->current.toInt();
-
+    if(colorIndex == ColorBacks::COLOR1){
+        hue = profile->colorBacks()->colorBack1()->hue();
+        saturation = profile->colorBacks()->colorBack1()->saturation();
+        brightness = profile->colorBacks()->colorBack1()->brightness();
         settings->setColor1Data({hue,saturation,brightness});
-
         fpga_value_y = COLOR1_Y;
         fpga_value_c = COLOR1_C;
-    }else if(colorIndex == COLOR_BACK_COLOR2){
-        hue = settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[colorIndex]->third[COLORBACK2_HUE]->current.toInt();
-        saturation = settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[colorIndex]->third[COLORBACK2_SATURATION]->current.toInt();
-        brightness = settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[colorIndex]->third[COLORBACK2_BRIGHTNESS]->current.toInt();
-
+    }else if(colorIndex == ColorBacks::COLOR2){
+        hue = profile->colorBacks()->colorBack2()->hue();
+        saturation = profile->colorBacks()->colorBack2()->saturation();
+        brightness = profile->colorBacks()->colorBack2()->brightness();
         settings->setColor2Data({hue,saturation,brightness});
-
         fpga_value_y = COLOR2_Y;
         fpga_value_c = COLOR2_C;
     }
@@ -3403,42 +3313,42 @@ void Models::setColorBack(int colorIndex)
 
 void Models::setSuperSourceEnable(int enable)
 {
-    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_ENABLE,SUPER_ENABLE,enable))
+//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_ENABLE,SUPER_ENABLE,enable))
         return ;
     setSuperSourceCtrl();
 }
 
 void Models::setSuperSourceSource1(int source1)
 {
-    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_SOURCE,SUPER_SOURCE_SOURCE_SOURCE1,source1))
+//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_SOURCE,SUPER_SOURCE_SOURCE_SOURCE1,source1))
         return ;
     setSuperSource();
 }
 
 void Models::setSuperSourceSource2(int source2)
 {
-    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_SOURCE,SUPER_SOURCE_SOURCE_SOURCE2,source2))
+//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_SOURCE,SUPER_SOURCE_SOURCE_SOURCE2,source2))
         return ;
     setSuperSource();
 }
 
 void Models::setSuperSourceBackground(int background)
 {
-    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_SOURCE,SUPER_SOURCE_SOURCE_BACKGROUND,background))
+//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_SOURCE,SUPER_SOURCE_SOURCE_BACKGROUND,background))
         return ;
     setSuperSource();
 }
 
 void Models::setSuperSourceControlStyle(int style)
 {
-    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_CONTROL,SUPER_CONTROL_STYLE,style))
+//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_CONTROL,SUPER_CONTROL_STYLE,style))
         return ;
     setSuperSourceCtrl();
 }
 
 void Models::setSuperSourceControlYPosition(int YPosition)
 {
-    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_CONTROL,SUPER_CONTROL_Y_POSITION,YPosition))
+//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_CONTROL,SUPER_CONTROL_Y_POSITION,YPosition))
         return ;
     float p;
     p = YPosition / 100.0;
@@ -3454,7 +3364,7 @@ void Models::setSuperSourceMaskEnable(int maskIndex, int enable)
         third = SUPER_MASK1_ENABLE;
     else if(maskIndex == SUPER_SOURCE_MASK2)
         third = SUPER_MASK2_ENABLE;
-    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,maskIndex,third,enable))
+//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,maskIndex,third,enable))
         return ;
     setSuperSourceCtrl();
 }
@@ -3466,7 +3376,7 @@ void Models::setSuperSourceMaskHStart(int maskIndex, int HStart)
         third = SUPER_MASK1_H_START;
     else if(maskIndex == SUPER_SOURCE_MASK2)
         third = SUPER_MASK2_H_START;
-    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,maskIndex,third,HStart))
+//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,maskIndex,third,HStart))
         return ;
     setSuperSourceMask(maskIndex,third);
 }
@@ -3478,7 +3388,7 @@ void Models::setSuperSourceMaskVStart(int maskIndex, int VStart)
         third = SUPER_MASK1_V_START;
     else if(maskIndex == SUPER_SOURCE_MASK2)
         third = SUPER_MASK2_V_START;
-    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,maskIndex,third,VStart))
+//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,maskIndex,third,VStart))
         return ;
     setSuperSourceMask(maskIndex,third);
 }
@@ -3490,7 +3400,7 @@ void Models::setSuperSourceMaskHEnd(int maskIndex, int HEnd)
         third = SUPER_MASK1_H_END;
     else if(maskIndex == SUPER_SOURCE_MASK2)
         third = SUPER_MASK2_H_END;
-    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,maskIndex,third,HEnd))
+//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,maskIndex,third,HEnd))
         return ;
     setSuperSourceMask(maskIndex,third);
 }
@@ -3502,7 +3412,7 @@ void Models::setSuperSourceMaskVEnd(int maskIndex, int VEnd)
         third = SUPER_MASK1_V_END;
     else if(maskIndex == SUPER_SOURCE_MASK2)
         third = SUPER_MASK2_V_END;
-    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,maskIndex,third,VEnd))
+//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,maskIndex,third,VEnd))
         return ;
     setSuperSourceMask(maskIndex,third);
 }
@@ -3514,7 +3424,7 @@ void Models::setSuperSourceBorderWidth(int borderIndex, int width)
         third = SUPER_BORDER1_WIDTH;
     else if(borderIndex == SUPER_SOURCE_BORDER2)
         third = SUPER_BORDER2_WIDTH;
-    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,borderIndex,third,width))
+//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,borderIndex,third,width))
         return ;
     int fpga_value = -1;
     if(borderIndex == SUPER_SOURCE_BORDER1)
@@ -3533,7 +3443,7 @@ void Models::setSuperSourceBorderColorHue(int borderIndex, int hue)
         third = SUPER_BORDER1_HUE;
     else if(borderIndex == SUPER_SOURCE_BORDER2)
         third = SUPER_BORDER2_HUE;
-    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,borderIndex,third,hue))
+//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,borderIndex,third,hue))
         return ;
     setSuperSourceColor(borderIndex);
 }
@@ -3545,7 +3455,7 @@ void Models::setSuperSourceBorderColorSaturation(int borderIndex, int saturation
         third = SUPER_BORDER1_SATURATION;
     else if(borderIndex == SUPER_SOURCE_BORDER2)
         third = SUPER_BORDER2_SATURATION;
-    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,borderIndex,third,saturation))
+//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,borderIndex,third,saturation))
         return ;
     setSuperSourceColor(borderIndex);
 }
@@ -3557,7 +3467,7 @@ void Models::setSuperSourceBorderColorBrightness(int borderIndex, int brightness
         third = SUPER_BORDER1_BRIGHTNESS;
     else if(borderIndex == SUPER_SOURCE_BORDER2)
         third = SUPER_BORDER2_BRIGHTNESS;
-    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,borderIndex,third,brightness))
+//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,borderIndex,third,brightness))
         return ;
     setSuperSourceColor(borderIndex);
 }
@@ -3714,7 +3624,7 @@ void Models::setSuperSourceColor(int colorIndex)
 
 void Models::setKeyType(int type)
 {
-    if(!settings->setMenuValue(MENU_FIRST_KEY_TYPE,KEY_TYPE_TYPE,TYPE_TYPE,type))
+//    if(!settings->setMenuValue(MENU_FIRST_KEY_TYPE,KEY_TYPE_TYPE,TYPE_TYPE,type))
         return ;
     fpga_write(&g_fpga,UPSTREAM_KEY_TYPE,type);
 }
@@ -3820,7 +3730,7 @@ void Models::setKeySourceFill(int key, int fill)
         fpga_value = PIP_SRC_SEL;
         break;
     }
-    if(!settings->setMenuValue(key,second,third,fill))
+//    if(!settings->setMenuValue(key,second,third,fill))
         return ;
     if(fpga_value != -1)
         fpga_write(&g_fpga,fpga_value,value);
@@ -3830,7 +3740,7 @@ void Models::setKeySourceKey(int key, int sourceKey)
 {
     if(key == MENU_FIRST_LUMA_KEY)
     {
-        if(!settings->setMenuValue(key,LUMA_KEY_SOURCE,LUMA_KEY_SOURCE_KEY,sourceKey))
+    //    if(!settings->setMenuValue(key,LUMA_KEY_SOURCE,LUMA_KEY_SOURCE_KEY,sourceKey))
             return ;
         int fill = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_SOURCE]->third[LUMA_KEY_SOURCE_FILL]->current.toInt();
         LumaKeySource source = {(u_int8_t)fill,(u_int8_t)sourceKey};

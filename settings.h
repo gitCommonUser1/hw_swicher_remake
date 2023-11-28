@@ -12,6 +12,7 @@
 #include <QQmlApplicationEngine>
 #include "keyboardevent.h"
 #include "regexp.h"
+
 class KeyAbstractClass;
 
 struct STREAM_PROFILE{
@@ -80,7 +81,6 @@ public:
     Q_INVOKABLE bool showPIPBorderColorFLag();
     Q_INVOKABLE bool isTransitionSelect();
     Q_INVOKABLE bool isKeyPatternSelect();
-
 
     explicit Settings(QObject *parent = nullptr);
     void init_settings();
@@ -604,7 +604,7 @@ public:
     Q_INVOKABLE void setMenuDHCPNetworkPrimaryDNS(QString dns);
     Q_INVOKABLE void setMenuDHCPNetworksecondayDNS(QString dns);
 
-    Q_INVOKABLE bool setMenuValue(int first,int second,int third,QVariant value);
+    Q_INVOKABLE void setMenuValue(int first,int second,int third,QVariant value);
     Q_INVOKABLE QVariant getMenuValue(int first,int second,int third);
     Q_INVOKABLE void addMenuValue();
     Q_INVOKABLE void subMenuValue();

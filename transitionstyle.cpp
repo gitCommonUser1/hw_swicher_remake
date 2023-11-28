@@ -1,4 +1,7 @@
 #include "transitionstyle.h"
+#include "mixparameters.h"
+#include "dipparameters.h"
+#include "wipeparameters.h"
 
 static QList<QString>styleList = {
     "Mix",
@@ -9,6 +12,14 @@ static QList<QString>styleList = {
 
 TransitionStyle::TransitionStyle(QObject *parent) : QObject(parent)
 {
+    m_mixParameters = new MixParameters(this);
+    m_mixParameters->setObjectName("mixParameters");
+    m_dipParameters = new DipParameters(this);
+    m_dipParameters->setObjectName("dipParameters");
+    m_wipeParameters = new WipeParameters(this);
+    m_wipeParameters->setObjectName("wipeParameters");
+
+
     setStyle(styleIndexToString(0));
     setNextStyle(styleIndexToString(0));
     setPreviewTransition(false);

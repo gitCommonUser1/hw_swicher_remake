@@ -10,6 +10,7 @@ public:
     explicit Control(QObject *parent = nullptr);
 
     void init_connect();
+    void connect_profile();
 signals:
 
 public slots:

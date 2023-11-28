@@ -36,6 +36,12 @@ public:
 public slots:
     void setHue(int hue)
     {
+        if(hue < m_hue_min)
+            hue = m_hue_min;
+        if(hue > m_hue_max)
+            hue = m_hue_max;
+
+        qDebug("______hue = ",hue);
         if (m_hue == hue)
             return;
 
@@ -54,6 +60,10 @@ public slots:
 
     void setSaturation(int saturation)
     {
+        if(saturation < m_saturation_min)
+            saturation = m_saturation_min;
+        if(saturation > m_saturation_max)
+            saturation = m_saturation_max;
         if (m_saturation == saturation)
             return;
 
@@ -63,6 +73,10 @@ public slots:
 
     void setBrightness(int brightness)
     {
+        if(brightness < m_brightness_min)
+            brightness = m_brightness_min;
+        if(brightness > m_brightness_max)
+            brightness = m_brightness_max;
         if (m_brightness == brightness)
             return;
 
@@ -74,11 +88,18 @@ private:
 
     int m_hue;
 
+    int m_hue_max;
+    int m_hue_min;
+
     int m_colorIndex;
 
     int m_saturation;
+    int m_saturation_max;
+    int m_saturation_min;
 
     int m_brightness;
+    int m_brightness_max;
+    int m_brightness_min;
 
 signals:
 

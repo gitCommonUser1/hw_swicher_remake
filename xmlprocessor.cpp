@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QMetaObject>
 #include <QMetaMethod>
+#include "profile_include.h"
 
 #define MACRO_OP "Op"
 
@@ -13,10 +14,13 @@
 
 void XmlProcessor::writeXml(QObject *object)
 {
-    QFile file("");
+    QFile file("/tmp/aaa.xml");
     if(!file.open(QIODevice::WriteOnly)){
         qDebug() << "open file fail!";
+        return ;
     }
+
+    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!";
 
     QXmlStreamWriter stream(&file);
     //xml info
@@ -24,28 +28,21 @@ void XmlProcessor::writeXml(QObject *object)
     //doc start
     stream.writeStartDocument();
 
-    //<Profile product="GoStream Deck">
-    //profile start
-    stream.writeStartElement("Profile");
-    stream.writeAttribute("product","GoStream Deck");
-
     writeXml(object,stream);
 
-    //profile end
-    stream.writeEndElement();
     //doc end
     stream.writeEndDocument();
 
     file.close();
 
     //断电无法保存，c语言方式再写一次
-    file.setFileName("");
+    file.setFileName("/tmp/aaa.xml");
     file.open(QIODevice::ReadOnly);
     QByteArray ba = file.readAll();
     file.close();
 
     FILE *fp;
-    fp = fopen("", "wt+");
+    fp = fopen("/tmp/aaa.xml", "wt+");
     fwrite(ba, 1, ba.size(), fp);
     fflush(fp);
     fsync(fileno(fp));
@@ -64,7 +61,8 @@ void XmlProcessor::writeXml(QObject *object, QXmlStreamWriter &stream)
         auto property = obj->property(i);
         auto name = property.name();
         auto type = property.type();
-        if(name != "objectName")
+        qDebug() << "name:" << name;
+        if(strcmp(name,"objectName") != 0)
         {
             //排除objectName
             if(type != QVariant::UserType)
@@ -76,6 +74,7 @@ void XmlProcessor::writeXml(QObject *object, QXmlStreamWriter &stream)
             else
             {
                 //这里是子节点列表
+                qDebug() << object->findChild<QObject*>(name);
                 writeXml(object->findChild<QObject*>(name),stream);
             }
         }

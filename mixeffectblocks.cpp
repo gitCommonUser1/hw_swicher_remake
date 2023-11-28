@@ -3,5 +3,6 @@
 
 MixEffectBlocks::MixEffectBlocks(QObject *parent) : QObject(parent)
 {
-    m_mixEffectBlock = new MixEffectBlock;
+    m_mixEffectBlock = new MixEffectBlock(this);
+    m_mixEffectBlock->setObjectName("mixEffectBlock");
 }

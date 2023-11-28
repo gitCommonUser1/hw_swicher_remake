@@ -23,6 +23,9 @@
 #include <QtConcurrent>
 #include "ndi.h"
 #include "ndi_license.h"
+#include "gostreamsystem.h"
+#include "colorbacks.h"
+#include "colorback.h"
 
 extern Settings *settings;
 extern LeftMenuModel *leftMenuModel;
@@ -33,6 +36,7 @@ extern KeyboardEvent *keyboardEvent;
 extern Media_sd *media_sd;
 extern MessageDialogControl *messageDialogControl;
 extern Ndi *ndi;
+extern Profile *profile;
 
 //键盘按下时间 ms
 #define KEY_PRESS_INTERVAL 2000
@@ -42,6 +46,7 @@ extern Ndi *ndi;
 Control::Control(QObject *parent) : QObject(parent)
 {
     init_connect();
+    connect_profile();
 
     //init audio led
     models->closeAllAudioLed();
@@ -448,6 +453,35 @@ void Control::init_connect()
                 settings->setMenuDHCPNetworksecondayDNS(c_dns2);
             }
         }
+    });
+}
+
+void Control::connect_profile()
+{
+    //color back
+    connect(profile->colorBacks()->colorBack1(),&ColorBack::hueChanged,this,[=](int hue){
+        models->macroInvoke(&Models::colorBackHue,ColorBacks::COLOR1,hue);
+        settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR1,COLORBACK1_HUE,hue);
+    });
+    connect(profile->colorBacks()->colorBack1(),&ColorBack::saturationChanged,this,[=](int saturation){
+        models->macroInvoke(&Models::colorBackSaturation,ColorBacks::COLOR1,saturation);
+        settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR1,COLORBACK1_SATURATION,saturation);
+    });
+    connect(profile->colorBacks()->colorBack1(),&ColorBack::brightnessChanged,this,[=](int brightness){
+        models->macroInvoke(&Models::colorBackBrightness,ColorBacks::COLOR1,brightness);
+        settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR1,COLORBACK1_BRIGHTNESS,brightness);
+    });
+    connect(profile->colorBacks()->colorBack2(),&ColorBack::hueChanged,this,[=](int hue){
+        models->macroInvoke(&Models::colorBackHue,ColorBacks::COLOR2,hue);
+        settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR2,COLORBACK2_HUE,hue);
+    });
+    connect(profile->colorBacks()->colorBack2(),&ColorBack::saturationChanged,this,[=](int saturation){
+        models->macroInvoke(&Models::colorBackSaturation,ColorBacks::COLOR2,saturation);
+        settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR2,COLORBACK2_SATURATION,saturation);
+    });
+    connect(profile->colorBacks()->colorBack2(),&ColorBack::brightnessChanged,this,[=](int brightness){
+        models->macroInvoke(&Models::colorBackBrightness,ColorBacks::COLOR2,brightness);
+        settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR2,COLORBACK2_BRIGHTNESS,brightness);
     });
 }
 

@@ -23,7 +23,10 @@ Profile::Profile(QObject *parent) : QObject(parent)
         free(str);
 
 
-    m_mixEffectBlocks = new MixEffectBlocks;
-    m_colorBacks = new ColorBacks;
-    m_downstreamKeys = new DownstreamKeys;
+    m_mixEffectBlocks = new MixEffectBlocks(this);
+    m_mixEffectBlocks->setObjectName("mixEffectBlocks");
+    m_colorBacks = new ColorBacks(this);
+    m_colorBacks->setObjectName("colorBacks");
+    m_downstreamKeys = new DownstreamKeys(this);
+    m_downstreamKeys->setObjectName("downstreamKeys");
 }
