@@ -1,0 +1,11 @@
+#!/bin/sh
+
+export QT_QPA_FB_DRM=1
+
+export QT_QPA_PLATFORM=linuxfb:rotation=0
+export QT_QPA_EGLFS_KMS_CONNECTOR_INDEX=1
+export QT_QPA_EGLFS_PHYSICAL_WIDTH=1920
+export QT_QPA_EGLFS_PHYSICAL_HEIGHT=1080
+export XDG_RUNTIME_DIR=/tmp
+
+export RUNLEVEL=3

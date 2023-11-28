@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Menu.qml</file>
+        <file>AudioTable.qml</file>
+        <file>Keyboard/Keyboard.qml</file>
+        <file>Keyboard/KeyboardSignal.qml</file>
+        <file>Keyboard/MidKey.qml</file>
+        <file>Keyboard/Key.qml</file>
+        <file>Keyboard/SpaceKey.qml</file>
+        <file>test.qml</file>
+        <file>TestRound.qml</file>
+        <file>TestSmallRect.qml</file>
+        <file>TestBigRect.qml</file>
+        <file>TestRect.qml</file>
+        <file>MessageDialog.qml</file>
+        <file>PlaybackList.qml</file>
+        <file>NdiList.qml</file>
+        <file>Keyboard/KeyboardIpAddrInput.qml</file>
+        <file>Keyboard/KeyboardIpAddrDot.qml</file>
+        <file>UpdateMessage.qml</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+QT_MONITOR=/oem/hw_rockchip_qt/qt_monitor.sh
+
+if [ -f ${QT_MONITOR} ]; then
+	nohup ${QT_MONITOR} > /dev/null 2>&1 &
+fi
+

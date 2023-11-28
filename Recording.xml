@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<streaming>
+	<profiles>
+		<profile>
+			<name>High</name>
+			<config resolution="720p" fps="60">
+				<bitrate>6000000</bitrate>
+				<audio-bitrate>128000</audio-bitrate>
+			</config>
+			<config resolution="720p" fps="30">
+				<bitrate>4000000</bitrate>
+				<audio-bitrate>128000</audio-bitrate>
+			</config>
+			<config resolution="1080p" fps="60">
+				<bitrate>50000000</bitrate>
+				<audio-bitrate>128000</audio-bitrate>
+			</config>
+			<config resolution="1080p" fps="30">
+				<bitrate>30000000</bitrate>
+				<audio-bitrate>128000</audio-bitrate>
+			</config>
+		</profile>
+		<profile>
+			<name>Medium</name>
+			<config resolution="720p" fps="60">
+				<bitrate>4500000</bitrate>
+				<audio-bitrate>128000</audio-bitrate>
+			</config>
+			<config resolution="720p" fps="30">
+				<bitrate>3000000</bitrate>
+				<audio-bitrate>128000</audio-bitrate>
+			</config>
+			<config resolution="1080p" fps="60">
+				<bitrate>12000000</bitrate>
+				<audio-bitrate>128000</audio-bitrate>
+			</config>
+			<config resolution="1080p" fps="30">
+				<bitrate>8000000</bitrate>
+				<audio-bitrate>128000</audio-bitrate>
+			</config>
+		</profile>
+		<profile>
+			<name>Low</name>
+			<config resolution="720p" fps="60">
+				<bitrate>2250000</bitrate>
+				<audio-bitrate>128000</audio-bitrate>
+			</config>
+			<config resolution="720p" fps="30">
+				<bitrate>1500000</bitrate>
+				<audio-bitrate>128000</audio-bitrate>
+			</config>
+			<config resolution="1080p" fps="60">
+				<bitrate>4500000</bitrate>
+				<audio-bitrate>128000</audio-bitrate>
+			</config>
+			<config resolution="1080p" fps="30">
+				<bitrate>3000000</bitrate>
+				<audio-bitrate>128000</audio-bitrate>
+			</config>
+		</profile>
+	</profiles>
+</streaming>
