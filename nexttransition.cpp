@@ -3,9 +3,9 @@
 #include <QThread>
 
 static QList<QString> selectionList = {
-    "KEY",
+    "BKGD",
     "DSK",
-    "BKGD"
+    "KEY"
 };
 
 NextTransition::NextTransition(QObject *parent) : QObject(parent)

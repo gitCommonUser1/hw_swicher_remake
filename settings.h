@@ -1557,6 +1557,9 @@ void setKeyboardType(int keyboardType)
     m_keyboardType = keyboardType;
     emit keyboardTypeChanged(m_keyboardType);
 }
+
+
+
 };
 
 #endif // SETTINGS_H

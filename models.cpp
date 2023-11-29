@@ -99,7 +99,27 @@ void Models::init_connect()
 
     //pip
 
-    //
+
+    //transition
+    connect(this,&Models::transitionRate,this,&Models::setTransitionRate);
+    connect(this,&Models::transitionWipePattern,this,&Models::setTransitionWipePattern);
+    connect(this,&Models::transitionWipeXPosition,this,&Models::setTransitionWipeXPosition);
+    connect(this,&Models::transitionWipeYPosition,this,&Models::setTransitionWipeYPosition);
+    connect(this,&Models::transitionWipeDirection,this,&Models::setTransitionWipeDirection);
+    connect(this,&Models::transitionWipeSymmetry,this,&Models::setTransitionWipeSymmetry);
+    connect(this,&Models::transitionWipeSoftness,this,&Models::setTransitionWipeSoftness);
+    connect(this,&Models::transitionWipeBorder,this,&Models::setTransitionWipeBorder);
+    connect(this,&Models::transitionWipeFillSource,this,&Models::setTransitionWipeFillSource);
+
+
+    //button status
+    connect(this,&Models::pgmIndex,this,&Models::setPgmIndex);
+    connect(this,&Models::pvwIndex,this,&Models::setPvwIndex);
+    connect(this,&Models::nextTransition,this,&Models::setNextTransition);
+    connect(this,&Models::transitionStyle,this,&Models::setTransitionStyle);
+    connect(this,&Models::previewTransition,this,&Models::setPreviewTransition);
+
+
 }
 
 
@@ -1792,178 +1812,6 @@ void Models::setFtbAFV()
     fpga_write(&g_fpga,FTB_AFV,value);
 }
 
-void Models::setMixRate()
-{
-    float value = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_MIX]->third[TRANSITION_MIX_RATE]->current.toFloat();
-    int outFormat = getOutFormat(settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt());
-    int fpga_value = getFTBRateValue(value,outFormat);
-    fpga_write(&g_fpga,MIX_RATE,fpga_value);
-}
-
-void Models::setDipSource()
-{
-    int value = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_DIP]->third[TRANSITION_DIP_SOURCE]->current.toInt();
-    fpga_write(&g_fpga,DIP_SRC_SEL,value);
-}
-
-void Models::setDipRate()
-{
-    float value = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_DIP]->third[TRANSITION_DIP_RATE]->current.toFloat();
-    int outFormat = getOutFormat(settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt());
-    int fpga_value = getFTBRateValue(value,outFormat);
-    fpga_write(&g_fpga,DIP_RATE,fpga_value);
-}
-
-void Models::setTransitionWipeRate()
-{
-    float value = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_RATE]->current.toFloat();
-    int outFormat = getOutFormat(settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt());
-    int fpga_value = getFTBRateValue(value,outFormat);
-    fpga_write(&g_fpga,WIPE_RATE,fpga_value);
-}
-
-void Models::setTransitionWipePattern()
-{
-    int derection = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_DIRECTION]->current.toInt();
-    int pattern_index = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_PATTERN]->current.toInt();
-
-    //send settings signal
-    settings->setTransitionWipePatternIndex(pattern_index);
-    int value = 0;
-    derection != 0?value += 0x20:value += 0;
-    value += pattern_index;
-    fpga_write(&g_fpga,WIPE_PATTERN,value);
-}
-
-void Models::setTransitionWipePosition()
-{
-    int pattern_index = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_PATTERN]->current.toInt();
-    float posX = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_POSITIONX]->current.toFloat();
-    float posXMax = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_POSITIONX]->max.toFloat();
-    float posXMin = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_POSITIONX]->min.toFloat();
-    posX = (posX - posXMin) / (posXMax - posXMin);
-
-    float posY = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_POSITIONY]->current.toFloat();
-    float posYMax = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_POSITIONX]->max.toFloat();
-    float posYMin = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_POSITIONX]->min.toFloat();
-    posY = (posY - posYMin) / (posYMax - posYMin);
-
-    float symmertry = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_SYMMERTRY]->current.toFloat();
-    float symmertryMax = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_SYMMERTRY]->max.toFloat();
-    float symmertryMin = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_SYMMERTRY]->min.toFloat();
-
-    symmertry = (symmertry - symmertryMin) / (symmertryMax - symmertryMin);
-
-//    float symmertryCircle = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_SYMMERTRY_CIRCLE]->current.toFloat();
-//    float symmertryCircleMax = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_SYMMERTRY_CIRCLE]->max.toFloat();
-//    float symmertryCircleMin = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_SYMMERTRY_CIRCLE]->min.toFloat();
-
-//    symmertryCircle = (symmertryCircle - symmertryCircleMin) / (symmertryCircleMax - symmertryCircleMin);
-
-    //抽象对象
-    TransitionWipePositionClass *pos;
-
-    switch (pattern_index) {
-    case LEFT_TO_RIGHT:
-        pos = new TransitionWipePositionLeftToRight(posX,posY,symmertry);
-        break;
-    case TOP_TO_BOTTOM:
-        pos = new TransitionWipePositionTopToBottom(posX,posY,symmertry);
-        break;
-    case VERTICAL_CENTER:
-        pos = new TransitionWipePositionVerticalCenter(posX,posY,symmertry);
-        break;
-    case HORIZONTAL_CENTER:
-        pos = new TransitionWipePositionHorizontalCenter(posX,posY,symmertry);
-        break;
-    case CROSS_CENTER:
-        pos = new TransitionWipePositionCrossCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_CENTER:
-        pos = new TransitionWipePositionSquareCenter(posX,posY,symmertry);
-        break;
-    case DIAMOND:
-        pos = new TransitionWipePositionDiamond(posX,posY,symmertry);
-        break;
-    case CIRCLE:
-        pos = new TransitionWipePositionCircle(posX,posY,symmertry);//symmertryCircle
-        break;
-    case SQUARE_TOP_LEFT:
-        pos = new TransitionWipePositionSquareTopLeft(posX,posY,symmertry);
-        break;
-    case SQUARE_TOP_RIGHT:
-        pos = new TransitionWipePositionSquareTopRight(posX,posY,symmertry);
-        break;
-    case SQUARE_BOTTOM_RIGHT:
-        pos = new TransitionWipePositionSquareBottomRight(posX,posY,symmertry);
-        break;
-    case SQUARE_BOTTOM_LEFT:
-        pos = new TransitionWipePositionSquareBottomLeft(posX,posY,symmertry);
-        break;
-    case SQUARE_TOP_CENTER:
-        pos = new TransitionWipePositionSquareTopCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_LEFT_CENTER:
-        pos = new TransitionWipePositionSquareLeftCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_BOTTOM_CENTER:
-        pos = new TransitionWipePositionSquareBottomCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_RIGHT_CENTER:
-        pos = new TransitionWipePositionSquareRightCentert(posX,posY,symmertry);
-        break;
-    case BOTTOM_RIGHT_ANGLE:
-        pos = new TransitionWipePositionBottomRightAngle(posX,posY,symmertry);
-        break;
-    case BOTTOM_LEFT_ANGLE:
-        pos = new TransitionWipePositionBottomLeftAngle(posX,posY,symmertry);
-        break;
-    }
-
-    pos->checkout();
-    fpga_write(&g_fpga,WIPE_POSX,pos->reg_h_pos);
-    fpga_write(&g_fpga,WIPE_POSY,pos->reg_v_pos);
-    fpga_write(&g_fpga,WIPE_H_PARAM,pos->reg_h_param);
-    fpga_write(&g_fpga,WIPE_V_PARAM,pos->reg_v_param);
-
-    delete pos;
-}
-
-void Models::setTransitionWipeSoftness()
-{
-    float softness = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_SOFTNESS]->current.toFloat();
-    float softnessMax = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_SOFTNESS]->max.toFloat();;
-    float softnessMin = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_SOFTNESS]->min.toFloat();;
-
-    softness = (softness - softnessMin) / (softnessMax - softnessMin);
-    int value = getWipeSoftness(softness);
-    fpga_write(&g_fpga,WIPE_SOFTNESS,value);
-}
-
-void Models::setTransitionWipeBoard()
-{
-    float softness = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_SOFTNESS]->current.toFloat();
-    float softnessMax = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_SOFTNESS]->max.toFloat();;
-    float softnessMin = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_SOFTNESS]->min.toFloat();;
-
-    softness = (softness - softnessMin) / (softnessMax - softnessMin);
-    int value = getWipeSoftness(softness);
-
-    float board = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_BOARD]->current.toFloat();
-    float boardMax = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_BOARD]->max.toFloat();;
-    float boardMin = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_BOARD]->min.toFloat();;
-
-    board = (board - boardMin) / (boardMax - boardMin);
-    value = (int)(value * board + 0.5);
-    fpga_write(&g_fpga,WIPE_BOARD,value);
-}
-
-void Models::setTransitionWipeFillSource()
-{
-    int index = settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_FILL_SOURCE]->current.toInt();
-    fpga_write(&g_fpga,WIPE_BOARD_SRC_SEL,index);
-}
-
 void Models::setStillSelection()
 {
     int value;
@@ -2939,6 +2787,80 @@ void Models::setPvwIndex(int index)
     keyClick(KEY_LED_PVW_1 + index);
 }
 
+void Models::setNextTransition(QString source)
+{
+    int index = NextTransition::selectionStringToValue(source);
+    if(index & 0x4){
+        //bkgd open
+        if(QSwitcher::get_led(KEY_LED_BKGD) == SWITCHER_LED_OFF){
+//            QSwitcher::set_softkey(KEY_LED_BKGD,1);
+            keyClick(KEY_LED_BKGD);
+            qDebug() << "bkgd open";
+        }
+    }else{
+        //bkgd close
+        if(QSwitcher::get_led(KEY_LED_BKGD) != SWITCHER_LED_OFF){
+//            QSwitcher::set_softkey(KEY_LED_BKGD,1);
+            keyClick(KEY_LED_BKGD);
+            qDebug() << "bkgd close";
+        }
+    }
+    if(index & 0x2){
+        //dsk open
+        if(QSwitcher::get_led(KEY_LED_DSK) == SWITCHER_LED_OFF){
+//            QSwitcher::set_softkey(KEY_LED_DSK,1);
+            keyClick(KEY_LED_DSK);
+            qDebug() << "dsk open";
+        }
+    }else{
+        //dsk close
+        if(QSwitcher::get_led(KEY_LED_DSK) != SWITCHER_LED_OFF){
+//            QSwitcher::set_softkey(KEY_LED_DSK,1);
+            keyClick(KEY_LED_DSK);
+            qDebug() << "dsk close";
+        }
+    }
+    if(index & 0x1){
+        //key open
+        if(QSwitcher::get_led(KEY_LED_KEY) == SWITCHER_LED_OFF){
+//            QSwitcher::set_softkey(KEY_LED_KEY,1);
+            keyClick(KEY_LED_KEY);
+            qDebug() << "key open";
+        }
+    }else{
+        //key close
+        if(QSwitcher::get_led(KEY_LED_KEY) != SWITCHER_LED_OFF){
+//            QSwitcher::set_softkey(KEY_LED_KEY,1);
+            keyClick(KEY_LED_KEY);
+            qDebug() << "key close";
+        }
+    }
+}
+
+void Models::setTransitionStyle(QString style)
+{
+    int value = TransitionStyle::styleStringToIndex(style);
+    if(value == TransitionStyle::MIX)
+    {
+        if(QSwitcher::get_led(KEY_LED_TRANS_MIX) == SWITCHER_LED_OFF){
+            keyClick(KEY_LED_TRANS_MIX);
+        }
+    }
+    if(value == TransitionStyle::DIP)
+    {
+        if(QSwitcher::get_led(KEY_LED_TRANS_DIP) == SWITCHER_LED_OFF){
+            keyClick(KEY_LED_TRANS_DIP);
+        }
+    }
+    if(value == TransitionStyle::WIPE)
+    {
+        if(QSwitcher::get_led(KEY_LED_TRANS_WIPE) == SWITCHER_LED_OFF){
+            keyClick(KEY_LED_TRANS_WIPE);
+        }
+    }
+
+}
+
 void Models::setFtb()
 {
     qDebug() << "setFtb:";
@@ -2960,22 +2882,16 @@ void Models::setAutoTransition()
     keyClick(KEY_LED_TRANS_AUTO);
 }
 
-void Models::setPrev(int status)
+void Models::setPreviewTransition(bool status)
 {
-    if(status == SWITCHER_LED_OFF && QSwitcher::get_led(KEY_LED_TRANS_PREVIEW) != SWITCHER_LED_OFF){
-//        QSwitcher::set_softkey(KEY_LED_TRANS_PREVIEW,1);
+    if(status && QSwitcher::get_led(KEY_LED_TRANS_PREVIEW) == SWITCHER_LED_OFF)
+    {
         keyClick(KEY_LED_TRANS_PREVIEW);
-        qDebug() << "setPrev!!!" ;
-    }else if(status != SWITCHER_LED_OFF && QSwitcher::get_led(KEY_LED_TRANS_PREVIEW) == SWITCHER_LED_OFF){
-//        QSwitcher::set_softkey(KEY_LED_TRANS_PREVIEW,1);
-        keyClick(KEY_LED_TRANS_PREVIEW);
-        qDebug() << "setPrev!!!" ;
     }
-}
-
-void Models::setTransitionIndex(int index)
-{
-    qDebug() << "setTransitionIndex:" << index;
+    else if(!status && QSwitcher::get_led(KEY_LED_TRANS_PREVIEW) != SWITCHER_LED_OFF)
+    {
+        keyClick(KEY_LED_TRANS_PREVIEW);
+    }
 }
 
 void Models::setTransitionPosition(int value)
@@ -3757,6 +3673,352 @@ void Models::setKeyShapedKey(int key, int enable)
 void Models::setKeyInvert(int key, int enable)
 {
 
+}
+
+void Models::setTransitionRate(int index, float rate)
+{
+    int outFormat = getOutFormat( 0 /*settings->getOutFormat()*/);
+    int fpga_value = getFTBRateValue(rate,outFormat);
+    int fpga_par = -1;
+    if(index == TransitionStyle::MIX)
+        fpga_par = MIX_RATE;
+    else if(index == TransitionStyle::DIP)
+        fpga_par = DIP_RATE;
+    else if(index == TransitionStyle::WIPE)
+        fpga_par = WIPE_RATE;
+    if(fpga_par != -1)
+        fpga_write(&g_fpga,fpga_par,fpga_value);
+}
+
+void Models::setTransitionDipSource(int source)
+{
+    fpga_write(&g_fpga,DIP_SRC_SEL,source);
+}
+
+void Models::setTransitionWipePattern(int pattern)
+{
+    bool derection = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->reverseDirection();
+//    //send settings signal
+    settings->setTransitionWipePatternIndex(pattern);
+    int value = 0;
+    derection ?value += 0x20:value += 0;
+    value += pattern;
+    fpga_write(&g_fpga,WIPE_PATTERN,value);
+}
+
+void Models::setTransitionWipeXPosition(float xPosition)
+{
+    int pattern_index = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->pattern();
+    float posX = xPosition;
+    float posXMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPositionMax();
+    float posXMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPositionMin();
+    posX = (posX - posXMin) / (posXMax - posXMin);
+
+    float posY = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPosition();
+    float posYMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPositionMax();
+    float posYMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPositionMin();
+    posY = (posY - posYMin) / (posYMax - posYMin);
+
+    float symmertry = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetry();
+    float symmertryMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetryMax();
+    float symmertryMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetryMin();
+
+    symmertry = (symmertry - symmertryMin) / (symmertryMax - symmertryMin);
+
+    qDebug() << "posX:" << posX << "   posY:" << posY << "   symmertry:" << symmertry;
+
+    //抽象对象
+    TransitionWipePositionClass *pos;
+
+    switch (pattern_index) {
+    case LEFT_TO_RIGHT:
+        pos = new TransitionWipePositionLeftToRight(posX,posY,symmertry);
+        break;
+    case TOP_TO_BOTTOM:
+        pos = new TransitionWipePositionTopToBottom(posX,posY,symmertry);
+        break;
+    case VERTICAL_CENTER:
+        pos = new TransitionWipePositionVerticalCenter(posX,posY,symmertry);
+        break;
+    case HORIZONTAL_CENTER:
+        pos = new TransitionWipePositionHorizontalCenter(posX,posY,symmertry);
+        break;
+    case CROSS_CENTER:
+        pos = new TransitionWipePositionCrossCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_CENTER:
+        pos = new TransitionWipePositionSquareCenter(posX,posY,symmertry);
+        break;
+    case DIAMOND:
+        pos = new TransitionWipePositionDiamond(posX,posY,symmertry);
+        break;
+    case CIRCLE:
+        pos = new TransitionWipePositionCircle(posX,posY,symmertry);
+        break;
+    case SQUARE_TOP_LEFT:
+        pos = new TransitionWipePositionSquareTopLeft(posX,posY,symmertry);
+        break;
+    case SQUARE_TOP_RIGHT:
+        pos = new TransitionWipePositionSquareTopRight(posX,posY,symmertry);
+        break;
+    case SQUARE_BOTTOM_RIGHT:
+        pos = new TransitionWipePositionSquareBottomRight(posX,posY,symmertry);
+        break;
+    case SQUARE_BOTTOM_LEFT:
+        pos = new TransitionWipePositionSquareBottomLeft(posX,posY,symmertry);
+        break;
+    case SQUARE_TOP_CENTER:
+        pos = new TransitionWipePositionSquareTopCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_LEFT_CENTER:
+        pos = new TransitionWipePositionSquareLeftCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_BOTTOM_CENTER:
+        pos = new TransitionWipePositionSquareBottomCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_RIGHT_CENTER:
+        pos = new TransitionWipePositionSquareRightCentert(posX,posY,symmertry);
+        break;
+    case BOTTOM_RIGHT_ANGLE:
+        pos = new TransitionWipePositionBottomRightAngle(posX,posY,symmertry);
+        break;
+    case BOTTOM_LEFT_ANGLE:
+        pos = new TransitionWipePositionBottomLeftAngle(posX,posY,symmertry);
+        break;
+    }
+
+    pos->checkout();
+    fpga_write(&g_fpga,PATTERN_POSX,pos->reg_h_pos);
+    fpga_write(&g_fpga,PATTERN_POSY,pos->reg_v_pos);
+    fpga_write(&g_fpga,PATTERN_H_PARAM,pos->reg_h_param);
+    fpga_write(&g_fpga,PATTERN_V_PARAM,pos->reg_v_param);
+
+    delete pos;
+}
+
+void Models::setTransitionWipeYPosition(float yPosition)
+{
+    int pattern_index = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->pattern();
+    float posX = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPosition();
+    float posXMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPositionMax();
+    float posXMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPositionMin();
+    posX = (posX - posXMin) / (posXMax - posXMin);
+
+    float posY = yPosition;
+    float posYMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPositionMax();
+    float posYMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPositionMin();
+    posY = (posY - posYMin) / (posYMax - posYMin);
+
+    float symmertry = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetry();
+    float symmertryMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetryMax();
+    float symmertryMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetryMin();
+
+    symmertry = (symmertry - symmertryMin) / (symmertryMax - symmertryMin);
+
+    qDebug() << "posX:" << posX << "   posY:" << posY << "   symmertry:" << symmertry;
+
+    //抽象对象
+    TransitionWipePositionClass *pos;
+
+    switch (pattern_index) {
+    case LEFT_TO_RIGHT:
+        pos = new TransitionWipePositionLeftToRight(posX,posY,symmertry);
+        break;
+    case TOP_TO_BOTTOM:
+        pos = new TransitionWipePositionTopToBottom(posX,posY,symmertry);
+        break;
+    case VERTICAL_CENTER:
+        pos = new TransitionWipePositionVerticalCenter(posX,posY,symmertry);
+        break;
+    case HORIZONTAL_CENTER:
+        pos = new TransitionWipePositionHorizontalCenter(posX,posY,symmertry);
+        break;
+    case CROSS_CENTER:
+        pos = new TransitionWipePositionCrossCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_CENTER:
+        pos = new TransitionWipePositionSquareCenter(posX,posY,symmertry);
+        break;
+    case DIAMOND:
+        pos = new TransitionWipePositionDiamond(posX,posY,symmertry);
+        break;
+    case CIRCLE:
+        pos = new TransitionWipePositionCircle(posX,posY,symmertry);
+        break;
+    case SQUARE_TOP_LEFT:
+        pos = new TransitionWipePositionSquareTopLeft(posX,posY,symmertry);
+        break;
+    case SQUARE_TOP_RIGHT:
+        pos = new TransitionWipePositionSquareTopRight(posX,posY,symmertry);
+        break;
+    case SQUARE_BOTTOM_RIGHT:
+        pos = new TransitionWipePositionSquareBottomRight(posX,posY,symmertry);
+        break;
+    case SQUARE_BOTTOM_LEFT:
+        pos = new TransitionWipePositionSquareBottomLeft(posX,posY,symmertry);
+        break;
+    case SQUARE_TOP_CENTER:
+        pos = new TransitionWipePositionSquareTopCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_LEFT_CENTER:
+        pos = new TransitionWipePositionSquareLeftCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_BOTTOM_CENTER:
+        pos = new TransitionWipePositionSquareBottomCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_RIGHT_CENTER:
+        pos = new TransitionWipePositionSquareRightCentert(posX,posY,symmertry);
+        break;
+    case BOTTOM_RIGHT_ANGLE:
+        pos = new TransitionWipePositionBottomRightAngle(posX,posY,symmertry);
+        break;
+    case BOTTOM_LEFT_ANGLE:
+        pos = new TransitionWipePositionBottomLeftAngle(posX,posY,symmertry);
+        break;
+    }
+
+    pos->checkout();
+    fpga_write(&g_fpga,PATTERN_POSX,pos->reg_h_pos);
+    fpga_write(&g_fpga,PATTERN_POSY,pos->reg_v_pos);
+    fpga_write(&g_fpga,PATTERN_H_PARAM,pos->reg_h_param);
+    fpga_write(&g_fpga,PATTERN_V_PARAM,pos->reg_v_param);
+
+    delete pos;
+}
+
+void Models::setTransitionWipeDirection(bool direction)
+{
+    int pattern = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->pattern();
+//    //send settings signal
+//    settings->setTransitionWipePatternIndex(pattern);
+    int value = 0;
+    direction ?value += 0x20:value += 0;
+    value += pattern;
+    fpga_write(&g_fpga,WIPE_PATTERN,value);
+}
+
+void Models::setTransitionWipeSymmetry(int symmetry)
+{
+    int pattern_index = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->pattern();
+    float posX = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPosition();
+    float posXMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPositionMax();
+    float posXMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPositionMin();
+    posX = (posX - posXMin) / (posXMax - posXMin);
+
+    float posY = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPosition();
+    float posYMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPositionMax();
+    float posYMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPositionMin();
+    posY = (posY - posYMin) / (posYMax - posYMin);
+
+    float symmertry = symmetry;
+    float symmertryMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetryMax();
+    float symmertryMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetryMin();
+
+    symmertry = (symmertry - symmertryMin) / (symmertryMax - symmertryMin);
+
+    qDebug() << "posX:" << posX << "   posY:" << posY << "   symmertry:" << symmertry;
+
+    //抽象对象
+    TransitionWipePositionClass *pos;
+
+    switch (pattern_index) {
+    case LEFT_TO_RIGHT:
+        pos = new TransitionWipePositionLeftToRight(posX,posY,symmertry);
+        break;
+    case TOP_TO_BOTTOM:
+        pos = new TransitionWipePositionTopToBottom(posX,posY,symmertry);
+        break;
+    case VERTICAL_CENTER:
+        pos = new TransitionWipePositionVerticalCenter(posX,posY,symmertry);
+        break;
+    case HORIZONTAL_CENTER:
+        pos = new TransitionWipePositionHorizontalCenter(posX,posY,symmertry);
+        break;
+    case CROSS_CENTER:
+        pos = new TransitionWipePositionCrossCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_CENTER:
+        pos = new TransitionWipePositionSquareCenter(posX,posY,symmertry);
+        break;
+    case DIAMOND:
+        pos = new TransitionWipePositionDiamond(posX,posY,symmertry);
+        break;
+    case CIRCLE:
+        pos = new TransitionWipePositionCircle(posX,posY,symmertry);
+        break;
+    case SQUARE_TOP_LEFT:
+        pos = new TransitionWipePositionSquareTopLeft(posX,posY,symmertry);
+        break;
+    case SQUARE_TOP_RIGHT:
+        pos = new TransitionWipePositionSquareTopRight(posX,posY,symmertry);
+        break;
+    case SQUARE_BOTTOM_RIGHT:
+        pos = new TransitionWipePositionSquareBottomRight(posX,posY,symmertry);
+        break;
+    case SQUARE_BOTTOM_LEFT:
+        pos = new TransitionWipePositionSquareBottomLeft(posX,posY,symmertry);
+        break;
+    case SQUARE_TOP_CENTER:
+        pos = new TransitionWipePositionSquareTopCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_LEFT_CENTER:
+        pos = new TransitionWipePositionSquareLeftCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_BOTTOM_CENTER:
+        pos = new TransitionWipePositionSquareBottomCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_RIGHT_CENTER:
+        pos = new TransitionWipePositionSquareRightCentert(posX,posY,symmertry);
+        break;
+    case BOTTOM_RIGHT_ANGLE:
+        pos = new TransitionWipePositionBottomRightAngle(posX,posY,symmertry);
+        break;
+    case BOTTOM_LEFT_ANGLE:
+        pos = new TransitionWipePositionBottomLeftAngle(posX,posY,symmertry);
+        break;
+    }
+
+    pos->checkout();
+    fpga_write(&g_fpga,PATTERN_POSX,pos->reg_h_pos);
+    fpga_write(&g_fpga,PATTERN_POSY,pos->reg_v_pos);
+    fpga_write(&g_fpga,PATTERN_H_PARAM,pos->reg_h_param);
+    fpga_write(&g_fpga,PATTERN_V_PARAM,pos->reg_v_param);
+
+    delete pos;
+}
+
+void Models::setTransitionWipeSoftness(int softness)
+{
+    float f_softness = softness;
+    float softnessMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->softnessMax();
+    float softnessMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->softnessMin();
+
+    f_softness = (f_softness - softnessMin) / (softnessMax - softnessMin);
+    int value = getWipeSoftness(f_softness);
+    fpga_write(&g_fpga,WIPE_SOFTNESS,value);
+}
+
+void Models::setTransitionWipeBorder(int border)
+{
+    float softness = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->softness();
+    float softnessMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->softnessMax();
+    float softnessMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->softnessMin();
+
+    softness = (softness - softnessMin) / (softnessMax - softnessMin);
+    int value = getWipeSoftness(softness);
+
+    float board = border;
+    float boardMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->borderMax();
+    float boardMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->borderMin();
+
+    board = (board - boardMin) / (boardMax - boardMin);
+    value = (int)(value * board + 0.5);
+    fpga_write(&g_fpga,WIPE_BOARD,value);
+}
+
+void Models::setTransitionWipeFillSource(int fillSource)
+{
+    fpga_write(&g_fpga,WIPE_BOARD_SRC_SEL,fillSource);
 }
 
 

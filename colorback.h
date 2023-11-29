@@ -49,8 +49,6 @@ public slots:
             hue = m_hue_min;
         if(hue > m_hue_max)
             hue = m_hue_max;
-
-        qDebug("______hue = ",hue);
         if (m_hue == hue)
             return;
 

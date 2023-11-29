@@ -20,11 +20,17 @@ class TransitionStyle : public QObject
 public:
     explicit TransitionStyle(QObject *parent = nullptr);
 
-    QString styleIndexToString(int index);
-    int styleStringToIndex(QString style);
+    static QString styleIndexToString(int index);
+    static int styleStringToIndex(QString style);
+
+    enum TRANSITIONSTYLE{
+        MIX = 0,
+        DIP,
+        WIPE
+    };
 
     enum TRANSITIONSOURCE{
-        IN1 = 1001,
+        IN1 = 0,
         IN2,
         IN3,
         IN4,
@@ -34,7 +40,8 @@ public:
         STILL2,
         COLOR1,
         COLOR2,
-        COLORBAR
+        COLORBAR,
+        MAX
     };
 
     QString style() const

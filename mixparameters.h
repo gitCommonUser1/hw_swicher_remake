@@ -6,18 +6,23 @@
 class MixParameters : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(float rate READ rate WRITE setRate NOTIFY rateChanged)
+    Q_PROPERTY(double rate READ rate WRITE setRate NOTIFY rateChanged)
 public:
     explicit MixParameters(QObject *parent = nullptr);
 
-    float rate() const
+    double rate() const
     {
         return m_rate;
     }
 
 public slots:
-    void setRate(float rate)
+    void setRate(double rate)
     {
+        if(rate > m_rate_max)
+            rate = m_rate_max;
+        if(rate < m_rate_min)
+            rate = m_rate_min;
+
         if (m_rate == rate)
             return;
 
@@ -27,11 +32,13 @@ public slots:
 
 private:
 
-    float m_rate;
+    double m_rate;
+    double m_rate_min;
+    double m_rate_max;
 
 signals:
 
-void rateChanged(float rate);
+void rateChanged(double rate);
 };
 
 #endif // MIXPARAMETERS_H

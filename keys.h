@@ -25,7 +25,7 @@ public:
     static int sizeStringToIndex(QString size);
 
     enum KEYSOURCE{
-        IN1 = 2001,
+        IN1 ,
         IN2,
         IN3,
         IN4,
@@ -37,7 +37,8 @@ public:
         COLOR1,
         COLOR2,
         COLORBAR,
-        BLACK
+        BLACK,
+        MAX
     };
 
     Key* key() const

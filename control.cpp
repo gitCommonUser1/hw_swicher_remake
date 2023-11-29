@@ -24,8 +24,7 @@
 #include "ndi.h"
 #include "ndi_license.h"
 #include "gostreamsystem.h"
-#include "colorbacks.h"
-#include "colorback.h"
+#include "profile_include.h"
 
 extern Settings *settings;
 extern LeftMenuModel *leftMenuModel;
@@ -458,38 +457,110 @@ void Control::init_connect()
 
 void Control::connect_profile()
 {
+    //先把所有值初始化
+    profile->read(profile);
+
     //color back
     connect(profile->colorBacks()->colorBack1(),&ColorBack::hueChanged,this,[=](int hue){
-        qDebug() << "set colorBack1 hue:" << hue;
         models->macroInvoke(&Models::colorBackHue,ColorBacks::COLOR1,hue);
         settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR1,COLORBACK1_HUE,hue);
     });
     connect(profile->colorBacks()->colorBack1(),&ColorBack::saturationChanged,this,[=](int saturation){
-        qDebug() << "set colorBack1 saturation:" << saturation;
         models->macroInvoke(&Models::colorBackSaturation,ColorBacks::COLOR1,saturation);
         settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR1,COLORBACK1_SATURATION,saturation);
     });
     connect(profile->colorBacks()->colorBack1(),&ColorBack::brightnessChanged,this,[=](int brightness){
-        qDebug() << "set colorBack1 brightness:" << brightness;
         models->macroInvoke(&Models::colorBackBrightness,ColorBacks::COLOR1,brightness);
         settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR1,COLORBACK1_BRIGHTNESS,brightness);
     });
     connect(profile->colorBacks()->colorBack2(),&ColorBack::hueChanged,this,[=](int hue){
-        qDebug() << "set colorBack2 hue:" << hue;
         models->macroInvoke(&Models::colorBackHue,ColorBacks::COLOR2,hue);
         settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR2,COLORBACK2_HUE,hue);
     });
     connect(profile->colorBacks()->colorBack2(),&ColorBack::saturationChanged,this,[=](int saturation){
-        qDebug() << "set colorBack2 saturation:" << saturation;
         models->macroInvoke(&Models::colorBackSaturation,ColorBacks::COLOR2,saturation);
         settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR2,COLORBACK2_SATURATION,saturation);
     });
     connect(profile->colorBacks()->colorBack2(),&ColorBack::brightnessChanged,this,[=](int brightness){
-        qDebug() << "set colorBack2 brightness:" << brightness;
         models->macroInvoke(&Models::colorBackBrightness,ColorBacks::COLOR2,brightness);
         settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR2,COLORBACK2_BRIGHTNESS,brightness);
     });
 
+    //mixEffectBlocks
+    //pgm
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->program(),&Program::inputChanged,this,[=](int input){
+        models->macroInvoke(&Models::pgmIndex,input);
+    });
+    //pvw
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->preview(),&Preview::inputChanged,this,[=](int input){
+        models->macroInvoke(&Models::pvwIndex,input);
+    });
+    //nextTransition
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->nextTransition(),&NextTransition::selectionChanged,this,[=](QString selection){
+        models->macroInvoke(&Models::nextTransition,selection);
+    });
+    //TransitionStyle
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle(),&TransitionStyle::styleChanged,this,[=](QString style){
+        models->macroInvoke(&Models::transitionStyle,style);
+    });
+    //previewTransition
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle(),&TransitionStyle::previewTransitionChanged,this,[=](bool flag){
+        models->macroInvoke(&Models::previewTransition,flag);
+    });
+    //MixParameters
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->mixParameters(),&MixParameters::rateChanged,this,[=](double rate){
+        models->macroInvoke(&Models::transitionRate,TransitionStyle::MIX,rate);
+        settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_MIX,TRANSITION_MIX_RATE,rate);
+    });
+    //DipParameters
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters(),&DipParameters::rateChanged,this,[=](double rate){
+        models->macroInvoke(&Models::transitionRate,TransitionStyle::DIP,rate);
+        settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_DIP,TRANSITION_DIP_RATE,rate);
+    });
+    //DipParameters
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters(),&DipParameters::inputChanged,this,[=](int input){
+        models->macroInvoke(&Models::transitionDipSource,input);
+        settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_DIP,TRANSITION_DIP_SOURCE,input);
+    });
+    //WipeParameters
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters(),&WipeParameters::rateChanged,this,[=](double rate){
+        models->macroInvoke(&Models::transitionRate,TransitionStyle::WIPE,rate);
+        settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_WIPE,TRANSITION_WIPE_RATE,rate);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters(),&WipeParameters::patternChanged,this,[=](int pattern){
+        models->macroInvoke(&Models::transitionWipePattern,pattern);
+        settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_WIPE,TRANSITION_WIPE_PATTERN,pattern);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters(),&WipeParameters::symmetryChanged,this,[=](int symmetry){
+        models->macroInvoke(&Models::transitionWipeSymmetry,symmetry);
+        settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_WIPE,TRANSITION_WIPE_SYMMERTRY,symmetry);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters(),&WipeParameters::xPositionChanged,this,[=](double xPosition){
+        models->macroInvoke(&Models::transitionWipeXPosition,xPosition);
+        settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_WIPE,TRANSITION_WIPE_POSITIONX,xPosition);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters(),&WipeParameters::yPositionChanged,this,[=](double yPosition){
+        models->macroInvoke(&Models::transitionWipeYPosition,yPosition);
+        settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_WIPE,TRANSITION_WIPE_POSITIONY,yPosition);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters(),&WipeParameters::reverseDirectionChanged,this,[=](bool direction){
+        models->macroInvoke(&Models::transitionWipeDirection,direction);
+        settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_WIPE,TRANSITION_WIPE_DIRECTION,direction?1:0);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters(),&WipeParameters::softnessChanged,this,[=](int softness){
+        models->macroInvoke(&Models::transitionWipeSoftness,softness);
+        settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_WIPE,TRANSITION_WIPE_SOFTNESS,softness);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters(),&WipeParameters::borderChanged,this,[=](int border){
+        models->macroInvoke(&Models::transitionWipeBorder,border);
+        settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_WIPE,TRANSITION_WIPE_BOARD,border);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters(),&WipeParameters::fillSourceChanged,this,[=](int source){
+        models->macroInvoke(&Models::transitionWipeFillSource,source);
+        settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_WIPE,TRANSITION_WIPE_FILL_SOURCE,source);
+    });
+
+    //第二遍读取，防止发多次信号
     profile->read(profile);
 }
 

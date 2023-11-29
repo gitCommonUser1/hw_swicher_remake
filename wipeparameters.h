@@ -3,14 +3,17 @@
 
 #include <QObject>
 
+//extern double dround(double x,int bit);
+#include "osee_math.h"
+
 class WipeParameters : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(float rate READ rate WRITE setRate NOTIFY rateChanged)
+    Q_PROPERTY(double rate READ rate WRITE setRate NOTIFY rateChanged)
     Q_PROPERTY(int pattern READ pattern WRITE setPattern NOTIFY patternChanged)
     Q_PROPERTY(int symmetry READ symmetry WRITE setSymmetry NOTIFY symmetryChanged)
-    Q_PROPERTY(float xPosition READ xPosition WRITE setXPosition NOTIFY xPositionChanged)
-    Q_PROPERTY(float yPosition READ yPosition WRITE setYPosition NOTIFY yPositionChanged)
+    Q_PROPERTY(double xPosition READ xPosition WRITE setXPosition NOTIFY xPositionChanged)
+    Q_PROPERTY(double yPosition READ yPosition WRITE setYPosition NOTIFY yPositionChanged)
     Q_PROPERTY(bool reverseDirection READ reverseDirection WRITE setReverseDirection NOTIFY reverseDirectionChanged)
     Q_PROPERTY(int softness READ softness WRITE setSoftness NOTIFY softnessChanged)
     Q_PROPERTY(int border READ border WRITE setBorder NOTIFY borderChanged)
@@ -19,7 +22,7 @@ class WipeParameters : public QObject
 public:
     explicit WipeParameters(QObject *parent = nullptr);
 
-    float rate() const
+    double rate() const
     {
         return m_rate;
     }
@@ -34,12 +37,12 @@ public:
         return m_symmetry;
     }
 
-    float xPosition() const
+    double xPosition() const
     {
         return m_xPosition;
     }
 
-    float yPosition() const
+    double yPosition() const
     {
         return m_yPosition;
     }
@@ -65,8 +68,12 @@ public:
     }
 
 public slots:
-    void setRate(float rate)
+    void setRate(double rate)
     {
+        if(rate > m_rate_max)
+            rate = m_rate_max;
+        if(rate < m_rate_min)
+            rate = m_rate_min;
         if (m_rate == rate)
             return;
 
@@ -76,6 +83,10 @@ public slots:
 
     void setPattern(int pattern)
     {
+        if(pattern < m_pattern_min)
+            pattern = m_pattern_min;
+        if(pattern > m_pattern_max)
+            pattern = m_pattern_max;
         if (m_pattern == pattern)
             return;
 
@@ -85,6 +96,10 @@ public slots:
 
     void setSymmetry(int symmetry)
     {
+        if(symmetry < m_symmetry_min)
+            symmetry = m_symmetry_min;
+        if(symmetry > m_symmetry_max)
+            symmetry = m_symmetry_max;
         if (m_symmetry == symmetry)
             return;
 
@@ -92,23 +107,31 @@ public slots:
         emit symmetryChanged(m_symmetry);
     }
 
-    void setXPosition(float xPosition)
+    void setXPosition(double xPosition)
     {
-        qWarning("Floating point comparison needs context sanity check");
-        if (qFuzzyCompare(m_xPosition, xPosition))
-            return;
+        auto dst = dround(xPosition,2);
+        if(dst < m_xPosition_min)
+            dst = m_xPosition_min;
+        if(dst > m_xPosition_max)
+            dst = m_xPosition_max;
+        if(dst == m_xPosition)
+            return ;
 
-        m_xPosition = xPosition;
+        m_xPosition = dst;
         emit xPositionChanged(m_xPosition);
     }
 
-    void setYPosition(float yPosition)
+    void setYPosition(double yPosition)
     {
-        qWarning("Floating point comparison needs context sanity check");
-        if (qFuzzyCompare(m_yPosition, yPosition))
-            return;
+        auto dst = dround(yPosition,2);
+        if(dst < m_yPosition_min)
+            dst = m_yPosition_min;
+        if(dst > m_yPosition_max)
+            dst = m_yPosition_max;
+        if(dst == m_yPosition)
+            return ;
 
-        m_yPosition = yPosition;
+        m_yPosition = dst;
         emit yPositionChanged(m_yPosition);
     }
 
@@ -123,6 +146,10 @@ public slots:
 
     void setSoftness(int softness)
     {
+        if(softness < m_softness_min)
+            softness = m_softness_min;
+        if(softness > m_softness_max)
+            softness = m_softness_max;
         if (m_softness == softness)
             return;
 
@@ -132,6 +159,10 @@ public slots:
 
     void setBorder(int border)
     {
+        if(border < m_border_min)
+            border = m_border_min;
+        if(border > m_border_max)
+            border = m_border_max;
         if (m_border == border)
             return;
 
@@ -141,6 +172,10 @@ public slots:
 
     void setFillSource(int fillSource)
     {
+        if(fillSource < m_fillSource_min)
+            fillSource = m_fillSource_min;
+        if(fillSource >= m_fillSource_max)
+            fillSource = m_fillSource_max - 1;
         if (m_fillSource == fillSource)
             return;
 
@@ -148,33 +183,62 @@ public slots:
         emit fillSourceChanged(m_fillSource);
     }
 
+    double xPositionMax(){return m_xPosition_max;}
+    double xPositionMin(){return m_xPosition_min;}
+    double yPositionMax(){return m_yPosition_max;}
+    double yPositionMin(){return m_yPosition_min;}
+    int symmetryMax(){return m_symmetry_max;}
+    int symmetryMin(){return m_symmetry_min;}
+    int softnessMax(){return m_softness_max;}
+    int softnessMin(){return m_softness_min;}
+    int borderMax(){return m_border_max;}
+    int borderMin(){return m_border_min;}
+
 private:
 
-    float m_rate;
+    double m_rate;
+    double m_rate_min;
+    double m_rate_max;
 
     int m_pattern;
+    int m_pattern_min;
+    int m_pattern_max;
 
     int m_symmetry;
+    int m_symmetry_min;
+    int m_symmetry_max;
 
-    float m_xPosition;
+    double m_xPosition;
+    double m_xPosition_min;
+    double m_xPosition_max;
 
-    float m_yPosition;
+    double m_yPosition;
+    double m_yPosition_min;
+    double m_yPosition_max;
 
     bool m_reverseDirection;
+    bool m_reverseDirection_min;
+    bool m_reverseDirection_max;
 
     int m_softness;
+    int m_softness_min;
+    int m_softness_max;
 
     int m_border;
+    int m_border_min;
+    int m_border_max;
 
     int m_fillSource;
+    int m_fillSource_min;
+    int m_fillSource_max;
 
 signals:
 
-void rateChanged(float rate);
+void rateChanged(double rate);
 void patternChanged(int pattern);
 void symmetryChanged(int symmetry);
-void xPositionChanged(float xPosition);
-void yPositionChanged(float yPosition);
+void xPositionChanged(double xPosition);
+void yPositionChanged(double yPosition);
 void reverseDirectionChanged(bool reverseDirection);
 void softnessChanged(int softness);
 void borderChanged(int border);

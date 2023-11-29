@@ -6,13 +6,13 @@
 class DipParameters : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(float rate READ rate WRITE setRate NOTIFY rateChanged)
+    Q_PROPERTY(double rate READ rate WRITE setRate NOTIFY rateChanged)
     Q_PROPERTY(int input READ input WRITE setInput NOTIFY inputChanged)
 
 public:
     explicit DipParameters(QObject *parent = nullptr);
 
-    float rate() const
+    double rate() const
     {
         return m_rate;
     }
@@ -23,8 +23,12 @@ public:
     }
 
 public slots:
-    void setRate(float rate)
+    void setRate(double rate)
     {
+        if(rate > m_rate_max)
+            rate = m_rate_max;
+        if(rate < m_rate_min)
+            rate = m_rate_min;
         if (m_rate == rate)
             return;
 
@@ -34,6 +38,10 @@ public slots:
 
     void setInput(int input)
     {
+        if(m_input < m_input_min)
+            input = m_input_min;
+        if(m_input >= m_input_max)
+            input = m_input_max -1;
         if (m_input == input)
             return;
 
@@ -43,13 +51,17 @@ public slots:
 
 private:
 
-    float m_rate;
+    double m_rate;
+    double m_rate_min;
+    double m_rate_max;
 
     int m_input;
+    int m_input_min;
+    int m_input_max;
 
 signals:
 
-void rateChanged(float rate);
+void rateChanged(double rate);
 void inputChanged(int input);
 };
 

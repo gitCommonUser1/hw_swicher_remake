@@ -821,6 +821,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::transitionRate),TRANSITION_MIX,value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->mixParameters()->setRate(value.toDouble());
     }
 };
 
@@ -829,6 +830,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::transitionDipSource),value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters()->setInput(value.toInt());
     }
 };
 
@@ -837,6 +839,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::transitionRate),TRANSITION_DIP,value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters()->setRate(value.toDouble());
     }
 };
 
@@ -845,6 +848,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::transitionWipePattern),value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setPattern(value.toInt());
     }
 };
 
@@ -853,6 +857,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::transitionRate),TRANSITION_WIPE,value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setRate(value.toDouble());
     }
 };
 
@@ -861,6 +866,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::transitionWipeXPosition),value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setXPosition(value.toDouble());
     }
 };
 
@@ -869,6 +875,8 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::transitionWipeYPosition),value.toInt());
+        qDebug() << value;
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setYPosition(value.toDouble());
     }
 };
 
@@ -877,6 +885,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::transitionWipeDirection),value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setReverseDirection(value > 0);
     }
 };
 
@@ -885,6 +894,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::transitionWipeSymmetry),value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setSymmetry(value.toInt());
     }
 };
 
@@ -893,6 +903,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::transitionWipeSoftness),value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setSoftness(value.toInt());
     }
 };
 
@@ -901,6 +912,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::transitionWipeBorder),value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setBorder(value.toInt());
     }
 };
 
@@ -909,6 +921,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::transitionWipeFillSource),value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setFillSource(value.toInt());
     }
 };
 

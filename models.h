@@ -140,24 +140,6 @@ public:
     void setFtbRate();
     void setFtbAFV();
 
-
-    //transition
-
-    /*mix*/
-    void setMixRate();
-
-    /*dip*/
-    void setDipSource();
-    void setDipRate();
-
-    /*wipe*/
-    void setTransitionWipeRate();
-    void setTransitionWipePattern();
-    void setTransitionWipePosition();
-    void setTransitionWipeSoftness();
-    void setTransitionWipeBoard();
-    void setTransitionWipeFillSource();
-
     //still generate
     void setStillSelection();
     void setStillUpload();
@@ -221,20 +203,6 @@ public:
     void setPlaybackMode();
 
     void setButtonBrightness();
-
-
-    //marco function
-    void setPgmIndex(int index);
-    void setPvwIndex(int index);
-    void setFtb();
-    void setCutTransition();
-    void setAutoTransition();
-    void setPrev(int status);
-    void setTransitionIndex(int index);
-    void setTransitionPosition(int value);
-    void setTransitionSource(int source);
-    void setKeyOnAir(int status);
-    void setDskOnAir(int status);
 
 
 
@@ -384,7 +352,7 @@ signals:
     //transition
 
     /**/
-    void transitionRate(int index,float rate);
+    void transitionRate(int index,double rate);
     /**/
 
     /**/
@@ -392,7 +360,7 @@ signals:
     void transitionWipePattern(int pattern);
     void transitionWipeXPosition(float xPosition);
     void transitionWipeYPosition(float yPosition);
-    void transitionWipeDirection(int direction);
+    void transitionWipeDirection(bool direction);
     void transitionWipeSymmetry(int symmetry);
     void transitionWipeSoftness(int softness);
     void transitionWipeBorder(int border);
@@ -457,11 +425,16 @@ signals:
 
     void buttonBrightness();
 
-    //macro function
+
+
+
+
+    //button status
     void pgmIndex(int input);
     void pvwIndex(int input);
-    void transitionIndex(int index);
-    void prev(int status);
+    void nextTransition(QString source);
+    void transitionStyle(QString style);
+    void previewTransition(bool preview);
     void ftb();
     void cutTransition();
     void autoTransition();
@@ -523,6 +496,41 @@ public slots:
     void setKeyGain(int key,int gain);
     void setKeyShapedKey(int key,int enable);
     void setKeyInvert(int key,int enable);
+
+
+    //transition
+    /**/
+    void setTransitionRate(int index,float rate);
+    /**/
+
+    /**/
+    void setTransitionDipSource(int source);
+    void setTransitionWipePattern(int pattern);
+    void setTransitionWipeXPosition(float xPosition);
+    void setTransitionWipeYPosition(float yPosition);
+    void setTransitionWipeDirection(bool direction);
+    void setTransitionWipeSymmetry(int symmetry);
+    void setTransitionWipeSoftness(int softness);
+    void setTransitionWipeBorder(int border);
+    void setTransitionWipeFillSource(int fillSource);
+    /**/
+
+
+
+    //button status
+    void setPgmIndex(int index);
+    void setPvwIndex(int index);
+    void setNextTransition(QString source);
+    void setTransitionStyle(QString style);
+    void setFtb();
+    void setCutTransition();
+    void setAutoTransition();
+    void setPreviewTransition(bool preview);
+    void setTransitionPosition(int value);
+    void setTransitionSource(int source);
+    void setKeyOnAir(int status);
+    void setDskOnAir(int status);
+
 
 public:
     int initStillMutex;

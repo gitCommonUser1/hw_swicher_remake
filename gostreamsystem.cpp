@@ -228,9 +228,14 @@ int Profile::read(QObject *object)
                             property.write(object,attributes.value(propertyName).toDouble());
                         else if(property.type()  == QVariant::String)
                             property.write(object,attributes.value(propertyName).toString());
+                        else if(property.type()  == QVariant::Bool){
+                            if(attributes.value(propertyName).toString().compare("true",Qt::CaseInsensitive) == 0)
+                                property.write(object,true);
+                            else
+                                property.write(object,false);
+                        }
 
-                        qDebug() << "object:" << object;
-                        qDebug() << "attributes.value(propertyName):" << attributes.value(propertyName);
+                        property.notifySignal().invoke(object,QGenericArgument(" ",property.read(object).data()));
                     }
                 }
                 break;
