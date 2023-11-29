@@ -6,8 +6,8 @@
 class NextTransition : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QStringList selection READ selection WRITE setSelection NOTIFY selectionChanged)
-    Q_PROPERTY(QStringList nextSelection READ nextSelection WRITE setNextSelection NOTIFY nextSelectionChanged)
+    Q_PROPERTY(QString selection READ selection WRITE setSelection NOTIFY selectionChanged)
+    Q_PROPERTY(QString nextSelection READ nextSelection WRITE setNextSelection NOTIFY nextSelectionChanged)
 
 public:
     explicit NextTransition(QObject *parent = nullptr);
@@ -15,18 +15,18 @@ public:
     static QString selectionValueToString(int value);
     static int selectionStringToValue(QString selection);
 
-    QStringList selection() const
+    QString selection() const
     {
         return m_selection;
     }
 
-    QStringList nextSelection() const
+    QString nextSelection() const
     {
         return m_nextSelection;
     }
 
 public slots:
-    void setSelection(QStringList selection)
+    void setSelection(QString selection)
     {
         if (m_selection == selection)
             return;
@@ -35,7 +35,7 @@ public slots:
         emit selectionChanged(m_selection);
     }
 
-    void setNextSelection(QStringList nextSelection)
+    void setNextSelection(QString nextSelection)
     {
         if (m_nextSelection == nextSelection)
             return;
@@ -46,14 +46,14 @@ public slots:
 
 private:
 
-    QStringList m_selection;
+    QString m_selection;
 
-    QStringList m_nextSelection;
+    QString m_nextSelection;
 
 signals:
 
-void selectionChanged(QStringList selection);
-void nextSelectionChanged(QStringList nextSelection);
+void selectionChanged(QString selection);
+void nextSelectionChanged(QString nextSelection);
 };
 
 #endif // NEXTTRANSITION_H

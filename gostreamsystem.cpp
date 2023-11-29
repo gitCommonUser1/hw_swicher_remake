@@ -4,6 +4,10 @@
 #include "downstreamkeys.h"
 #include "device_info.h"
 #include <QDebug>
+#include <QMetaProperty>
+#include <QXmlStreamWriter>
+#include <QFile>
+#include "hw_config.h"
 
 #define PRODUCT_NAME "GoStream Deck"
 
@@ -22,11 +26,233 @@ Profile::Profile(QObject *parent) : QObject(parent)
     if(str)
         free(str);
 
-
+    this->setObjectName("Profile");
     m_mixEffectBlocks = new MixEffectBlocks(this);
     m_mixEffectBlocks->setObjectName("mixEffectBlocks");
     m_colorBacks = new ColorBacks(this);
     m_colorBacks->setObjectName("colorBacks");
     m_downstreamKeys = new DownstreamKeys(this);
     m_downstreamKeys->setObjectName("downstreamKeys");
+}
+
+void Profile::write(QObject *object)
+{
+    QString objName = object->objectName();
+    if(objName == "")
+        return ;
+
+    objName = DATA_PATH "/" + objName + ".xml";
+    std::string stdObjName = objName.toStdString();
+
+    QFile file(objName);
+    if(!file.open(QIODevice::WriteOnly)){
+        qDebug() << "open file fail!";
+        return ;
+    }
+
+    QXmlStreamWriter stream(&file);
+    //xml info
+    stream.setAutoFormatting(true);
+    //doc start
+    stream.writeStartDocument();
+
+    writeRecursion(object,stream);
+
+    //doc end
+    stream.writeEndDocument();
+
+    file.flush();
+    ::fsync(file.handle());
+
+    file.close();
+
+//    //断电无法保存，c语言方式再写一次
+//    file.setFileName(objName);
+//    file.open(QIODevice::ReadOnly);
+//    QByteArray ba = file.readAll();
+//    file.close();
+
+//    FILE *fp;
+//    fp = fopen(stdObjName.data(), "wt+");
+//    fwrite(ba, 1, ba.size(), fp);
+//    fflush(fp);
+//    fsync(fileno(fp));
+//    fclose(fp);
+}
+
+void Profile::writeRecursion(QObject *object, QXmlStreamWriter &stream)
+{
+    auto obj = object->metaObject();
+    stream.writeStartElement(obj->className());
+    //par
+    for(int i = 0;i < obj->propertyCount();++i)
+    {
+        auto property = obj->property(i);
+        auto name = property.name();
+        auto type = property.type();
+        if(strcmp(name,"objectName") != 0)
+        {
+            //排除objectName
+            if(type != QVariant::UserType)
+            {
+                //排除自定义类型，只读取qt内置类型
+                //这里是节点参数列表
+                stream.writeAttribute(name,property.read(object).toString());
+            }
+            else
+            {
+                //这里是子节点列表
+                writeRecursion(object->findChild<QObject*>(name),stream);
+            }
+        }
+    }
+    stream.writeEndElement();
+}
+
+int Profile::read(QObject *object)
+{
+    QString objName = object->objectName();
+    if(objName == ""){
+        return -1;
+    }
+
+    objName = DATA_PATH "/" + objName + ".xml";
+    std::string stdObjName = objName.toStdString();
+
+    qDebug() << "objName:" << objName;
+
+    QFile file(objName);
+    if(!file.open(QIODevice::ReadOnly)){
+        qDebug() << "open file fail!";
+        return -1;
+    }
+    auto obj = object->metaObject();
+    bool profileFlag = true;
+
+    QXmlStreamReader stream(&file);
+    // xml info
+    stream.readNext();
+    stream.readNext();
+    if(stream.name() == object->objectName()){
+        //profile
+        auto attributes = stream.attributes();
+        for(int i = 0;i < obj->propertyCount();++i)
+        {
+            auto property = obj->property(i);
+            auto name = property.name();
+            auto type = property.type();
+            if(strcmp(name,"objectName") != 0 && type != QVariant::UserType)
+            {
+                if(!attributes.hasAttribute(name))
+                {
+                    profileFlag = false;
+                    break;
+                }
+                else
+                {
+                    if(attributes.value(name).toString() != property.read(object).toString())
+                    {
+                        profileFlag = false;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        profileFlag = false;
+    }
+    qDebug() << "profileFlag :" << profileFlag;
+    if(profileFlag)
+    {
+        stream.readNext();
+        auto startObject = object;
+        while(!stream.atEnd())
+        {
+            if(stream.hasError())
+            {
+                qDebug() << "stream has error!";
+                break;
+            }
+            auto type = stream.tokenType();
+            auto name = stream.name();
+            auto attributes = stream.attributes();
+            switch (type) {
+            case QXmlStreamReader::StartElement:
+                qDebug() << "start:" << name;
+                for(int i = 0;i < object->children().size();++i)
+                {
+                    auto childrenMetaObj = object->children()[i]->metaObject();
+                    if(childrenMetaObj->className() == name)
+                    {
+                        bool finalFlag = false;
+                        bool isSet = false;
+                        for(int j = 0;j < childrenMetaObj->propertyCount();++j)
+                        {
+                            if(childrenMetaObj->property(j).isFinal())
+                            {
+                                finalFlag = true;
+                                if(attributes.hasAttribute(childrenMetaObj->property(j).name()))
+                                {
+                                    if(attributes.value(childrenMetaObj->property(j).name()).toString() == childrenMetaObj->property(j).read(object->children()[i]))
+                                    {
+                                        object = object->children()[i];
+                                        obj = object->metaObject();
+                                        isSet = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if(!finalFlag)
+                        {
+                            object = object->children()[i];
+                            obj = object->metaObject();
+                            break;
+                        }
+                        if(isSet)
+                            break;
+                    }
+                }
+
+                for(int i = 0; i < obj->propertyCount();++i)
+                {
+                    auto property = obj->property(i);
+                    auto propertyName = property.name();
+                    if(attributes.hasAttribute(propertyName))
+                    {
+                        if(property.type()  == QVariant::Int)
+                            property.write(object,attributes.value(propertyName).toInt());
+                        else if(property.type()  == QVariant::Double)
+                            property.write(object,attributes.value(propertyName).toDouble());
+                        else if(property.type()  == QVariant::String)
+                            property.write(object,attributes.value(propertyName).toString());
+
+                        qDebug() << "object:" << object;
+                        qDebug() << "attributes.value(propertyName):" << attributes.value(propertyName);
+                    }
+                }
+                break;
+            case QXmlStreamReader::EndElement:
+                if(object != startObject)
+                {
+                    object = object->parent();
+                    obj = object->metaObject();
+                }
+                qDebug() << "end:" << name;
+                break;
+            default:
+                break;
+            }
+            stream.readNext();
+        }
+    }
+    file.close();
+
+    if(stream.hasError()){
+        qDebug() << "read error:" << stream.errorString() << " at line:" << stream.lineNumber();
+        return -1;
+    }
+    return 0;
 }

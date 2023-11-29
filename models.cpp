@@ -3232,7 +3232,7 @@ void Models::setColorBackHue(int colorIndex, int hue)
             m_colorBack->setHue(hue);
             return ;
         }
-        setColorBack(colorIndex);
+        setColorBack(colorIndex,m_colorBack->hue(),m_colorBack->saturation(),m_colorBack->brightness());
     }
 }
 
@@ -3254,7 +3254,7 @@ void Models::setColorBackSaturation(int colorIndex, int saturation)
             m_colorBack->setSaturation(saturation);
             return ;
         }
-        setColorBack(colorIndex);
+        setColorBack(colorIndex,m_colorBack->hue(),m_colorBack->saturation(),m_colorBack->brightness());
     }
 }
 
@@ -3277,28 +3277,19 @@ void Models::setColorBackBrightness(int colorIndex, int brightness)
             m_colorBack->setBrightness(brightness);
             return ;
         }
-        setColorBack(colorIndex);
+        setColorBack(colorIndex,m_colorBack->hue(),m_colorBack->saturation(),m_colorBack->brightness());
     }
 }
 
-void Models::setColorBack(int colorIndex)
+void Models::setColorBack(int colorIndex,int hue,int saturation,int brightness)
 {
-    int hue = 0;
-    int saturation = 0;
-    int brightness = 0;
     int fpga_value_y = -1;
     int fpga_value_c = -1;
     if(colorIndex == ColorBacks::COLOR1){
-        hue = profile->colorBacks()->colorBack1()->hue();
-        saturation = profile->colorBacks()->colorBack1()->saturation();
-        brightness = profile->colorBacks()->colorBack1()->brightness();
         settings->setColor1Data({hue,saturation,brightness});
         fpga_value_y = COLOR1_Y;
         fpga_value_c = COLOR1_C;
     }else if(colorIndex == ColorBacks::COLOR2){
-        hue = profile->colorBacks()->colorBack2()->hue();
-        saturation = profile->colorBacks()->colorBack2()->saturation();
-        brightness = profile->colorBacks()->colorBack2()->brightness();
         settings->setColor2Data({hue,saturation,brightness});
         fpga_value_y = COLOR2_Y;
         fpga_value_c = COLOR2_C;

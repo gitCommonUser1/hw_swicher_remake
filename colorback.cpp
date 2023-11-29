@@ -1,6 +1,6 @@
 #include "colorback.h"
 
-ColorBack::ColorBack(QObject *parent) : QObject(parent)
+ColorBack::ColorBack(int colorIndex,QObject *parent) : QObject(parent),m_colorIndex(colorIndex)
 {
     m_hue_max = 359;
     m_hue_min = 0;

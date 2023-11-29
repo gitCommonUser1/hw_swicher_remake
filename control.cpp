@@ -460,29 +460,37 @@ void Control::connect_profile()
 {
     //color back
     connect(profile->colorBacks()->colorBack1(),&ColorBack::hueChanged,this,[=](int hue){
+        qDebug() << "set colorBack1 hue:" << hue;
         models->macroInvoke(&Models::colorBackHue,ColorBacks::COLOR1,hue);
         settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR1,COLORBACK1_HUE,hue);
     });
     connect(profile->colorBacks()->colorBack1(),&ColorBack::saturationChanged,this,[=](int saturation){
+        qDebug() << "set colorBack1 saturation:" << saturation;
         models->macroInvoke(&Models::colorBackSaturation,ColorBacks::COLOR1,saturation);
         settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR1,COLORBACK1_SATURATION,saturation);
     });
     connect(profile->colorBacks()->colorBack1(),&ColorBack::brightnessChanged,this,[=](int brightness){
+        qDebug() << "set colorBack1 brightness:" << brightness;
         models->macroInvoke(&Models::colorBackBrightness,ColorBacks::COLOR1,brightness);
         settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR1,COLORBACK1_BRIGHTNESS,brightness);
     });
     connect(profile->colorBacks()->colorBack2(),&ColorBack::hueChanged,this,[=](int hue){
+        qDebug() << "set colorBack2 hue:" << hue;
         models->macroInvoke(&Models::colorBackHue,ColorBacks::COLOR2,hue);
         settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR2,COLORBACK2_HUE,hue);
     });
     connect(profile->colorBacks()->colorBack2(),&ColorBack::saturationChanged,this,[=](int saturation){
+        qDebug() << "set colorBack2 saturation:" << saturation;
         models->macroInvoke(&Models::colorBackSaturation,ColorBacks::COLOR2,saturation);
         settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR2,COLORBACK2_SATURATION,saturation);
     });
     connect(profile->colorBacks()->colorBack2(),&ColorBack::brightnessChanged,this,[=](int brightness){
+        qDebug() << "set colorBack2 brightness:" << brightness;
         models->macroInvoke(&Models::colorBackBrightness,ColorBacks::COLOR2,brightness);
         settings->setMenuValue(MENU_FIRST_COLOR_BACK,COLOR_BACK_COLOR2,COLORBACK2_BRIGHTNESS,brightness);
     });
+
+    profile->read(profile);
 }
 
 void Control::slotKnobChanged(const int knob, int value)
@@ -665,6 +673,7 @@ void Control::slotKeyChanged(const int key, const int value)
             //released
             if(timer->isActive()){
                 qDebug() << "_________ audio enter  pressed:short" ;
+                profile->write(profile);
                 timer->stop();
                 t_pressed = 0;
             }

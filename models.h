@@ -481,7 +481,7 @@ public slots:
     void setColorBackHue(int colorIndex,int hue);
     void setColorBackSaturation(int colorIndex,int saturation);
     void setColorBackBrightness(int colorIndex,int brightness);
-    void setColorBack(int colorIndex);
+    void setColorBack(int colorIndex,int hue,int saturation,int brightness);
 
     //super source
     void setSuperSourceEnable(int enable);

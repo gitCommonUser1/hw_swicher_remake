@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+class QXmlStreamWriter;
+
 class MixEffectBlocks;
 class DownstreamKeys;
 class ColorBacks;
@@ -19,6 +21,12 @@ class Profile : public QObject
     Q_PROPERTY(ColorBacks* colorBacks READ colorBacks WRITE setColorBacks NOTIFY colorBacksChanged)
 public:
     explicit Profile(QObject *parent = nullptr);
+
+    void write(QObject *object);
+    void writeRecursion(QObject *object,QXmlStreamWriter &stream);
+    int read(QObject *object);
+
+
 
     MixEffectBlocks* mixEffectBlocks() const
     {

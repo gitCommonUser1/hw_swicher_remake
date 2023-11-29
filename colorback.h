@@ -6,12 +6,12 @@
 class ColorBack : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int colorIndex READ colorIndex WRITE setColorIndex NOTIFY colorIndexChanged)
+    Q_PROPERTY(int colorIndex READ colorIndex WRITE setColorIndex FINAL)
     Q_PROPERTY(int hue READ hue WRITE setHue NOTIFY hueChanged)
     Q_PROPERTY(int saturation READ saturation WRITE setSaturation NOTIFY saturationChanged)
     Q_PROPERTY(int brightness READ brightness WRITE setBrightness NOTIFY brightnessChanged)
 public:
-    explicit ColorBack(QObject *parent = nullptr);
+    explicit ColorBack(int colorIndex,QObject *parent = nullptr);
 
     int hue() const
     {
@@ -34,6 +34,15 @@ public:
     }
 
 public slots:
+
+    void setColorIndex(int colorIndex)
+    {
+        if (m_colorIndex == colorIndex)
+            return;
+
+        m_colorIndex = colorIndex;
+    }
+
     void setHue(int hue)
     {
         if(hue < m_hue_min)
@@ -47,15 +56,6 @@ public slots:
 
         m_hue = hue;
         emit hueChanged(m_hue);
-    }
-
-    void setColorIndex(int colorIndex)
-    {
-        if (m_colorIndex == colorIndex)
-            return;
-
-        m_colorIndex = colorIndex;
-        emit colorIndexChanged(m_colorIndex);
     }
 
     void setSaturation(int saturation)
@@ -104,7 +104,6 @@ private:
 signals:
 
 void hueChanged(int hue);
-void colorIndexChanged(int colorIndex);
 void saturationChanged(int saturation);
 void brightnessChanged(int brightness);
 };
