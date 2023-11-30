@@ -98,34 +98,11 @@ public:
     void setDSKClip();
 
     //luma key
-    void setLumaKeySource();
-    void setLumaKeyCtrl();
-    void setLumaKeyPosition(int third);
-    void setLumaKeyClip();
-    void setLumaKeyGain();
-    void setLumaKeyResizeSize();
-    void setLumaKeyResizePosition(int third);
 
     //key pattern
-    void setKeyPatternSource();
-    void setKeyPatternWipePattern();
     void setKeyPatternResizeSize();
     void setKeyPatternResizePosition(int third);
-    void setKeyPatternWipePosition();
-    void setKeyPatternWipeSoftness();
-    void setKeyPatternWipeSize();
     void setKeyPatternMask(int third);
-
-    //chroma key
-    void setChromaKeySource();
-    void setChromaKeyCtrl();
-    void setChromaKeyCtrlSample();
-    void setChromaKeyMask(int third);
-    void setChromaKeyResizeSize();
-    void setChromaKeyResizePosition(int third);
-    void setChromaKeyProfile();
-    void setChromaKeySMPPosition();
-    void setChromaKeySampleColor();
 
     //pip
     void setPipSource();
@@ -279,7 +256,7 @@ signals:
     //key type
 
     /**/
-    void keyType(int type);
+    void keyType(QString type);
     /**/
 
     //keys
@@ -289,16 +266,16 @@ signals:
     void keyMaskVStart(int key,int vStart);
     void keyMaskHEnd(int key,int hEnd);
     void keyMaskVEnd(int key,int vEnd);
-    void keyResize(int key,int resize);
-    void keySize(int key,int size);
-    void keyXPosition(int key,float xPosition);
-    void keyYPosition(int key,float yPosition);
+    void keyResize(int key,bool resize);
+    void keySize(int key,QString size);
+    void keyXPosition(int key,double xPosition);
+    void keyYPosition(int key,double yPosition);
     void keySourceFill(int key,int fill);
     void keySourceKey(int key,int sourceKey);
     void keyClip(int key,int clip);
     void keyGain(int key,int gain);
-    void keyShapedKey(int key,int enable);
-    void keyInvert(int key,int enable);
+    void keyShapedKey(int key,bool enable);
+    void keyInvert(int key,bool enable);
     /**/
 
     //luma key
@@ -312,8 +289,8 @@ signals:
     /**/
     void keyPatternWipePattern(int patternIndex);
     void keyPatternWipeSize(int size);
-    void keyPatternWipeXPosition(float xPosition);
-    void keyPatternWipeYPosition(float yPosition);
+    void keyPatternWipeXPosition(double xPosition);
+    void keyPatternWipeYPosition(double yPosition);
     void keyPatternWipeSymmetry(int symmetry);
     void keyPatternWipeSoftness(int softness);
     /**/
@@ -322,6 +299,9 @@ signals:
     //chroma key
 
     /**/
+    void chromaKeySampleXPosition(double xPosition);
+    void chromaKeySampleYPosition(double yPosition);
+    void chromaKeySample(bool enable);
     void chromaKeySampleColorHue(int hue);
     void chromaKeySampleColorSaturation(int saturation);
     void chromaKeySampleColorBrightness(int brightness);
@@ -358,8 +338,8 @@ signals:
     /**/
     void transitionDipSource(int source);
     void transitionWipePattern(int pattern);
-    void transitionWipeXPosition(float xPosition);
-    void transitionWipeYPosition(float yPosition);
+    void transitionWipeXPosition(double xPosition);
+    void transitionWipeYPosition(double yPosition);
     void transitionWipeDirection(bool direction);
     void transitionWipeSymmetry(int symmetry);
     void transitionWipeSoftness(int softness);
@@ -438,7 +418,7 @@ signals:
     void ftb();
     void cutTransition();
     void autoTransition();
-    void keyOnAir(int status);
+    void keyOnAir(bool status);
     void dskOnAir(int status);
     void transitionPosition(int value);
     void transitionSource(int source);
@@ -478,7 +458,7 @@ public slots:
     void setSuperSourceColor(int colorIndex);
 
     //key type
-    void setKeyType(int type);
+    void setKeyType(QString type);
 
     //keys
     void setKeyMaskEnable(int key,int enable);
@@ -486,16 +466,40 @@ public slots:
     void setKeyMaskVStart(int key,int vStart);
     void setKeyMaskHEnd(int key,int hEnd);
     void setKeyMaskVEnd(int key,int vEnd);
-    void setKeyResize(int key,int resize);
-    void setKeySize(int key,int size);
-    void setKeyXPosition(int key,float xPosition);
-    void setKeyYPosition(int key,float yPosition);
+    void setKeyResize(int key,bool resize);
+    void setKeySize(int key,QString size);
+    void setKeyXPosition(int key,double xPosition);
+    void setKeyYPosition(int key,double yPosition);
     void setKeySourceFill(int key,int fill);
     void setKeySourceKey(int key,int sourceKey);
     void setKeyClip(int key,int clip);
     void setKeyGain(int key,int gain);
-    void setKeyShapedKey(int key,int enable);
-    void setKeyInvert(int key,int enable);
+    void setKeyShapedKey(int key,bool enable);
+    void setKeyInvert(int key,bool enable);
+    void setKeyCtrl(int key);//
+
+    //chroma key
+    void setChromaKeySampleXPosition(double xPosition);
+    void setChromaKeySampleYPosition(double yPosition);
+    void setChromaKeySample(bool enable);
+    void setChromaKeySampleColorHue(int hue);
+    void setChromaKeySampleColorSaturation(int saturation);
+    void setChromaKeySampleColorBrightness(int brightness);
+    void setChromaKeyForeground(int foreground);
+    void setChromaKeyBackground(int background);
+    void setChromaKeyKeyEdge(int keyEdge);
+    void setChromaKeyProfile();//
+    void setChromaKeySampleColor();//
+
+    //key pattern
+    void setKeyPatternWipePattern(int patternIndex);
+    void setKeyPatternWipeSize(int size);
+    void setKeyPatternWipeXPosition(double xPosition);
+    void setKeyPatternWipeYPosition(double yPosition);
+    void setKeyPatternWipeSymmetry(int symmetry);
+    void setKeyPatternWipeSoftness(int softness);
+    void setKeyPatternCtrl();
+    void setKeyPatternPosition();
 
 
     //transition
@@ -506,13 +510,14 @@ public slots:
     /**/
     void setTransitionDipSource(int source);
     void setTransitionWipePattern(int pattern);
-    void setTransitionWipeXPosition(float xPosition);
-    void setTransitionWipeYPosition(float yPosition);
+    void setTransitionWipeXPosition(double xPosition);
+    void setTransitionWipeYPosition(double yPosition);
     void setTransitionWipeDirection(bool direction);
     void setTransitionWipeSymmetry(int symmetry);
     void setTransitionWipeSoftness(int softness);
     void setTransitionWipeBorder(int border);
     void setTransitionWipeFillSource(int fillSource);
+    void setTransitionWipePosition();//
     /**/
 
 
@@ -528,7 +533,7 @@ public slots:
     void setPreviewTransition(bool preview);
     void setTransitionPosition(int value);
     void setTransitionSource(int source);
-    void setKeyOnAir(int status);
+    void setKeyOnAir(bool status);
     void setDskOnAir(int status);
 
 

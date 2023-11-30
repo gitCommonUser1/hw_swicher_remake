@@ -43,6 +43,7 @@
 #include "device_info.h"
 #include "ndi_license.h"
 #include "gostreamsystem.h"
+#include "profile_include.h"
 
 
 Models *models;
@@ -475,12 +476,22 @@ int main(int argc, char *argv[])
     //init color
     //这里必须调用一次，初始化后color应该是绿色，否则颜色不对
 //    models->setChromaKeySampleColor();
-    QFileInfo chromaColor(CHROMAKEY_SMP_COLOR_PATH);
-    if(chromaColor.exists()){
-        settings->init_chromaColor();
-    }else{
-        models->setChromaKeySampleColor();
-    }
+//    QFileInfo chromaColor(CHROMAKEY_SMP_COLOR_PATH);
+//    if(chromaColor.exists()){
+//        settings->init_chromaColor();
+//    }else{
+//        models->setChromaKeySampleColor();
+//    }
+    //初始化 chroma  smp color
+    int r = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->red();
+    int g = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->green();
+    int b = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->blue();
+    int y = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->y();
+    int cb = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->cb();
+    int cr = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->cr();
+    settings->setColor5Data({r,g,b});
+    settings->setChromakeySMPColorYcbcr({y,cb,cr});
+
 
 //    初始化fpga数据
     settings->init_menuStatus();

@@ -24,6 +24,19 @@ public:
     static QString sizeIndexToString(int index);
     static int sizeStringToIndex(QString size);
 
+    enum KEYTYPE{
+        LUMA = 0,
+        CHROMA,
+        PATTERN,
+        PIP
+    };
+
+    enum KEYSIZE{
+        KEY_SIZE_0_25 = 0,
+        KEY_SIZE_0_33,
+        KEY_SIZE_0_50
+    };
+
     enum KEYSOURCE{
         IN1 ,
         IN2,
@@ -126,7 +139,7 @@ private:
 
 signals:
 
-void keyChanged(Key* key);
+void keyChanged(Key* keyType);
 void lumaParametersChanged(LumaParameters* lumaParameters);
 void chromaParametersChanged(ChromaParameters* chromaParameters);
 void patternParametersChanged(PatternParameters* patternParameters);

@@ -16,10 +16,12 @@ Key::Key(QObject *parent) : QObject(parent)
 
 QString Key::typeIndexToString(int index)
 {
-    if(index >= 0 && index < keyList.size())
-        return keyList[index];
-    else
-        return keyList[0];
+    if(index < 0)
+        index = 0;
+    if(index >= keyList.size())
+        index = keyList.size() - 1;
+
+    return keyList[index];
 }
 
 int Key::typeStringToIndex(QString str)

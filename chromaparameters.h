@@ -2,6 +2,7 @@
 #define CHROMAPARAMETERS_H
 
 #include <QObject>
+#include "osee_math.h"
 
 class ChromaParameters : public QObject
 {
@@ -14,14 +15,17 @@ class ChromaParameters : public QObject
     Q_PROPERTY(int maskVEnd READ maskVEnd WRITE setMaskVEnd NOTIFY maskVEndChanged)
     Q_PROPERTY(bool resize READ resize WRITE setResize NOTIFY resizeChanged)
     Q_PROPERTY(QString size READ size WRITE setSize NOTIFY sizeChanged)
-    Q_PROPERTY(float xPosition READ xPosition WRITE setXPosition NOTIFY xPositionChanged)
-    Q_PROPERTY(float yPosition READ yPosition WRITE setYPosition NOTIFY yPositionChanged)
-    Q_PROPERTY(float smpXPosition READ smpXPosition WRITE setSmpXPosition NOTIFY smpXPositionChanged)
-    Q_PROPERTY(float smpYPosition READ smpYPosition WRITE setSmpYPosition NOTIFY smpYPositionChanged)
+    Q_PROPERTY(double xPosition READ xPosition WRITE setXPosition NOTIFY xPositionChanged)
+    Q_PROPERTY(double yPosition READ yPosition WRITE setYPosition NOTIFY yPositionChanged)
+    Q_PROPERTY(double smpXPosition READ smpXPosition WRITE setSmpXPosition NOTIFY smpXPositionChanged)
+    Q_PROPERTY(double smpYPosition READ smpYPosition WRITE setSmpYPosition NOTIFY smpYPositionChanged)
     Q_PROPERTY(bool sample READ sample WRITE setSample NOTIFY sampleChanged)
     Q_PROPERTY(int red READ red WRITE setRed NOTIFY redChanged)
     Q_PROPERTY(int green READ green WRITE setGreen NOTIFY greenChanged)
     Q_PROPERTY(int blue READ blue WRITE setBlue NOTIFY blueChanged)
+    Q_PROPERTY(int y READ y WRITE setY NOTIFY yChanged)
+    Q_PROPERTY(int cb READ cb WRITE setCb NOTIFY cbChanged)
+    Q_PROPERTY(int cr READ cr WRITE setCr NOTIFY crChanged)
     Q_PROPERTY(int foreground READ foreground WRITE setForeground NOTIFY foregroundChanged)
     Q_PROPERTY(int background READ background WRITE setBackground NOTIFY backgroundChanged)
     Q_PROPERTY(int keyEdge READ keyEdge WRITE setKeyEdge NOTIFY keyEdgeChanged)
@@ -69,22 +73,22 @@ public:
         return m_size;
     }
 
-    float xPosition() const
+    double xPosition() const
     {
         return m_xPosition;
     }
 
-    float yPosition() const
+    double yPosition() const
     {
         return m_yPosition;
     }
 
-    float smpXPosition() const
+    double smpXPosition() const
     {
         return m_smpXPosition;
     }
 
-    float smpYPosition() const
+    double smpYPosition() const
     {
         return m_smpYPosition;
     }
@@ -124,9 +128,28 @@ public:
         return m_keyEdge;
     }
 
+    int y() const
+    {
+        return m_y;
+    }
+
+    int cb() const
+    {
+        return m_cb;
+    }
+
+    int cr() const
+    {
+        return m_cr;
+    }
+
 public slots:
     void setFillSource(int fillSource)
     {
+        if(fillSource >= m_fillSource_max)
+            fillSource = m_fillSource_max - 1;
+        if(fillSource < m_fillSource_min)
+            fillSource = m_fillSource_min;
         if (m_fillSource == fillSource)
             return;
 
@@ -145,6 +168,10 @@ public slots:
 
     void setMaskHStart(int maskHStart)
     {
+        if(maskHStart > m_maskHStart_max)
+            maskHStart = m_maskHStart_max;
+        if(maskHStart < m_maskHStart_min)
+            maskHStart = m_maskHStart_min;
         if (m_maskHStart == maskHStart)
             return;
 
@@ -154,6 +181,10 @@ public slots:
 
     void setMaskVStart(int maskVStart)
     {
+        if(maskVStart > m_maskVStart_max)
+            maskVStart = m_maskVStart_max;
+        if(maskVStart < m_maskVStart_min)
+            maskVStart = m_maskVStart_min;
         if (m_maskVStart == maskVStart)
             return;
 
@@ -163,6 +194,10 @@ public slots:
 
     void setMaskHEnd(int maskHEnd)
     {
+        if(maskHEnd > m_maskHEnd_max)
+            maskHEnd = m_maskHEnd_max;
+        if(maskHEnd < m_maskHEnd_min)
+            maskHEnd = m_maskHEnd_min;
         if (m_maskHEnd == maskHEnd)
             return;
 
@@ -172,6 +207,10 @@ public slots:
 
     void setMaskVEnd(int maskVEnd)
     {
+        if(maskVEnd > m_maskVEnd_max)
+            maskVEnd = m_maskVEnd_max;
+        if(maskVEnd < m_maskVEnd_min)
+            maskVEnd = m_maskVEnd_min;
         if (m_maskVEnd == maskVEnd)
             return;
 
@@ -197,43 +236,59 @@ public slots:
         emit sizeChanged(m_size);
     }
 
-    void setXPosition(float xPosition)
+    void setXPosition(double xPosition)
     {
-        qWarning("Floating point comparison needs context sanity check");
-        if (qFuzzyCompare(m_xPosition, xPosition))
-            return;
+        auto dst = dround(xPosition,2);
+        if(dst < m_xPosition_min)
+            dst = m_xPosition_min;
+        if(dst > m_xPosition_max)
+            dst = m_xPosition_max;
+        if(dst == m_xPosition)
+            return ;
 
-        m_xPosition = xPosition;
+        m_xPosition = dst;
         emit xPositionChanged(m_xPosition);
     }
 
-    void setYPosition(float yPosition)
+    void setYPosition(double yPosition)
     {
-        qWarning("Floating point comparison needs context sanity check");
-        if (qFuzzyCompare(m_yPosition, yPosition))
-            return;
+        auto dst = dround(yPosition,2);
+        if(dst < m_yPosition_min)
+            dst = m_yPosition_min;
+        if(dst > m_yPosition_max)
+            dst = m_yPosition_max;
+        if(dst == m_yPosition)
+            return ;
 
-        m_yPosition = yPosition;
+        m_yPosition = dst;
         emit yPositionChanged(m_yPosition);
     }
 
-    void setSmpXPosition(float smpXPosition)
+    void setSmpXPosition(double smpXPosition)
     {
-        qWarning("Floating point comparison needs context sanity check");
-        if (qFuzzyCompare(m_smpXPosition, smpXPosition))
-            return;
+        auto dst = dround(smpXPosition,2);
+        if(dst < m_smpXPosition_min)
+            dst = m_smpXPosition_min;
+        if(dst > m_smpXPosition_max)
+            dst = m_smpXPosition_max;
+        if(dst == m_smpXPosition)
+            return ;
 
-        m_smpXPosition = smpXPosition;
+        m_smpXPosition = dst;
         emit smpXPositionChanged(m_smpXPosition);
     }
 
-    void setSmpYPosition(float smpYPosition)
+    void setSmpYPosition(double smpYPosition)
     {
-        qWarning("Floating point comparison needs context sanity check");
-        if (qFuzzyCompare(m_smpYPosition, smpYPosition))
-            return;
+        auto dst = dround(smpYPosition,2);
+        if(dst < m_smpYPosition_min)
+            dst = m_smpYPosition_min;
+        if(dst > m_smpYPosition_max)
+            dst = m_smpYPosition_max;
+        if(dst == m_smpYPosition)
+            return ;
 
-        m_smpYPosition = smpYPosition;
+        m_smpYPosition = dst;
         emit smpYPositionChanged(m_smpYPosition);
     }
 
@@ -275,7 +330,11 @@ public slots:
 
     void setForeground(int foreground)
     {
-        if (m_foreground == foreground)
+        if(foreground > m_foreground_max)
+            foreground = m_foreground_max;
+        if(foreground < m_foreground_min)
+            foreground = m_foreground_min;
+        if (foreground == m_foreground)
             return;
 
         m_foreground = foreground;
@@ -284,7 +343,11 @@ public slots:
 
     void setBackground(int background)
     {
-        if (m_background == background)
+        if(background > m_background_max)
+            background = m_background_max;
+        if(background < m_background_min)
+            background = m_background_min;
+        if (background == m_background)
             return;
 
         m_background = background;
@@ -293,39 +356,87 @@ public slots:
 
     void setKeyEdge(int keyEdge)
     {
-        if (m_keyEdge == keyEdge)
+        if(keyEdge > m_keyEdge_max)
+            keyEdge = m_keyEdge_max;
+        if(keyEdge < m_keyEdge_min)
+            keyEdge = m_keyEdge_min;
+        if (keyEdge == m_keyEdge)
             return;
-
         m_keyEdge = keyEdge;
         emit keyEdgeChanged(m_keyEdge);
+    }
+
+    void setY(int y)
+    {
+        if (m_y == y)
+            return;
+
+        m_y = y;
+        emit yChanged(m_y);
+    }
+
+    void setCb(int cb)
+    {
+        if (m_cb == cb)
+            return;
+
+        m_cb = cb;
+        emit cbChanged(m_cb);
+    }
+
+    void setCr(int cr)
+    {
+        if (m_cr == cr)
+            return;
+
+        m_cr = cr;
+        emit crChanged(m_cr);
     }
 
 private:
 
 
     int m_fillSource;
+    int m_fillSource_min;
+    int m_fillSource_max;
 
     bool m_maskEnable;
 
     int m_maskHStart;
+    int m_maskHStart_min;
+    int m_maskHStart_max;
 
     int m_maskVStart;
+    int m_maskVStart_min;
+    int m_maskVStart_max;
 
     int m_maskHEnd;
+    int m_maskHEnd_min;
+    int m_maskHEnd_max;
 
     int m_maskVEnd;
+    int m_maskVEnd_min;
+    int m_maskVEnd_max;
 
     bool m_resize;
 
     QString m_size;
 
-    float m_xPosition;
+    double m_xPosition;
+    double m_xPosition_min;
+    double m_xPosition_max;
 
-    float m_yPosition;
+    double m_yPosition;
+    double m_yPosition_min;
+    double m_yPosition_max;
 
-    float m_smpXPosition;
+    double m_smpXPosition;
+    double m_smpXPosition_min;
+    double m_smpXPosition_max;
 
-    float m_smpYPosition;
+    double m_smpYPosition;
+    double m_smpYPosition_min;
+    double m_smpYPosition_max;
 
     bool m_sample;
 
@@ -336,10 +447,22 @@ private:
     int m_blue;
 
     int m_foreground;
+    int m_foreground_min;
+    int m_foreground_max;
 
     int m_background;
+    int m_background_min;
+    int m_background_max;
 
     int m_keyEdge;
+    int m_keyEdge_min;
+    int m_keyEdge_max;
+
+    int m_y;
+
+    int m_cb;
+
+    int m_cr;
 
 signals:
 
@@ -351,10 +474,10 @@ void maskHEndChanged(int maskHEnd);
 void maskVEndChanged(int maskVEnd);
 void resizeChanged(bool resize);
 void sizeChanged(QString size);
-void xPositionChanged(float xPosition);
-void yPositionChanged(float yPosition);
-void smpXPositionChanged(float smpXPosition);
-void smpYPositionChanged(float smpYPosition);
+void xPositionChanged(double xPosition);
+void yPositionChanged(double yPosition);
+void smpXPositionChanged(double smpXPosition);
+void smpYPositionChanged(double smpYPosition);
 void sampleChanged(bool sample);
 void redChanged(int red);
 void greenChanged(int green);
@@ -362,6 +485,9 @@ void blueChanged(int blue);
 void foregroundChanged(int foreground);
 void backgroundChanged(int background);
 void keyEdgeChanged(int keyEdge);
+void yChanged(int y);
+void cbChanged(int cb);
+void crChanged(int cr);
 };
 
 #endif // CHROMAPARAMETERS_H

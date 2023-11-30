@@ -92,10 +92,20 @@ void Models::init_connect()
 
 
     //chroma key
-
+    connect(this,&Models::chromaKeySampleXPosition,this,&Models::setChromaKeySampleXPosition);
+    connect(this,&Models::chromaKeySampleYPosition,this,&Models::setChromaKeySampleYPosition);
+    connect(this,&Models::chromaKeySample,this,&Models::setChromaKeySample);
+    connect(this,&Models::chromaKeyForeground,this,&Models::setChromaKeyForeground);
+    connect(this,&Models::chromaKeyBackground,this,&Models::setChromaKeyBackground);
+    connect(this,&Models::chromaKeyKeyEdge,this,&Models::setChromaKeyKeyEdge);
 
     //key pattern
-
+    connect(this,&Models::keyPatternWipePattern,this,&Models::setKeyPatternWipePattern);
+    connect(this,&Models::keyPatternWipeSize,this,&Models::setKeyPatternWipeSize);
+    connect(this,&Models::keyPatternWipeXPosition,this,&Models::setKeyPatternWipeXPosition);
+    connect(this,&Models::keyPatternWipeYPosition,this,&Models::setKeyPatternWipeYPosition);
+    connect(this,&Models::keyPatternWipeSymmetry,this,&Models::setKeyPatternWipeSymmetry);
+    connect(this,&Models::keyPatternWipeSoftness,this,&Models::setKeyPatternWipeSoftness);
 
     //pip
 
@@ -118,6 +128,7 @@ void Models::init_connect()
     connect(this,&Models::nextTransition,this,&Models::setNextTransition);
     connect(this,&Models::transitionStyle,this,&Models::setTransitionStyle);
     connect(this,&Models::previewTransition,this,&Models::setPreviewTransition);
+    connect(this,&Models::keyOnAir,this,&Models::setKeyOnAir);
 
 
 }
@@ -1105,152 +1116,6 @@ void Models::setDSKClip()
 //    fpga_write(&g_fpga,FPGA_DSK_CLIP,fpga_value);
 }
 
-void Models::setLumaKeySource()
-{
-//    u_int8_t fill_index = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_SOURCE]->third[LUMA_KEY_SOURCE_FILL]->current.toInt();
-//    u_int8_t key_index = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_SOURCE]->third[LUMA_KEY_SOURCE_KEY]->current.toInt();
-
-//    //屏蔽color1、color2
-//    if(key_index > INPUT_SOURCE_STILL2_KEY)
-//        key_index +=2;
-
-//    LumaKeySource source = {fill_index,key_index};
-//    fpga_write(&g_fpga,LUMA_SRC_SEL,*(u_int16_t*)&source);
-}
-
-void Models::setLumaKeyCtrl()
-{
-//    LumaKeyCtrl ctl;
-//    int shapedKeyOn = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_CONTROL]->third[CONTROL_SHAPED_KEY]->current.toInt();
-//    shapedKeyOn == 0?ctl.shaped = 0:ctl.shaped = 1;
-//    int InvertOn = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_CONTROL]->third[CONTROL_INVERT]->current.toInt();
-//    InvertOn == 0?ctl.invert = 0:ctl.invert = 1;
-//    int maskOn = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_MASK]->third[MASK_ENABLE]->current.toInt();
-//    maskOn == 0?ctl.mask = 0:ctl.mask = 1;
-//    int resizeOn = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_RESIZE]->third[RESIZE_RESIZE]->current.toInt();
-//    resizeOn == 0?ctl.resize = 0:ctl.resize = 1;
-
-//    //
-//    fpga_write(&g_fpga,LUMA_KEY_CTRL,*(u_int16_t*)&ctl);
-}
-
-void Models::setLumaKeyPosition(int index)
-{
-//    int fpga_value = -1;
-//    float p;
-//    int value;
-//    int per;
-//    switch (index) {
-//    case MASK_H_START:
-//        fpga_value = LUMA_KEY_MASK_HSTART;
-//        per = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_MASK]->third[MASK_H_START]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
-//        value = getMaskPositionH(p);
-//        break;
-//    case MASK_V_START:
-//        fpga_value = LUMA_KEY_MASK_VSTART;
-//        per = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_MASK]->third[MASK_V_START]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
-//        value = getMaskPositionV(p);
-//        break;
-//    case MASK_H_END:
-//        fpga_value = LUMA_KEY_MASK_HEND;
-//        per = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_MASK]->third[MASK_H_END]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
-//        value = getMaskPositionH(p);
-//        break;
-//    case MASK_V_END:
-//        fpga_value = LUMA_KEY_MASK_VEND;
-//        per = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_MASK]->third[MASK_V_END]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
-//        value = getMaskPositionV(p);
-//        break;
-//    }
-//    if(fpga_value != -1)
-//    {
-//        fpga_write(&g_fpga,fpga_value,value);
-//    }
-}
-
-void Models::setLumaKeyClip()
-{
-//    float value = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_CONTROL]->third[CONTROL_CLIP]->current.toFloat();
-//    int fpga_value = getKeyClip(value);
-//    fpga_write(&g_fpga,LUMA_KEY_CLIP,fpga_value);
-}
-
-void Models::setLumaKeyGain()
-{
-//    float value = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_CONTROL]->third[CONTROL_GAIN]->current.toFloat();
-//    int fpga_value = getKeyGain(value);
-//    fpga_write(&g_fpga,LUMA_KEY_GAIN,fpga_value);
-}
-
-void Models::setLumaKeyResizeSize()
-{
-//    int value = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_RESIZE]->third[RESIZE_SIZE]->current.toInt();
-//    int fpga_value;
-//    switch (value) {
-//    case KEY_SIZE_0_25:
-//        fpga_value = 0;
-//        break;
-//    case KEY_SIZE_0_33:
-//        fpga_value = 1;
-//        break;
-//    case KEY_SIZE_0_50:
-//        fpga_value = 2;
-//        break;
-//    }
-//    fpga_write(&g_fpga,LUMA_KEY_SIZE,fpga_value);
-}
-
-void Models::setLumaKeyResizePosition(int index)
-{
-//    int fpga_value = -1;
-//    float p;
-//    int value;
-//    switch (index) {
-//    case RESIZE_X_POSITION:
-//        fpga_value = LUMA_KEY_H_POS;
-//        p = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_RESIZE]->third[RESIZE_X_POSITION]->current.toFloat();
-//        value = getMaskPositionH(p);
-//        break;
-//    case RESIZE_Y_POSITION:
-//        fpga_value = LUMA_KEY_V_POS;
-//        p = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_RESIZE]->third[RESIZE_Y_POSITION]->current.toFloat();
-//        value = getMaskPositionV(p);
-//        break;
-//    }
-//    if(fpga_value != -1)
-//    {
-//        fpga_write(&g_fpga,fpga_value,value);
-//    }
-}
-
-void Models::setKeyPatternSource()
-{
-//    u_int8_t fill_index = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_SOURCE]->third[SOURCE_FILL]->current.toInt();
-//    fpga_write(&g_fpga,PATTERN_SRC_SEL,fill_index);
-}
-
-void Models::setKeyPatternWipePattern()
-{
-//    int pattern_index = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_PATTERN]->current.toInt();
-//    int pattern_resize = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_RESIZE]->third[RESIZE_RESIZE]->current.toInt();
-//    int pattern_mask = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_MASK]->third[MASK_ENABLE]->current.toInt();
-
-////    //send settings signal
-//    settings->setKeyPatternWipePatternIndex(pattern_index);
-//    int value = 0;
-//    pattern_resize != 0?value += 0x40:value += 0;
-//    pattern_mask != 0?value += 0x20:value += 0;
-//    value += pattern_index;
-//    fpga_write(&g_fpga,PATTERN_CTRL,value);
-}
 
 void Models::setKeyPatternResizeSize()
 {
@@ -1293,22 +1158,230 @@ void Models::setKeyPatternResizePosition(int index)
 //    }
 }
 
-void Models::setKeyPatternWipePosition()
+void Models::setKeyPatternMask(int index)
 {
-    int pattern_index = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_PATTERN]->current.toInt();
-    float posX = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_POS_X]->current.toFloat();
-    float posXMax = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_POS_X]->max.toFloat();
-    float posXMin = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_POS_X]->min.toFloat();
+//    int fpga_value = -1;
+//    float p;
+//    int value;
+//    int per;
+//    switch (index) {
+//    case MASK_H_START:
+//        fpga_value = PATTERN_MASK_HSTART;
+//        per = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_MASK]->third[MASK_H_START]->current.toInt();
+//        p = per / 100.0;
+//        p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
+//        value = getMaskPositionH(p);
+//        break;
+//    case MASK_V_START:
+//        fpga_value = PATTERN_MASK_VSTART;
+//        per = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_MASK]->third[MASK_V_START]->current.toInt();
+//        p = per / 100.0;
+//        p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
+//        value = getMaskPositionV(p);
+//        break;
+//    case MASK_H_END:
+//        fpga_value = PATTERN_MASK_HEND;
+//        per = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_MASK]->third[MASK_H_END]->current.toInt();
+//        p = per / 100.0;
+//        p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
+//        value = getMaskPositionH(p);
+//        break;
+//    case MASK_V_END:
+//        fpga_value = PATTERN_MASK_VEND;
+//        per = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_MASK]->third[MASK_V_END]->current.toInt();
+//        p = per / 100.0;
+//        p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
+//        value = getMaskPositionV(p);
+//        break;
+//    }
+
+//    if(fpga_value != -1)
+//        fpga_write(&g_fpga,fpga_value,value);
+}
+
+void Models::setChromaKeyProfile()
+{
+    float foreground = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->foreground();
+    float background = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->background();
+    float keyedge = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->keyEdge();
+
+    float bgclear = 2.1;
+    float blkgloss = 1;
+    float green_suppression_ratio = 1.5;
+    float background_clean = foreground * 1.5 + 1;
+    float key_edge = 60;
+
+    int R = settings->color5Data()[0];
+    int G = settings->color5Data()[1];
+    int B = settings->color5Data()[2];
+    int Y = settings->chromakeySMPColorYcbcr()[0];
+    int cb = settings->chromakeySMPColorYcbcr()[1];
+    int cr = settings->chromakeySMPColorYcbcr()[2];
+
+    int resize = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->resize();
+    int mask = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->maskEnable();
+    int smp = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->sample();
+    int value = 0;
+    resize > 0?value += 16:value +=0;
+    mask > 0?value += 2:value += 0;
+    smp > 0?value += 4:value +=0;
+    G > B ?value += 1:value +=0;
+//    fpga_write(&g_fpga,CHROMA_CTRL,value);
+
+    qDebug() << "bgclear:" << bgclear;
+    qDebug() << "blkgloss:" << blkgloss;
+    qDebug() << "green_suppression_ratio:" << green_suppression_ratio;
+    qDebug() << "background_clean:" << background_clean;
+    qDebug() << "key_edge:" << key_edge;
+    qDebug() << "foreground:" << foreground;
+    qDebug() << "background:" << background;
+    qDebug() << "keyedge:" << keyedge;
+
+    auto chromaKeyData = getChromaKeyData(Y,cb,cr,bgclear,blkgloss,green_suppression_ratio,background_clean,key_edge,background,keyedge);
+    chromaKeyData.print();
+
+    fpga_write(&g_fpga,CHROMA_YS,chromaKeyData.ck_ys);
+    fpga_write(&g_fpga,CHROMA_K1,chromaKeyData.k1);
+    fpga_write(&g_fpga,CHROMA_K2,chromaKeyData.k2);
+    fpga_write(&g_fpga,CHROMA_K3,chromaKeyData.k3);
+    fpga_write(&g_fpga,CHROMA_K4,chromaKeyData.k4);
+    fpga_write(&g_fpga,CHROMA_K5,chromaKeyData.k5);
+    fpga_write(&g_fpga,CHROMA_K6,chromaKeyData.k6);
+    fpga_write(&g_fpga,CHROMA_K7,chromaKeyData.k7);
+    fpga_write(&g_fpga,CHROMA_K10,chromaKeyData.k10);
+    fpga_write(&g_fpga,CHROMA_K11,chromaKeyData.k11);
+    fpga_write(&g_fpga,CHROMA_K12,chromaKeyData.k12);
+    fpga_write(&g_fpga,ADDR_MATTE_GAIN,chromaKeyData.gain);
+    fpga_write(&g_fpga,ADDR_MATTE_CLIP,chromaKeyData.clip);
+
+    value += 8;
+    fpga_write(&g_fpga,CHROMA_CTRL,value);
+//    usleep(50000);
+//    QTimer::singleShot(50,this,[=](){
+//        fpga_write(&g_fpga,CHROMA_CTRL,value - 8);
+//    });
+    fpga_write(&g_fpga,CHROMA_CTRL,value - 8);
+}
+
+void Models::setChromaKeySampleColor()
+{
+    uint16_t Y,C;
+    fpga_read(&g_fpga,CHROMA_SMP_Y,&Y);
+    fpga_read(&g_fpga,CHROMA_SMP_C,&C);
+    int R,G,B;
+    int cb = C >> 8;
+    int cr = C & 0xFF;
+    QList<int> ycbcr;
+    ycbcr << Y << cb << cr;
+    settings->setChromakeySMPColorYcbcr(ycbcr);
+    ycbcr2Rgb(Y,cb,cr,&R,&G,&B);
+    QList<int>data;
+    data << R << G << B;
+    settings->setColor5Data(data);
+}
+
+void Models::setKeyPatternWipePattern(int patternIndex)
+{
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->pattern() != patternIndex)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setPattern(patternIndex);
+        return ;
+    }
+    //    //send settings signal
+    settings->setKeyPatternWipePatternIndex(patternIndex);
+    setKeyPatternCtrl();
+    setKeyPatternPosition();
+}
+
+void Models::setKeyPatternWipeSize(int size)
+{
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->wipeSize() != size)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setWipeSize(size);
+        return ;
+    }
+
+#define PATTERN_WIPE_SIZE_PERCENT 2.55
+    size = size * PATTERN_WIPE_SIZE_PERCENT;
+    fpga_write(&g_fpga,PATTERN_WIPE_SIZE,size);
+}
+
+void Models::setKeyPatternWipeXPosition(double xPosition)
+{
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->wipeXPosition() != xPosition)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setWipeXPosition(xPosition);
+        return ;
+    }
+    setKeyPatternPosition();
+}
+
+void Models::setKeyPatternWipeYPosition(double yPosition)
+{
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->wipeYPosition() != yPosition)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setWipeYPosition(yPosition);
+        return ;
+    }
+    setKeyPatternPosition();
+}
+
+void Models::setKeyPatternWipeSymmetry(int symmetry)
+{
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->wipeSymmetry() != symmetry)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setWipeSymmetry(symmetry);
+        return ;
+    }
+    setKeyPatternPosition();
+}
+
+void Models::setKeyPatternWipeSoftness(int softness)
+{
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->wipeSoftness() != softness)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setWipeSoftness(softness);
+        return ;
+    }
+
+    float softnessCur ;
+    float softnessMax = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->softnessMax();
+    float softnessMin = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->softnessMin();
+
+    softnessCur = (softness - softnessMin) / (softnessMax - softnessMin);
+    int value = getWipeSoftness(softnessCur);
+    fpga_write(&g_fpga,PATTERN_SOFTNESS,value);
+}
+
+void Models::setKeyPatternCtrl()
+{
+    int pattern_index = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->pattern();
+    int pattern_resize = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->resize();
+    int pattern_mask = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->maskEnable();
+
+    int value = 0;
+    pattern_resize != 0?value += 0x40:value += 0;
+    pattern_mask != 0?value += 0x20:value += 0;
+    value += pattern_index;
+    fpga_write(&g_fpga,PATTERN_CTRL,value);
+}
+
+void Models::setKeyPatternPosition()
+{
+    int pattern_index = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->pattern();
+    float posX = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->wipeXPosition();
+    float posXMax = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->wipeXPositionMax();
+    float posXMin = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->wipeXPositionMin();
     posX = (posX - posXMin) / (posXMax - posXMin);
 
-    float posY = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_POS_Y]->current.toFloat();
-    float posYMax = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_POS_Y]->max.toFloat();
-    float posYMin = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_POS_Y]->min.toFloat();
+    float posY = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->wipeYPosition();
+    float posYMax = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->wipeYPositionMax();
+    float posYMin = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->wipeYPositionMin();
     posY = (posY - posYMin) / (posYMax - posYMin);
 
-    float symmertry = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_SYMMERTRY]->current.toFloat();
-    float symmertryMax = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_SYMMERTRY]->max.toFloat();
-    float symmertryMin = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_SYMMERTRY]->min.toFloat();
+    float symmertry = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->wipeSymmetry();
+    float symmertryMax = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->SymmetryMax();
+    float symmertryMin = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->SymmetryMin();
 
     symmertry = (symmertry - symmertryMin) / (symmertryMax - symmertryMin);
 
@@ -1381,299 +1454,6 @@ void Models::setKeyPatternWipePosition()
     fpga_write(&g_fpga,PATTERN_V_PARAM,pos->reg_v_param);
 
     delete pos;
-}
-
-void Models::setKeyPatternWipeSoftness()
-{
-    float softness = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_SOFTNESS]->current.toFloat();
-    float softnessMax = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_SOFTNESS]->max.toFloat();;
-    float softnessMin = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_SOFTNESS]->min.toFloat();;
-
-    softness = (softness - softnessMin) / (softnessMax - softnessMin);
-    int value = getWipeSoftness(softness);
-    fpga_write(&g_fpga,PATTERN_SOFTNESS,value);
-}
-
-void Models::setKeyPatternWipeSize()
-{
-#define PATTERN_WIPE_SIZE_PERCENT 2.55
-    int size = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_SIZE]->current.toInt();
-    size = size * PATTERN_WIPE_SIZE_PERCENT;
-    fpga_write(&g_fpga,PATTERN_WIPE_SIZE,size);
-}
-
-void Models::setKeyPatternMask(int index)
-{
-//    int fpga_value = -1;
-//    float p;
-//    int value;
-//    int per;
-//    switch (index) {
-//    case MASK_H_START:
-//        fpga_value = PATTERN_MASK_HSTART;
-//        per = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_MASK]->third[MASK_H_START]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
-//        value = getMaskPositionH(p);
-//        break;
-//    case MASK_V_START:
-//        fpga_value = PATTERN_MASK_VSTART;
-//        per = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_MASK]->third[MASK_V_START]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
-//        value = getMaskPositionV(p);
-//        break;
-//    case MASK_H_END:
-//        fpga_value = PATTERN_MASK_HEND;
-//        per = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_MASK]->third[MASK_H_END]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
-//        value = getMaskPositionH(p);
-//        break;
-//    case MASK_V_END:
-//        fpga_value = PATTERN_MASK_VEND;
-//        per = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_MASK]->third[MASK_V_END]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
-//        value = getMaskPositionV(p);
-//        break;
-//    }
-
-//    if(fpga_value != -1)
-//        fpga_write(&g_fpga,fpga_value,value);
-}
-
-void Models::setChromaKeySource()
-{
-    int fill_index = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_SOURCE]->third[CHROMA_KEY_SOURCE_FILL]->current.toInt();
-    fpga_write(&g_fpga,CHROMA_SRC_SEL,fill_index);
-}
-
-void Models::setChromaKeyCtrl()
-{
-//    int enable = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_RESIZE]->third[RESIZE_RESIZE]->current.toInt();
-//    int mask = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_MASK]->third[MASK_ENABLE]->current.toInt();
-//    int smp = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_SMP_ENABLE]->current.toInt();
-//    int value = 0;
-//    enable > 0?value += 16:value += 0;
-//    mask > 0?value += 2:value += 0;
-//    smp > 0?value += 4:value +=0;
-//    int G = settings->color5Data()[1];
-//    int B = settings->color5Data()[2];
-//    G > B ?value += 1:value +=0;
-//    fpga_write(&g_fpga,CHROMA_CTRL,value);
-}
-
-void Models::setChromaKeyCtrlSample()
-{
-//    int enable = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_RESIZE]->third[RESIZE_RESIZE]->current.toInt();
-//    int mask = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_MASK]->third[MASK_ENABLE]->current.toInt();
-//    int smp = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_SMP_ENABLE]->current.toInt();
-//    int value = 0;
-//    enable > 0?value += 16:value += 0;
-//    mask > 0?value += 2:value += 0;
-//    smp > 0?value += 4:value +=0;
-
-//    static QTimer *timer = nullptr;
-//    if(timer == nullptr)
-//    {
-//        timer = new QTimer();
-//        connect(timer,&QTimer::timeout,this,[=](){
-//            setChromaKeySampleColor();
-//        });
-//    }
-//    if(smp > 0)
-//    {
-//        timer->start(50);
-//    }
-//    else
-//    {
-//        timer->stop();
-//        //set data
-//        setChromaKeyProfile();
-//        //save color
-//        settings->saveSMPColorAndColor5ToFile();
-//    }
-
-//    int G = settings->color5Data()[1];
-//    int B = settings->color5Data()[2];
-//    G > B ?value += 1:value +=0;
-//    fpga_write(&g_fpga,CHROMA_CTRL,value);
-}
-
-void Models::setChromaKeyMask(int index)
-{
-//    int fpga_value = -1;
-//    float p;
-//    int value;
-//    int per;
-//    switch (index) {
-//    case MASK_H_START:
-//        fpga_value = CHROMA_MASK_HSTART;
-//        per = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_MASK]->third[MASK_H_START]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
-//        value = getMaskPositionH(p);
-//        break;
-//    case MASK_V_START:
-//        fpga_value = CHROMA_MASK_VSTART;
-//        per = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_MASK]->third[MASK_V_START]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
-//        value = getMaskPositionV(p);
-//        break;
-//    case MASK_H_END:
-//        fpga_value = CHROMA_MASK_HEND;
-//        per = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_MASK]->third[MASK_H_END]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
-//        value = getMaskPositionH(p);
-//        break;
-//    case MASK_V_END:
-//        fpga_value = CHROMA_MASK_VEND;
-//        per = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_MASK]->third[MASK_V_END]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
-//        value = getMaskPositionV(p);
-//        break;
-//    }
-
-//    if(fpga_value != -1)
-//        fpga_write(&g_fpga,fpga_value,value);
-}
-
-void Models::setChromaKeyResizeSize()
-{
-//    int value = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_RESIZE]->third[RESIZE_SIZE]->current.toInt();
-//    int fpga_value;
-//    switch (value) {
-//    case KEY_SIZE_0_25:
-//        fpga_value = 0;
-//        break;
-//    case KEY_SIZE_0_33:
-//        fpga_value = 1;
-//        break;
-//    case KEY_SIZE_0_50:
-//        fpga_value = 2;
-//        break;
-//    }
-//    fpga_write(&g_fpga,CHROMA_SIZE,fpga_value);
-}
-
-void Models::setChromaKeyResizePosition(int index)
-{
-//    int fpga_value = -1;
-//    float p;
-//    int value;
-//    switch (index) {
-//    case RESIZE_X_POSITION:
-//        fpga_value = CHROMA_H_POS;
-//        p = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_RESIZE]->third[RESIZE_X_POSITION]->current.toFloat();
-//        value = getMaskPositionH(p);
-//        break;
-//    case RESIZE_Y_POSITION:
-//        fpga_value = CHROMA_V_POS;
-//        p = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_RESIZE]->third[RESIZE_Y_POSITION]->current.toFloat();
-//        value = getMaskPositionV(p);
-//        break;
-//    }
-//    if(fpga_value != -1)
-//    {
-//        fpga_write(&g_fpga,fpga_value,value);
-//    }
-}
-
-void Models::setChromaKeyProfile()
-{
-//    float foreground = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_Foreground]->current.toInt() / 100.0;
-//    float background = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_Background]->current.toInt() / 100.0;
-//    float keyedge = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_KeyEdge]->current.toInt() / 100.0;
-
-//    float bgclear = 2.1;
-//    float blkgloss = 1;
-//    float green_suppression_ratio = 1.5;
-//    float background_clean = foreground * 1.5 + 1;
-//    float key_edge = 60;
-
-//    int R = settings->color5Data()[0];
-//    int G = settings->color5Data()[1];
-//    int B = settings->color5Data()[2];
-//    int Y = settings->chromakeySMPColorYcbcr()[0];
-//    int cb = settings->chromakeySMPColorYcbcr()[1];
-//    int cr = settings->chromakeySMPColorYcbcr()[2];
-
-//    int enable = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_RESIZE]->third[RESIZE_RESIZE]->current.toInt();
-//    int mask = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_MASK]->third[MASK_ENABLE]->current.toInt();
-//    int smp = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_SMP_ENABLE]->current.toInt();
-//    int value = 0;
-//    enable > 0?value += 16:value +=0;
-//    mask > 0?value += 2:value += 0;
-//    smp > 0?value += 4:value +=0;
-//    G > B ?value += 1:value +=0;
-////    fpga_write(&g_fpga,CHROMA_CTRL,value);
-
-//    qDebug() << "bgclear:" << bgclear;
-//    qDebug() << "blkgloss:" << blkgloss;
-//    qDebug() << "green_suppression_ratio:" << green_suppression_ratio;
-//    qDebug() << "background_clean:" << background_clean;
-//    qDebug() << "key_edge:" << key_edge;
-//    qDebug() << "foreground:" << foreground;
-//    qDebug() << "background:" << background;
-//    qDebug() << "keyedge:" << keyedge;
-
-//    auto chromaKeyData = getChromaKeyData(Y,cb,cr,bgclear,blkgloss,green_suppression_ratio,background_clean,key_edge,background,keyedge);
-//    chromaKeyData.print();
-
-//    fpga_write(&g_fpga,CHROMA_YS,chromaKeyData.ck_ys);
-//    fpga_write(&g_fpga,CHROMA_K1,chromaKeyData.k1);
-//    fpga_write(&g_fpga,CHROMA_K2,chromaKeyData.k2);
-//    fpga_write(&g_fpga,CHROMA_K3,chromaKeyData.k3);
-//    fpga_write(&g_fpga,CHROMA_K4,chromaKeyData.k4);
-//    fpga_write(&g_fpga,CHROMA_K5,chromaKeyData.k5);
-//    fpga_write(&g_fpga,CHROMA_K6,chromaKeyData.k6);
-//    fpga_write(&g_fpga,CHROMA_K7,chromaKeyData.k7);
-//    fpga_write(&g_fpga,CHROMA_K10,chromaKeyData.k10);
-//    fpga_write(&g_fpga,CHROMA_K11,chromaKeyData.k11);
-//    fpga_write(&g_fpga,CHROMA_K12,chromaKeyData.k12);
-//    fpga_write(&g_fpga,ADDR_MATTE_GAIN,chromaKeyData.gain);
-//    fpga_write(&g_fpga,ADDR_MATTE_CLIP,chromaKeyData.clip);
-
-//    value += 8;
-//    fpga_write(&g_fpga,CHROMA_CTRL,value);
-////    usleep(50000);
-////    QTimer::singleShot(50,this,[=](){
-////        fpga_write(&g_fpga,CHROMA_CTRL,value - 8);
-////    });
-//    fpga_write(&g_fpga,CHROMA_CTRL,value - 8);
-}
-
-void Models::setChromaKeySMPPosition()
-{
-    float x = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_SMP_X_POSITION]->current.toFloat();
-    float y = settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_SMP_Y_POSITION]->current.toFloat();
-
-    int x_value = getMaskPositionH(x);
-    int y_value = getMaskPositionV(y);
-
-    fpga_write(&g_fpga,CHROMA_SMP_X_POS,x_value);
-    fpga_write(&g_fpga,CHROMA_SMP_Y_POS,y_value);
-}
-
-void Models::setChromaKeySampleColor()
-{
-    uint16_t Y,C;
-    fpga_read(&g_fpga,CHROMA_SMP_Y,&Y);
-    fpga_read(&g_fpga,CHROMA_SMP_C,&C);
-    int R,G,B;
-    int cb = C >> 8;
-    int cr = C & 0xFF;
-    QList<int> ycbcr;
-    ycbcr << Y << cb << cr;
-    settings->setChromakeySMPColorYcbcr(ycbcr);
-    ycbcr2Rgb(Y,cb,cr,&R,&G,&B);
-    QList<int>data;
-    data << R << G << B;
-    settings->setColor5Data(data);
 }
 
 void Models::setPipSource()
@@ -2775,70 +2555,75 @@ void Models::setButtonBrightness()
 
 void Models::setPgmIndex(int index)
 {
-    qDebug() << "setPgmIndex:" << index;
-//    QSwitcher::set_softkey(KEY_LED_PGM_1 + index,1);
+    if(profile->mixEffectBlocks()->mixEffectBlock()->program()->input() != index)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->program()->setInput(index);
+        return ;
+    }
     keyClick(KEY_LED_PGM_1 + index);
 }
 
 void Models::setPvwIndex(int index)
 {
-    qDebug() << "setPvwIndex:" << index;
-//    QSwitcher::set_softkey(KEY_LED_PVW_1 + index,1);
+    if(profile->mixEffectBlocks()->mixEffectBlock()->preview()->input() != index)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->preview()->setInput(index);
+        return ;
+    }
     keyClick(KEY_LED_PVW_1 + index);
 }
 
 void Models::setNextTransition(QString source)
 {
+    if(profile->mixEffectBlocks()->mixEffectBlock()->nextTransition()->selection() != source)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->nextTransition()->setSelection(source);
+        return ;
+    }
+
     int index = NextTransition::selectionStringToValue(source);
     if(index & 0x4){
-        //bkgd open
         if(QSwitcher::get_led(KEY_LED_BKGD) == SWITCHER_LED_OFF){
-//            QSwitcher::set_softkey(KEY_LED_BKGD,1);
             keyClick(KEY_LED_BKGD);
-            qDebug() << "bkgd open";
         }
     }else{
         //bkgd close
         if(QSwitcher::get_led(KEY_LED_BKGD) != SWITCHER_LED_OFF){
-//            QSwitcher::set_softkey(KEY_LED_BKGD,1);
             keyClick(KEY_LED_BKGD);
-            qDebug() << "bkgd close";
         }
     }
     if(index & 0x2){
         //dsk open
         if(QSwitcher::get_led(KEY_LED_DSK) == SWITCHER_LED_OFF){
-//            QSwitcher::set_softkey(KEY_LED_DSK,1);
             keyClick(KEY_LED_DSK);
-            qDebug() << "dsk open";
         }
     }else{
         //dsk close
         if(QSwitcher::get_led(KEY_LED_DSK) != SWITCHER_LED_OFF){
-//            QSwitcher::set_softkey(KEY_LED_DSK,1);
             keyClick(KEY_LED_DSK);
-            qDebug() << "dsk close";
         }
     }
     if(index & 0x1){
         //key open
         if(QSwitcher::get_led(KEY_LED_KEY) == SWITCHER_LED_OFF){
-//            QSwitcher::set_softkey(KEY_LED_KEY,1);
             keyClick(KEY_LED_KEY);
-            qDebug() << "key open";
         }
     }else{
         //key close
         if(QSwitcher::get_led(KEY_LED_KEY) != SWITCHER_LED_OFF){
-//            QSwitcher::set_softkey(KEY_LED_KEY,1);
             keyClick(KEY_LED_KEY);
-            qDebug() << "key close";
         }
     }
 }
 
 void Models::setTransitionStyle(QString style)
 {
+    if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->style() != style)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->setStyle(style);
+        return ;
+    }
+
     int value = TransitionStyle::styleStringToIndex(style);
     if(value == TransitionStyle::MIX)
     {
@@ -2884,6 +2669,12 @@ void Models::setAutoTransition()
 
 void Models::setPreviewTransition(bool status)
 {
+    if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->previewTransition() != status)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->setPreviewTransition(status);
+        return ;
+    }
+
     if(status && QSwitcher::get_led(KEY_LED_TRANS_PREVIEW) == SWITCHER_LED_OFF)
     {
         keyClick(KEY_LED_TRANS_PREVIEW);
@@ -2949,16 +2740,17 @@ void Models::setTransitionSource(int source)
     }
 }
 
-void Models::setKeyOnAir(int status)
+void Models::setKeyOnAir(bool status)
 {
-    if(status == SWITCHER_LED_OFF && QSwitcher::get_led(KEY_LED_KEY_ON_AIR) != SWITCHER_LED_OFF){
-//        QSwitcher::set_softkey(KEY_LED_KEY_ON_AIR,1);
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->key()->onAir() != status)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->key()->setOnAir(status);
+        return ;
+    }
+    if(!status && QSwitcher::get_led(KEY_LED_KEY_ON_AIR) != SWITCHER_LED_OFF){
         keyClick(KEY_LED_KEY_ON_AIR);
-        qDebug() << "setKeyOnAir!!!" ;
-    }else if(status != SWITCHER_LED_OFF && QSwitcher::get_led(KEY_LED_KEY_ON_AIR) == SWITCHER_LED_OFF){
-//        QSwitcher::set_softkey(KEY_LED_KEY_ON_AIR,1);
+    }else if(status && QSwitcher::get_led(KEY_LED_KEY_ON_AIR) == SWITCHER_LED_OFF){
         keyClick(KEY_LED_KEY_ON_AIR);
-        qDebug() << "setKeyOnAir!!!" ;
     }
 }
 
@@ -3529,76 +3321,434 @@ void Models::setSuperSourceColor(int colorIndex)
     }
 }
 
-void Models::setKeyType(int type)
+void Models::setKeyType(QString type)
 {
-//    if(!settings->setMenuValue(MENU_FIRST_KEY_TYPE,KEY_TYPE_TYPE,TYPE_TYPE,type))
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->key()->type() != type)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->key()->setType(type);
         return ;
-    fpga_write(&g_fpga,UPSTREAM_KEY_TYPE,type);
+    }
+    fpga_write(&g_fpga,UPSTREAM_KEY_TYPE,Key::typeStringToIndex(type));
 }
 
 void Models::setKeyMaskEnable(int key, int enable)
 {
-//    int second = 0;
-//    int third = 0;
-//    int fpga_value = -1;
-//    switch (key) {
-//    case MENU_FIRST_LUMA_KEY:
-//        second = LUMA_KEY_MASK;
-//        third = LUMA_KEY_MASK_ENABLE;
-//        break;
-//    case MENU_FIRST_CHROMA_KEY:
-//        second = CHROMA_KEY_MASK;
-//        third = CHROMA_KEY_MASK_ENABLE;
-//        break;
-//    case MENU_FIRST_KEY_PATTERN:
-//        second = PATTERN_MASK;
-//        third = KEY_PATTERN_MASK_ENABLE;
-//        break;
-//    case MENU_FIRST_PIP:
-//        second = PIP_MASK;
-//        third = PIP_MASK_ENABLE;
-//        break;
-//    }
+    switch (key) {
+    case Keys::LUMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->maskEnable() != enable)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->setMaskEnable(enable);
+            return ;
+        }
+        break;
+    case Keys::CHROMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->maskEnable() != enable)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setMaskEnable(enable);
+            return ;
+        }
+        break;
+    case Keys::PATTERN:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->maskEnable() != enable)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setMaskEnable(enable);
+            return ;
+        }
+        break;
+    case Keys::PIP:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->maskEnable() != enable)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setMaskEnable(enable);
+            return ;
+        }
+        break;
+    default:
+        return ;
+    }
+
+    setKeyCtrl(key);
 }
 
 void Models::setKeyMaskHStart(int key, int hStart)
 {
+    int fpga_value = -1;
+    float p;
+    int value;
+    int per;
+    switch (key) {
+    case Keys::LUMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->maskHStart() != hStart)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->setMaskHStart(hStart);
+            return ;
+        }
+        fpga_value = LUMA_KEY_MASK_HSTART;
+        break;
+    case Keys::CHROMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->maskHStart() != hStart)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setMaskHStart(hStart);
+            return ;
+        }
+        fpga_value = CHROMA_MASK_HSTART;
+        break;
+    case Keys::PATTERN:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->maskHStart() != hStart)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setMaskHStart(hStart);
+            return ;
+        }
+        fpga_value = PATTERN_MASK_HSTART;
+        break;
+    case Keys::PIP:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->maskHStart() != hStart)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setMaskHStart(hStart);
+            return ;
+        }
+        fpga_value = PIP_MASK_HSTART;
+        break;
+    default:
+        return ;
+    }
+    per = hStart;
+    p = per / 100.0;
+    p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
+    value = getMaskPositionH(p);
 
+    if(fpga_value != -1)
+        fpga_write(&g_fpga,fpga_value,value);
 }
 
 void Models::setKeyMaskVStart(int key, int vStart)
 {
+    int fpga_value = -1;
+    float p;
+    int value;
+    int per;
+    switch (key) {
+    case Keys::LUMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->maskVStart() != vStart)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->setMaskVStart(vStart);
+            return ;
+        }
+        fpga_value = LUMA_KEY_MASK_VSTART;
+        break;
+    case Keys::CHROMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->maskVStart() != vStart)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setMaskVStart(vStart);
+            return ;
+        }
+        fpga_value = CHROMA_MASK_VSTART;
+        break;
+    case Keys::PATTERN:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->maskVStart() != vStart)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setMaskVStart(vStart);
+            return ;
+        }
+        fpga_value = PATTERN_MASK_VSTART;
+        break;
+    case Keys::PIP:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->maskVStart() != vStart)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setMaskVStart(vStart);
+            return ;
+        }
+        fpga_value = PIP_MASK_VSTART;
+        break;
+    default:
+        return ;
+    }
+    per = vStart;
+    p = per / 100.0;
+    p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
+    value = getMaskPositionV(p);
 
+    if(fpga_value != -1)
+        fpga_write(&g_fpga,fpga_value,value);
 }
 
 void Models::setKeyMaskHEnd(int key, int hEnd)
 {
+    int fpga_value = -1;
+    float p;
+    int value;
+    int per;
+    switch (key) {
+    case Keys::LUMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->maskHEnd() != hEnd)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->setMaskHEnd(hEnd);
+            return ;
+        }
+        fpga_value = LUMA_KEY_MASK_HEND;
+        break;
+    case Keys::CHROMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->maskHEnd() != hEnd)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setMaskHEnd(hEnd);
+            return ;
+        }
+        fpga_value = CHROMA_MASK_HEND;
+        break;
+    case Keys::PATTERN:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->maskHEnd() != hEnd)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setMaskHEnd(hEnd);
+            return ;
+        }
+        fpga_value = PATTERN_MASK_HEND;
+        break;
+    case Keys::PIP:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->maskHEnd() != hEnd)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setMaskHEnd(hEnd);
+            return ;
+        }
+        fpga_value = PIP_MASK_HEND;
+        break;
+    default:
+        return ;
+    }
+    per = hEnd;
+    p = per / 100.0;
+    p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
+    value = getMaskPositionH(p);
 
+    if(fpga_value != -1)
+        fpga_write(&g_fpga,fpga_value,value);
 }
 
 void Models::setKeyMaskVEnd(int key, int vEnd)
 {
+    int fpga_value = -1;
+    float p;
+    int value;
+    int per;
+    switch (key) {
+    case Keys::LUMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->maskVEnd() != vEnd)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->setMaskVEnd(vEnd);
+            return ;
+        }
+        fpga_value = LUMA_KEY_MASK_VEND;
+        break;
+    case Keys::CHROMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->maskVEnd() != vEnd)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setMaskVEnd(vEnd);
+            return ;
+        }
+        fpga_value = CHROMA_MASK_VEND;
+        break;
+    case Keys::PATTERN:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->maskVEnd() != vEnd)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setMaskVEnd(vEnd);
+            return ;
+        }
+        fpga_value = PATTERN_MASK_VEND;
+        break;
+    case Keys::PIP:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->maskVEnd() != vEnd)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setMaskVEnd(vEnd);
+            return ;
+        }
+        fpga_value = PIP_MASK_VEND;
+        break;
+    default:
+        return ;
+    }
+    per = vEnd;
+    p = per / 100.0;
+    p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
+    value = getMaskPositionV(p);
 
+    if(fpga_value != -1)
+        fpga_write(&g_fpga,fpga_value,value);
 }
 
-void Models::setKeyResize(int key, int resize)
+void Models::setKeyResize(int key, bool resize)
 {
-
+    switch (key) {
+    case Keys::LUMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->resize() != resize)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->setResize(resize);
+            return ;
+        }
+        break;
+    case Keys::CHROMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->resize() != resize)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setResize(resize);
+            return ;
+        }
+        break;
+    case Keys::PATTERN:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->resize() != resize)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setResize(resize);
+            return ;
+        }
+        break;
+    default:
+        return ;
+    }
+    setKeyCtrl(key);
 }
 
-void Models::setKeySize(int key, int size)
+void Models::setKeySize(int key, QString size)
 {
-
+    int fpga_par = -1;
+    int fpga_value = -1;
+    switch (key) {
+    case Keys::LUMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->size() != size)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->setSize(size);
+            return ;
+        }
+        fpga_par = LUMA_KEY_SIZE;
+        break;
+    case Keys::CHROMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->size() != size)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setSize(size);
+            return ;
+        }
+        fpga_par = CHROMA_SIZE;
+        break;
+    case Keys::PATTERN:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->size() != size)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setSize(size);
+            return ;
+        }
+        fpga_par = PATTERN_SIZE;
+        break;
+    case Keys::PIP:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->size() != size)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setSize(size);
+            return ;
+        }
+        fpga_par = PIP_SIZE;
+        break;
+    default:
+        return ;
+    }
+    int value = Keys::sizeStringToIndex(size);
+    switch (value) {
+    case Keys::KEY_SIZE_0_25:
+        fpga_value = 0;
+        break;
+    case Keys::KEY_SIZE_0_33:
+        fpga_value = 1;
+        break;
+    case Keys::KEY_SIZE_0_50:
+        fpga_value = 2;
+        break;
+    }
+    if(fpga_par != -1 && fpga_value != -1)
+        fpga_write(&g_fpga,fpga_par,fpga_value);
 }
 
-void Models::setKeyXPosition(int key, float xPosition)
+void Models::setKeyXPosition(int key, double xPosition)
 {
+    int fpga_value = -1;
+    switch (key) {
+    case Keys::LUMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->xPosition() != xPosition)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->setXPosition(xPosition);
+            return ;
+        }
+        fpga_value = LUMA_KEY_H_POS;
+        break;
+    case Keys::CHROMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->xPosition() != xPosition)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setXPosition(xPosition);
+            return ;
+        }
+        fpga_value = CHROMA_H_POS;
+        break;
+    case Keys::PATTERN:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->xPosition() != xPosition)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setXPosition(xPosition);
+            return ;
+        }
+        fpga_value = PATTERN_H_POS;
+        break;
+    case Keys::PIP:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->xPosition() != xPosition)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setXPosition(xPosition);
+            return ;
+        }
+        fpga_value = PIP_H_POS;
+        break;
+    default:
+        return ;
+    }
+    int value;
+    value = getMaskPositionH(xPosition);
 
+    if(fpga_value != -1)
+        fpga_write(&g_fpga,fpga_value,value);
 }
 
-void Models::setKeyYPosition(int key, float yPosition)
+void Models::setKeyYPosition(int key, double yPosition)
 {
+    int fpga_value = -1;
+    switch (key) {
+    case Keys::LUMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->yPosition() != yPosition)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->setYPosition(yPosition);
+            return ;
+        }
+        fpga_value = LUMA_KEY_V_POS;
+        break;
+    case Keys::CHROMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->yPosition() != yPosition)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setYPosition(yPosition);
+            return ;
+        }
+        fpga_value = CHROMA_V_POS;
+        break;
+    case Keys::PATTERN:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->yPosition() != yPosition)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setYPosition(yPosition);
+            return ;
+        }
+        fpga_value = PATTERN_V_POS;
+        break;
+    case Keys::PIP:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->yPosition() != yPosition)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setYPosition(yPosition);
+            return ;
+        }
+        fpga_value = PIP_V_POS;
+        break;
+    default:
+        return ;
+    }
+    int value;
+    value = getMaskPositionV(yPosition);
 
+    if(fpga_value != -1)
+        fpga_write(&g_fpga,fpga_value,value);
 }
 
 void Models::setKeySourceFill(int key, int fill)
@@ -3607,49 +3757,60 @@ void Models::setKeySourceFill(int key, int fill)
     u_int16_t value = fill;;
     u_int8_t key_index = 0;
     LumaKeySource source = {};
-    int second = 0;
-    int third = 0;
     switch (key) {
-    case MENU_FIRST_LUMA_KEY:
-        second = LUMA_KEY_SOURCE;
-        third = LUMA_KEY_SOURCE_FILL;
+    case Keys::LUMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->fillSource() != fill)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->setFillSource(fill);
+            return ;
+        }
         fpga_value = LUMA_SRC_SEL;
-        key_index = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_SOURCE]->third[LUMA_KEY_SOURCE_KEY]->current.toInt();
+        key_index = profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->keySource();
         //屏蔽color1、color2
         if(key_index > INPUT_SOURCE_STILL2_KEY)
             key_index +=2;
         source = {(u_int8_t)fill,key_index};
         value = *(u_int16_t*)&source;
         break;
-    case MENU_FIRST_CHROMA_KEY:
-        second = CHROMA_KEY_SOURCE;
-        third = CHROMA_KEY_SOURCE_FILL;
+    case Keys::CHROMA:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->fillSource() != fill)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setFillSource(fill);
+            return ;
+        }
         fpga_value = CHROMA_SRC_SEL;
         break;
-    case MENU_FIRST_KEY_PATTERN:
-        second = PATTERN_SOURCE;
-        third = KEY_PATTERN_SOURCE_FILL;
+    case Keys::PATTERN:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->fillSource() != fill)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->setFillSource(fill);
+            return ;
+        }
         fpga_value = PATTERN_SRC_SEL;
         break;
-    case MENU_FIRST_PIP:
-        second = PIP_SOURCE;
-        third = PIP_SOURCE_FILL;
+    case Keys::PIP:
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->fillSource() != fill)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setFillSource(fill);
+            return ;
+        }
         fpga_value = PIP_SRC_SEL;
         break;
     }
-//    if(!settings->setMenuValue(key,second,third,fill))
-        return ;
     if(fpga_value != -1)
         fpga_write(&g_fpga,fpga_value,value);
 }
 
 void Models::setKeySourceKey(int key, int sourceKey)
 {
-    if(key == MENU_FIRST_LUMA_KEY)
+    if(key == Keys::LUMA)
     {
-    //    if(!settings->setMenuValue(key,LUMA_KEY_SOURCE,LUMA_KEY_SOURCE_KEY,sourceKey))
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->keySource() != sourceKey)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->setKeySource(sourceKey);
             return ;
-        int fill = settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_SOURCE]->third[LUMA_KEY_SOURCE_FILL]->current.toInt();
+        }
+        int fill = profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->fillSource();
         LumaKeySource source = {(u_int8_t)fill,(u_int8_t)sourceKey};
         fpga_write(&g_fpga,LUMA_SRC_SEL,*(u_int16_t*)&source);
     }
@@ -3657,46 +3818,292 @@ void Models::setKeySourceKey(int key, int sourceKey)
 
 void Models::setKeyClip(int key, int clip)
 {
-
+    if(key == Keys::LUMA)
+    {
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->clip() != clip)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->setClip(clip);
+            return ;
+        }
+        int fpga_value = getKeyClip(clip);
+        fpga_write(&g_fpga,LUMA_KEY_CLIP,fpga_value);
+    }
 }
 
 void Models::setKeyGain(int key, int gain)
 {
-
+    if(key == Keys::LUMA)
+    {
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->gain() != gain)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->setGain(gain);
+            return ;
+        }
+        int fpga_value = getKeyGain(gain);
+        fpga_write(&g_fpga,LUMA_KEY_GAIN,fpga_value);
+    }
 }
 
-void Models::setKeyShapedKey(int key, int enable)
+void Models::setKeyShapedKey(int key, bool enable)
+{
+    if(key == Keys::LUMA)
+    {
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->shapedKey() != enable)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->setShapedKey(enable);
+            return ;
+        }
+        setKeyCtrl(key);
+    }
+}
+
+void Models::setKeyInvert(int key, bool enable)
+{
+    if(key == Keys::LUMA)
+    {
+        if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->invert() != enable)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->setInvert(enable);
+            return ;
+        }
+        setKeyCtrl(key);
+    }
+}
+
+void Models::setKeyCtrl(int key)
+{
+    switch (key) {
+    case Keys::LUMA:
+    {
+        LumaKeyCtrl ctl;
+        int shapedKeyOn = profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->shapedKey()?1:0;
+        shapedKeyOn == 0?ctl.shaped = 0:ctl.shaped = 1;
+        int InvertOn = profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->invert()?1:0;
+        InvertOn == 0?ctl.invert = 0:ctl.invert = 1;
+        int maskOn = profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->maskEnable()?1:0;;
+        maskOn == 0?ctl.mask = 0:ctl.mask = 1;
+        int resizeOn = profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->resize()?1:0;
+        resizeOn == 0?ctl.resize = 0:ctl.resize = 1;
+        fpga_write(&g_fpga,LUMA_KEY_CTRL,*(u_int16_t*)&ctl);
+    }
+        break;
+    case Keys::CHROMA:
+    {
+        int enable = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->resize()?1:0;
+        int mask = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->maskEnable()?1:0;;
+        int smp = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->sample()?1:0;
+        int value = 0;
+        enable > 0?value += 16:value += 0;
+        mask > 0?value += 2:value += 0;
+        smp > 0?value += 4:value +=0;
+        int G = settings->color5Data()[1];
+        int B = settings->color5Data()[2];
+        G > B ?value += 1:value +=0;
+        fpga_write(&g_fpga,CHROMA_CTRL,value);
+    }
+        break;
+    case Keys::PATTERN:
+    {
+        int pattern_index = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->pattern()?1:0;
+        int pattern_resize = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->resize()?1:0;
+        int pattern_mask = profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->maskEnable()?1:0;
+        settings->setKeyPatternWipePatternIndex(pattern_index);
+        int value = 0;
+        pattern_resize != 0?value += 0x40:value += 0;
+        pattern_mask != 0?value += 0x20:value += 0;
+        value += pattern_index;
+        fpga_write(&g_fpga,PATTERN_CTRL,value);
+    }
+        break;
+    case Keys::PIP:
+    {
+        int value = 0;
+        int mask = profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->maskEnable()?1:0;
+        int board = profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->borderEnable()?1:0;
+        mask > 0 ?value += 1:value += 0;
+        board > 0 ?value += 2:value += 0;
+        fpga_write(&g_fpga,PIP_CTRL,value);
+    }
+        break;
+    }
+}
+
+void Models::setChromaKeySampleXPosition(double xPosition)
+{
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->smpXPosition() != xPosition)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setSmpXPosition(xPosition);
+        return ;
+    }
+    double y = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->smpYPosition();
+    int x_value = getMaskPositionH(xPosition);
+    int y_value = getMaskPositionV(y);
+    fpga_write(&g_fpga,CHROMA_SMP_X_POS,x_value);
+    fpga_write(&g_fpga,CHROMA_SMP_Y_POS,y_value);
+}
+
+void Models::setChromaKeySampleYPosition(double yPosition)
+{
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->smpYPosition() != yPosition)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setSmpYPosition(yPosition);
+        return ;
+    }
+    double x = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->smpXPosition();
+    int x_value = getMaskPositionH(x);
+    int y_value = getMaskPositionV(yPosition);
+    fpga_write(&g_fpga,CHROMA_SMP_X_POS,x_value);
+    fpga_write(&g_fpga,CHROMA_SMP_Y_POS,y_value);
+}
+
+void Models::setChromaKeySample(bool enable)
+{
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->sample() != enable)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setSample(enable);
+        return ;
+    }
+
+    int resize = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->resize();
+    int mask = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->maskEnable();
+    int smp = enable;
+    int value = 0;
+    resize > 0?value += 16:value += 0;
+    mask > 0?value += 2:value += 0;
+    smp > 0?value += 4:value +=0;
+
+    static QTimer *timer = nullptr;
+    if(timer == nullptr)
+    {
+        timer = new QTimer();
+        connect(timer,&QTimer::timeout,this,[=](){
+            setChromaKeySampleColor();
+        });
+    }
+    if(smp > 0)
+    {
+        timer->start(50);
+    }
+    else
+    {
+        timer->stop();
+        //set data
+        setChromaKeyProfile();
+        //save color
+//        settings->saveSMPColorAndColor5ToFile();
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setRed(settings->color5Data()[0]);
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setGreen(settings->color5Data()[1]);
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setBlue(settings->color5Data()[2]);
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setY(settings->chromakeySMPColorYcbcr()[0]);
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setCb(settings->chromakeySMPColorYcbcr()[1]);
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setCr(settings->chromakeySMPColorYcbcr()[2]);
+    }
+    int G = settings->color5Data()[1];
+    int B = settings->color5Data()[2];
+    G > B ?value += 1:value +=0;
+    fpga_write(&g_fpga,CHROMA_CTRL,value);
+}
+
+void Models::setChromaKeySampleColorHue(int hue)
 {
 
 }
 
-void Models::setKeyInvert(int key, int enable)
+void Models::setChromaKeySampleColorSaturation(int saturation)
 {
 
+}
+
+void Models::setChromaKeySampleColorBrightness(int brightness)
+{
+
+}
+
+void Models::setChromaKeyForeground(int foreground)
+{
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->foreground() != foreground)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setForeground(foreground);
+        return ;
+    }
+    setChromaKeyProfile();
+}
+
+void Models::setChromaKeyBackground(int background)
+{
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->background() != background)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setBackground(background);
+        return ;
+    }
+    setChromaKeyProfile();
+}
+
+void Models::setChromaKeyKeyEdge(int keyEdge)
+{
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->keyEdge() != keyEdge)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setKeyEdge(keyEdge);
+        return ;
+    }
+    setChromaKeyProfile();
 }
 
 void Models::setTransitionRate(int index, float rate)
 {
-    int outFormat = getOutFormat( 0 /*settings->getOutFormat()*/);
+    //////////////
+    int outFormat = getOutFormat(0/*settings->getOutFormat()*/);
     int fpga_value = getFTBRateValue(rate,outFormat);
     int fpga_par = -1;
     if(index == TransitionStyle::MIX)
+    {
         fpga_par = MIX_RATE;
+        if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->mixParameters()->rate() != rate)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->mixParameters()->setRate(rate);
+            return ;
+        }
+    }
     else if(index == TransitionStyle::DIP)
+    {
         fpga_par = DIP_RATE;
+        if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters()->rate() != rate)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters()->setRate(rate);
+            return ;
+        }
+    }
     else if(index == TransitionStyle::WIPE)
+    {
         fpga_par = WIPE_RATE;
+        if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->rate() != rate)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setRate(rate);
+            return ;
+        }
+    }
     if(fpga_par != -1)
         fpga_write(&g_fpga,fpga_par,fpga_value);
 }
 
 void Models::setTransitionDipSource(int source)
 {
+    if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters()->input() != source)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters()->setInput(source);
+        return ;
+    }
     fpga_write(&g_fpga,DIP_SRC_SEL,source);
 }
 
 void Models::setTransitionWipePattern(int pattern)
 {
+    if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->pattern() != pattern)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setPattern(pattern);
+        return ;
+    }
+
     bool derection = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->reverseDirection();
 //    //send settings signal
     settings->setTransitionWipePatternIndex(pattern);
@@ -3706,188 +4113,36 @@ void Models::setTransitionWipePattern(int pattern)
     fpga_write(&g_fpga,WIPE_PATTERN,value);
 }
 
-void Models::setTransitionWipeXPosition(float xPosition)
+void Models::setTransitionWipeXPosition(double xPosition)
 {
-    int pattern_index = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->pattern();
-    float posX = xPosition;
-    float posXMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPositionMax();
-    float posXMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPositionMin();
-    posX = (posX - posXMin) / (posXMax - posXMin);
-
-    float posY = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPosition();
-    float posYMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPositionMax();
-    float posYMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPositionMin();
-    posY = (posY - posYMin) / (posYMax - posYMin);
-
-    float symmertry = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetry();
-    float symmertryMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetryMax();
-    float symmertryMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetryMin();
-
-    symmertry = (symmertry - symmertryMin) / (symmertryMax - symmertryMin);
-
-    qDebug() << "posX:" << posX << "   posY:" << posY << "   symmertry:" << symmertry;
-
-    //抽象对象
-    TransitionWipePositionClass *pos;
-
-    switch (pattern_index) {
-    case LEFT_TO_RIGHT:
-        pos = new TransitionWipePositionLeftToRight(posX,posY,symmertry);
-        break;
-    case TOP_TO_BOTTOM:
-        pos = new TransitionWipePositionTopToBottom(posX,posY,symmertry);
-        break;
-    case VERTICAL_CENTER:
-        pos = new TransitionWipePositionVerticalCenter(posX,posY,symmertry);
-        break;
-    case HORIZONTAL_CENTER:
-        pos = new TransitionWipePositionHorizontalCenter(posX,posY,symmertry);
-        break;
-    case CROSS_CENTER:
-        pos = new TransitionWipePositionCrossCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_CENTER:
-        pos = new TransitionWipePositionSquareCenter(posX,posY,symmertry);
-        break;
-    case DIAMOND:
-        pos = new TransitionWipePositionDiamond(posX,posY,symmertry);
-        break;
-    case CIRCLE:
-        pos = new TransitionWipePositionCircle(posX,posY,symmertry);
-        break;
-    case SQUARE_TOP_LEFT:
-        pos = new TransitionWipePositionSquareTopLeft(posX,posY,symmertry);
-        break;
-    case SQUARE_TOP_RIGHT:
-        pos = new TransitionWipePositionSquareTopRight(posX,posY,symmertry);
-        break;
-    case SQUARE_BOTTOM_RIGHT:
-        pos = new TransitionWipePositionSquareBottomRight(posX,posY,symmertry);
-        break;
-    case SQUARE_BOTTOM_LEFT:
-        pos = new TransitionWipePositionSquareBottomLeft(posX,posY,symmertry);
-        break;
-    case SQUARE_TOP_CENTER:
-        pos = new TransitionWipePositionSquareTopCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_LEFT_CENTER:
-        pos = new TransitionWipePositionSquareLeftCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_BOTTOM_CENTER:
-        pos = new TransitionWipePositionSquareBottomCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_RIGHT_CENTER:
-        pos = new TransitionWipePositionSquareRightCentert(posX,posY,symmertry);
-        break;
-    case BOTTOM_RIGHT_ANGLE:
-        pos = new TransitionWipePositionBottomRightAngle(posX,posY,symmertry);
-        break;
-    case BOTTOM_LEFT_ANGLE:
-        pos = new TransitionWipePositionBottomLeftAngle(posX,posY,symmertry);
-        break;
+    if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPosition() != xPosition)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setXPosition(xPosition);
+        return ;
     }
 
-    pos->checkout();
-    fpga_write(&g_fpga,PATTERN_POSX,pos->reg_h_pos);
-    fpga_write(&g_fpga,PATTERN_POSY,pos->reg_v_pos);
-    fpga_write(&g_fpga,PATTERN_H_PARAM,pos->reg_h_param);
-    fpga_write(&g_fpga,PATTERN_V_PARAM,pos->reg_v_param);
-
-    delete pos;
+    setTransitionWipePosition();
 }
 
-void Models::setTransitionWipeYPosition(float yPosition)
+void Models::setTransitionWipeYPosition(double yPosition)
 {
-    int pattern_index = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->pattern();
-    float posX = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPosition();
-    float posXMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPositionMax();
-    float posXMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPositionMin();
-    posX = (posX - posXMin) / (posXMax - posXMin);
-
-    float posY = yPosition;
-    float posYMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPositionMax();
-    float posYMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPositionMin();
-    posY = (posY - posYMin) / (posYMax - posYMin);
-
-    float symmertry = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetry();
-    float symmertryMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetryMax();
-    float symmertryMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetryMin();
-
-    symmertry = (symmertry - symmertryMin) / (symmertryMax - symmertryMin);
-
-    qDebug() << "posX:" << posX << "   posY:" << posY << "   symmertry:" << symmertry;
-
-    //抽象对象
-    TransitionWipePositionClass *pos;
-
-    switch (pattern_index) {
-    case LEFT_TO_RIGHT:
-        pos = new TransitionWipePositionLeftToRight(posX,posY,symmertry);
-        break;
-    case TOP_TO_BOTTOM:
-        pos = new TransitionWipePositionTopToBottom(posX,posY,symmertry);
-        break;
-    case VERTICAL_CENTER:
-        pos = new TransitionWipePositionVerticalCenter(posX,posY,symmertry);
-        break;
-    case HORIZONTAL_CENTER:
-        pos = new TransitionWipePositionHorizontalCenter(posX,posY,symmertry);
-        break;
-    case CROSS_CENTER:
-        pos = new TransitionWipePositionCrossCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_CENTER:
-        pos = new TransitionWipePositionSquareCenter(posX,posY,symmertry);
-        break;
-    case DIAMOND:
-        pos = new TransitionWipePositionDiamond(posX,posY,symmertry);
-        break;
-    case CIRCLE:
-        pos = new TransitionWipePositionCircle(posX,posY,symmertry);
-        break;
-    case SQUARE_TOP_LEFT:
-        pos = new TransitionWipePositionSquareTopLeft(posX,posY,symmertry);
-        break;
-    case SQUARE_TOP_RIGHT:
-        pos = new TransitionWipePositionSquareTopRight(posX,posY,symmertry);
-        break;
-    case SQUARE_BOTTOM_RIGHT:
-        pos = new TransitionWipePositionSquareBottomRight(posX,posY,symmertry);
-        break;
-    case SQUARE_BOTTOM_LEFT:
-        pos = new TransitionWipePositionSquareBottomLeft(posX,posY,symmertry);
-        break;
-    case SQUARE_TOP_CENTER:
-        pos = new TransitionWipePositionSquareTopCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_LEFT_CENTER:
-        pos = new TransitionWipePositionSquareLeftCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_BOTTOM_CENTER:
-        pos = new TransitionWipePositionSquareBottomCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_RIGHT_CENTER:
-        pos = new TransitionWipePositionSquareRightCentert(posX,posY,symmertry);
-        break;
-    case BOTTOM_RIGHT_ANGLE:
-        pos = new TransitionWipePositionBottomRightAngle(posX,posY,symmertry);
-        break;
-    case BOTTOM_LEFT_ANGLE:
-        pos = new TransitionWipePositionBottomLeftAngle(posX,posY,symmertry);
-        break;
+    if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPosition() != yPosition)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setYPosition(yPosition);
+        return ;
     }
 
-    pos->checkout();
-    fpga_write(&g_fpga,PATTERN_POSX,pos->reg_h_pos);
-    fpga_write(&g_fpga,PATTERN_POSY,pos->reg_v_pos);
-    fpga_write(&g_fpga,PATTERN_H_PARAM,pos->reg_h_param);
-    fpga_write(&g_fpga,PATTERN_V_PARAM,pos->reg_v_param);
-
-    delete pos;
+    setTransitionWipePosition();
 }
 
 void Models::setTransitionWipeDirection(bool direction)
 {
+    if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->reverseDirection() != direction)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setReverseDirection(direction);
+        return ;
+    }
+
     int pattern = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->pattern();
 //    //send settings signal
 //    settings->setTransitionWipePatternIndex(pattern);
@@ -3899,96 +4154,23 @@ void Models::setTransitionWipeDirection(bool direction)
 
 void Models::setTransitionWipeSymmetry(int symmetry)
 {
-    int pattern_index = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->pattern();
-    float posX = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPosition();
-    float posXMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPositionMax();
-    float posXMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPositionMin();
-    posX = (posX - posXMin) / (posXMax - posXMin);
-
-    float posY = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPosition();
-    float posYMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPositionMax();
-    float posYMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPositionMin();
-    posY = (posY - posYMin) / (posYMax - posYMin);
-
-    float symmertry = symmetry;
-    float symmertryMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetryMax();
-    float symmertryMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetryMin();
-
-    symmertry = (symmertry - symmertryMin) / (symmertryMax - symmertryMin);
-
-    qDebug() << "posX:" << posX << "   posY:" << posY << "   symmertry:" << symmertry;
-
-    //抽象对象
-    TransitionWipePositionClass *pos;
-
-    switch (pattern_index) {
-    case LEFT_TO_RIGHT:
-        pos = new TransitionWipePositionLeftToRight(posX,posY,symmertry);
-        break;
-    case TOP_TO_BOTTOM:
-        pos = new TransitionWipePositionTopToBottom(posX,posY,symmertry);
-        break;
-    case VERTICAL_CENTER:
-        pos = new TransitionWipePositionVerticalCenter(posX,posY,symmertry);
-        break;
-    case HORIZONTAL_CENTER:
-        pos = new TransitionWipePositionHorizontalCenter(posX,posY,symmertry);
-        break;
-    case CROSS_CENTER:
-        pos = new TransitionWipePositionCrossCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_CENTER:
-        pos = new TransitionWipePositionSquareCenter(posX,posY,symmertry);
-        break;
-    case DIAMOND:
-        pos = new TransitionWipePositionDiamond(posX,posY,symmertry);
-        break;
-    case CIRCLE:
-        pos = new TransitionWipePositionCircle(posX,posY,symmertry);
-        break;
-    case SQUARE_TOP_LEFT:
-        pos = new TransitionWipePositionSquareTopLeft(posX,posY,symmertry);
-        break;
-    case SQUARE_TOP_RIGHT:
-        pos = new TransitionWipePositionSquareTopRight(posX,posY,symmertry);
-        break;
-    case SQUARE_BOTTOM_RIGHT:
-        pos = new TransitionWipePositionSquareBottomRight(posX,posY,symmertry);
-        break;
-    case SQUARE_BOTTOM_LEFT:
-        pos = new TransitionWipePositionSquareBottomLeft(posX,posY,symmertry);
-        break;
-    case SQUARE_TOP_CENTER:
-        pos = new TransitionWipePositionSquareTopCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_LEFT_CENTER:
-        pos = new TransitionWipePositionSquareLeftCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_BOTTOM_CENTER:
-        pos = new TransitionWipePositionSquareBottomCenter(posX,posY,symmertry);
-        break;
-    case SQUARE_RIGHT_CENTER:
-        pos = new TransitionWipePositionSquareRightCentert(posX,posY,symmertry);
-        break;
-    case BOTTOM_RIGHT_ANGLE:
-        pos = new TransitionWipePositionBottomRightAngle(posX,posY,symmertry);
-        break;
-    case BOTTOM_LEFT_ANGLE:
-        pos = new TransitionWipePositionBottomLeftAngle(posX,posY,symmertry);
-        break;
+    if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetry() != symmetry)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setSymmetry(symmetry);
+        return ;
     }
 
-    pos->checkout();
-    fpga_write(&g_fpga,PATTERN_POSX,pos->reg_h_pos);
-    fpga_write(&g_fpga,PATTERN_POSY,pos->reg_v_pos);
-    fpga_write(&g_fpga,PATTERN_H_PARAM,pos->reg_h_param);
-    fpga_write(&g_fpga,PATTERN_V_PARAM,pos->reg_v_param);
-
-    delete pos;
+    setTransitionWipePosition();
 }
 
 void Models::setTransitionWipeSoftness(int softness)
 {
+    if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->softness() != softness)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setSoftness(softness);
+        return ;
+    }
+
     float f_softness = softness;
     float softnessMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->softnessMax();
     float softnessMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->softnessMin();
@@ -4000,6 +4182,12 @@ void Models::setTransitionWipeSoftness(int softness)
 
 void Models::setTransitionWipeBorder(int border)
 {
+    if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->border() != border)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setBorder(border);
+        return ;
+    }
+
     float softness = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->softness();
     float softnessMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->softnessMax();
     float softnessMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->softnessMin();
@@ -4018,7 +4206,102 @@ void Models::setTransitionWipeBorder(int border)
 
 void Models::setTransitionWipeFillSource(int fillSource)
 {
+    if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->fillSource() != fillSource)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->setFillSource(fillSource);
+        return ;
+    }
     fpga_write(&g_fpga,WIPE_BOARD_SRC_SEL,fillSource);
+}
+
+void Models::setTransitionWipePosition()
+{
+    int pattern_index = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->pattern();
+    float posX = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPosition();
+    float posXMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPositionMax();
+    float posXMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->xPositionMin();
+    posX = (posX - posXMin) / (posXMax - posXMin);
+
+    float posY = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPosition();
+    float posYMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPositionMax();
+    float posYMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->yPositionMin();
+    posY = (posY - posYMin) / (posYMax - posYMin);
+
+    float symmertry = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetry();
+    float symmertryMax = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetryMax();
+    float symmertryMin = profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters()->symmetryMin();
+
+    symmertry = (symmertry - symmertryMin) / (symmertryMax - symmertryMin);
+
+    qDebug() << "posX:" << posX << "   posY:" << posY << "   symmertry:" << symmertry;
+
+    //抽象对象
+    TransitionWipePositionClass *pos;
+
+    switch (pattern_index) {
+    case LEFT_TO_RIGHT:
+        pos = new TransitionWipePositionLeftToRight(posX,posY,symmertry);
+        break;
+    case TOP_TO_BOTTOM:
+        pos = new TransitionWipePositionTopToBottom(posX,posY,symmertry);
+        break;
+    case VERTICAL_CENTER:
+        pos = new TransitionWipePositionVerticalCenter(posX,posY,symmertry);
+        break;
+    case HORIZONTAL_CENTER:
+        pos = new TransitionWipePositionHorizontalCenter(posX,posY,symmertry);
+        break;
+    case CROSS_CENTER:
+        pos = new TransitionWipePositionCrossCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_CENTER:
+        pos = new TransitionWipePositionSquareCenter(posX,posY,symmertry);
+        break;
+    case DIAMOND:
+        pos = new TransitionWipePositionDiamond(posX,posY,symmertry);
+        break;
+    case CIRCLE:
+        pos = new TransitionWipePositionCircle(posX,posY,symmertry);
+        break;
+    case SQUARE_TOP_LEFT:
+        pos = new TransitionWipePositionSquareTopLeft(posX,posY,symmertry);
+        break;
+    case SQUARE_TOP_RIGHT:
+        pos = new TransitionWipePositionSquareTopRight(posX,posY,symmertry);
+        break;
+    case SQUARE_BOTTOM_RIGHT:
+        pos = new TransitionWipePositionSquareBottomRight(posX,posY,symmertry);
+        break;
+    case SQUARE_BOTTOM_LEFT:
+        pos = new TransitionWipePositionSquareBottomLeft(posX,posY,symmertry);
+        break;
+    case SQUARE_TOP_CENTER:
+        pos = new TransitionWipePositionSquareTopCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_LEFT_CENTER:
+        pos = new TransitionWipePositionSquareLeftCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_BOTTOM_CENTER:
+        pos = new TransitionWipePositionSquareBottomCenter(posX,posY,symmertry);
+        break;
+    case SQUARE_RIGHT_CENTER:
+        pos = new TransitionWipePositionSquareRightCentert(posX,posY,symmertry);
+        break;
+    case BOTTOM_RIGHT_ANGLE:
+        pos = new TransitionWipePositionBottomRightAngle(posX,posY,symmertry);
+        break;
+    case BOTTOM_LEFT_ANGLE:
+        pos = new TransitionWipePositionBottomLeftAngle(posX,posY,symmertry);
+        break;
+    }
+
+    pos->checkout();
+    fpga_write(&g_fpga,PATTERN_POSX,pos->reg_h_pos);
+    fpga_write(&g_fpga,PATTERN_POSY,pos->reg_v_pos);
+    fpga_write(&g_fpga,PATTERN_H_PARAM,pos->reg_h_param);
+    fpga_write(&g_fpga,PATTERN_V_PARAM,pos->reg_v_param);
+
+    delete pos;
 }
 
 

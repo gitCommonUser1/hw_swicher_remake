@@ -6,7 +6,7 @@
 class Key : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int  index READ index WRITE setIndex NOTIFY indexChanged)
+    Q_PROPERTY(int  index READ index WRITE setIndex FINAL)
     Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(bool onAir READ onAir WRITE setOnAir NOTIFY onAirChanged)
 
@@ -14,7 +14,6 @@ public:
     explicit Key(QObject *parent = nullptr);
     static QString typeIndexToString(int index);
     static int typeStringToIndex(QString str);
-
 
     int index() const
     {

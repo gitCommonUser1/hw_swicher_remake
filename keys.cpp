@@ -27,10 +27,12 @@ Keys::Keys(QObject *parent) : QObject(parent)
 
 QString Keys::sizeIndexToString(int index)
 {
-    if(index >= 0 && index < sizeList.size())
-        return sizeList[index];
-    else
-        return sizeList[0];
+    if(index < 0)
+        index = 0;
+    if(index >= sizeList.size())
+        index = sizeList.size() - 1;
+
+    return sizeList[index];
 }
 
 int Keys::sizeStringToIndex(QString size)

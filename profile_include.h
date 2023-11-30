@@ -18,6 +18,7 @@
 #include "patternparameters.h"
 #include "pipparameters.h"
 #include "keys.h"
+#include "key.h"
 #include "fadetoblack.h"
 
 #endif // PROFILE_INCLUDE_H
