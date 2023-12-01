@@ -757,6 +757,121 @@ void Control::connect_profile()
         models->macroInvoke(&Models::keyYPosition,Keys::PATTERN,yPosition);
         settings->setMenuValue(MENU_FIRST_KEY_PATTERN,PATTERN_RESIZE,KEY_PATTERN_RESIZE_Y_POSITION,yPosition);
     });
+    //pIPParameters
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::fillSourceChanged,this,[=](int fillSource){
+        models->macroInvoke(&Models::keySourceFill,Keys::PIP,fillSource);
+        settings->setMenuValue(MENU_FIRST_PIP,PIP_SOURCE,PIP_SOURCE_FILL,fillSource);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::sizeChanged,this,[=](QString size){
+        models->macroInvoke(&Models::keySize,Keys::PIP,size);
+        settings->setMenuValue(MENU_FIRST_PIP,PIP_SIZE_POSITION,PIP_SIZE_SIZE,size);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::xPositionChanged,this,[=](double xPosition){
+        models->macroInvoke(&Models::keyXPosition,Keys::PIP,xPosition);
+        settings->setMenuValue(MENU_FIRST_PIP,PIP_SIZE_POSITION,PIP_SIZE_X_POSITION,xPosition);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::yPositionChanged,this,[=](double yPosition){
+        models->macroInvoke(&Models::keyYPosition,Keys::PIP,yPosition);
+        settings->setMenuValue(MENU_FIRST_PIP,PIP_SIZE_POSITION,PIP_SIZE_Y_POSITION,yPosition);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::maskEnableChanged,this,[=](bool maskEnable){
+        models->macroInvoke(&Models::keyMaskEnable,Keys::PIP,maskEnable);
+        settings->setMenuValue(MENU_FIRST_PIP,PIP_MASK,PIP_MASK_ENABLE,maskEnable?1:0);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::maskHStartChanged,this,[=](int maskHStart){
+        models->macroInvoke(&Models::keyMaskHStart,Keys::PIP,maskHStart);
+        settings->setMenuValue(MENU_FIRST_PIP,PIP_MASK,PIP_MASK_H_START,maskHStart);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::maskVStartChanged,this,[=](int maskVStart){
+        models->macroInvoke(&Models::keyMaskVStart,Keys::PIP,maskVStart);
+        settings->setMenuValue(MENU_FIRST_PIP,PIP_MASK,PIP_MASK_V_START,maskVStart);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::maskHEndChanged,this,[=](int maskHEnd){
+        models->macroInvoke(&Models::keyMaskHEnd,Keys::PIP,maskHEnd);
+        settings->setMenuValue(MENU_FIRST_PIP,PIP_MASK,PIP_MASK_H_END,maskHEnd);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::maskVEndChanged,this,[=](int maskVEnd){
+        models->macroInvoke(&Models::keyMaskVEnd,Keys::PIP,maskVEnd);
+        settings->setMenuValue(MENU_FIRST_PIP,PIP_MASK,PIP_MASK_V_END,maskVEnd);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::borderEnableChanged,this,[=](bool borderEnable){
+        models->macroInvoke(&Models::pipBorderEnable,borderEnable);
+        settings->setMenuValue(MENU_FIRST_PIP,PIP_BOARD,PIP_BORDER_ENABLE,borderEnable);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::borderWidthChanged,this,[=](int borderWidth){
+        models->macroInvoke(&Models::pipBorderWidth,borderWidth);
+        settings->setMenuValue(MENU_FIRST_PIP,PIP_BOARD,PIP_BORDER_WIDTH,borderWidth);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::borderColorHueChanged,this,[=](int borderColorHue){
+        models->macroInvoke(&Models::pipBorderColorHue,borderColorHue);
+        settings->setMenuValue(MENU_FIRST_PIP,PIP_COLOR,PIP_COLOR_HUE,borderColorHue);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::borderColorSaturationChanged,this,[=](int borderColorSaturation){
+        models->macroInvoke(&Models::pipBorderColorSaturation,borderColorSaturation);
+        settings->setMenuValue(MENU_FIRST_PIP,PIP_COLOR,PIP_COLOR_SATURATION,borderColorSaturation);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::borderColorBrightnessChanged,this,[=](int borderColorBrightness){
+        models->macroInvoke(&Models::pipBorderColorBrightness,borderColorBrightness);
+        settings->setMenuValue(MENU_FIRST_PIP,PIP_COLOR,PIP_COLOR_BRIGHTNESS,borderColorBrightness);
+    });
+    //FadeToBlack
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->ftb(),&FadeToBlack::rateChanged,this,[=](double rate){
+        models->macroInvoke(&Models::ftbRate,rate);
+        settings->setMenuValue(MENU_FIRST_FTB,MENU_SECOND_FTB_RATE,FTB_RATE_RATE,rate);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->ftb(),&FadeToBlack::afvChanged,this,[=](bool afv){
+        models->macroInvoke(&Models::ftbAfv,afv);
+        settings->setMenuValue(MENU_FIRST_FTB,MENU_SECOND_FTB_AUDIO,FTB_AUDIO_AFV,afv);
+    });
+    //DownstreamKeys
+    connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::fillSourceChanged,this,[=](int fillSource){
+        models->macroInvoke(&Models::dskSourceFill,fillSource);
+        settings->setMenuValue(MENU_FIRST_DSK,DSK_SOURCE,DSK_SOURCE_FILL,fillSource);
+    });
+    connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::keySourceChanged,this,[=](int keySource){
+        models->macroInvoke(&Models::dskSourceKey,keySource);
+        settings->setMenuValue(MENU_FIRST_DSK,DSK_SOURCE,DSK_SOURCE_KEY,keySource);
+    });
+    connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::maskEnableChanged,this,[=](bool maskEnable){
+        models->macroInvoke(&Models::dskMaskEnable,maskEnable);
+        settings->setMenuValue(MENU_FIRST_DSK,DSK_MASK,DSK_MASK_ENABLE,maskEnable);
+    });
+    connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::maskHStartChanged,this,[=](int maskHStart){
+        models->macroInvoke(&Models::dskMaskHStart,maskHStart);
+        settings->setMenuValue(MENU_FIRST_DSK,DSK_MASK,DSK_MASK_H_START,maskHStart);
+    });
+    connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::maskVStartChanged,this,[=](int maskVStart){
+        models->macroInvoke(&Models::dskMaskVStart,maskVStart);
+        settings->setMenuValue(MENU_FIRST_DSK,DSK_MASK,DSK_MASK_V_START,maskVStart);
+    });
+    connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::maskHEndChanged,this,[=](int maskHEnd){
+        models->macroInvoke(&Models::dskMaskHEnd,maskHEnd);
+        settings->setMenuValue(MENU_FIRST_DSK,DSK_MASK,DSK_MASK_H_END,maskHEnd);
+    });
+    connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::maskVEndChanged,this,[=](int maskVEnd){
+        models->macroInvoke(&Models::dskMaskVEnd,maskVEnd);
+        settings->setMenuValue(MENU_FIRST_DSK,DSK_MASK,DSK_MASK_V_END,maskVEnd);
+    });
+    connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::clipChanged,this,[=](int clip){
+        models->macroInvoke(&Models::dskClip,clip);
+        settings->setMenuValue(MENU_FIRST_DSK,DSK_CONTROL,DSK_CONTROL_CLIP,clip);
+    });
+    connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::gainChanged,this,[=](int gain){
+        models->macroInvoke(&Models::dskGain,gain);
+        settings->setMenuValue(MENU_FIRST_DSK,DSK_CONTROL,DSK_CONTROL_GAIN,gain);
+    });
+    connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::invertChanged,this,[=](bool invert){
+        models->macroInvoke(&Models::dskInvert,invert);
+        settings->setMenuValue(MENU_FIRST_DSK,DSK_CONTROL,DSK_CONTROL_INVERT,invert);
+    });
+    connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::shapedKeyChanged,this,[=](bool shapedKey){
+        models->macroInvoke(&Models::dskShapedKey,shapedKey);
+        settings->setMenuValue(MENU_FIRST_DSK,DSK_CONTROL,DSK_CONTROL_SHAPED_KEY,shapedKey);
+    });
+    connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::rateChanged,this,[=](double rate){
+        models->macroInvoke(&Models::dskRate,rate);
+        settings->setMenuValue(MENU_FIRST_DSK,DSK_RATE,DSK_RATE_RATE,rate);
+    });
 
     //第二遍读取，防止发多次信号
     profile->read(profile);

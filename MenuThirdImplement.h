@@ -722,14 +722,12 @@ public:
 
 
 
-
-
-
 class MenuThirdPipSource:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::keySourceFill),MENU_FIRST_PIP,value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setFillSource(value.toInt());
     }
 };
 
@@ -738,6 +736,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::keySize),MENU_FIRST_PIP,value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setSize(Keys::sizeIndexToString(value.toInt()));
     }
 };
 
@@ -746,6 +745,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::keyXPosition),MENU_FIRST_PIP,value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setXPosition(value.toDouble());
     }
 };
 
@@ -754,6 +754,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::keyYPosition),MENU_FIRST_PIP,value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setYPosition(value.toDouble());
     }
 };
 
@@ -764,6 +765,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::keyMaskEnable),MENU_FIRST_PIP,value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setMaskEnable(value > 0);
     }
 };
 
@@ -772,6 +774,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::keyMaskHStart),MENU_FIRST_PIP,value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setMaskHStart(value.toInt());
     }
 };
 
@@ -781,6 +784,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::keyMaskVStart),MENU_FIRST_PIP,value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setMaskVStart(value.toInt());
     }
 };
 
@@ -790,6 +794,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::keyMaskHEnd),MENU_FIRST_PIP,value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setMaskHEnd(value.toInt());
     }
 };
 
@@ -799,6 +804,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::keyMaskVEnd),MENU_FIRST_PIP,value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setMaskVEnd(value.toInt());
     }
 };
 
@@ -810,6 +816,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::pipBorderEnable),value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setBorderEnable(value > 0);
     }
 };
 
@@ -818,6 +825,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::pipBorderWidth),value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setBorderWidth(value.toInt());
     }
 };
 
@@ -826,6 +834,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::pipBorderColorHue),value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setBorderColorHue(value.toInt());
     }
 };
 
@@ -834,6 +843,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::pipBorderColorSaturation),value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setBorderColorSaturation(value.toInt());
     }
 };
 
@@ -842,6 +852,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::pipBorderColorBrightness),value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setBorderColorBrightness(value.toInt());
     }
 };
 
@@ -962,6 +973,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::dskSourceFill),value.toInt());
+        profile->downstreamKeys()->downstreamKey()->setFillSource(value.toInt());
     }
 };
 
@@ -970,6 +982,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::dskSourceKey),value.toInt());
+        profile->downstreamKeys()->downstreamKey()->setKeySource(value.toInt());
     }
 };
 
@@ -978,6 +991,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::dskMaskEnable),value.toInt());
+        profile->downstreamKeys()->downstreamKey()->setMaskEnable(value > 0);
     }
 };
 
@@ -986,6 +1000,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::dskMaskHStart),value.toInt());
+        profile->downstreamKeys()->downstreamKey()->setMaskHStart(value.toInt());
     }
 };
 
@@ -994,6 +1009,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::dskMaskVStart),value.toInt());
+        profile->downstreamKeys()->downstreamKey()->setMaskVStart(value.toInt());
     }
 };
 
@@ -1002,6 +1018,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::dskMaskHEnd),value.toInt());
+        profile->downstreamKeys()->downstreamKey()->setMaskHEnd(value.toInt());
     }
 };
 
@@ -1010,6 +1027,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::dskMaskVEnd),value.toInt());
+        profile->downstreamKeys()->downstreamKey()->setMaskVEnd(value.toInt());
     }
 };
 
@@ -1018,6 +1036,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::dskShapedKey),value.toInt());
+        profile->downstreamKeys()->downstreamKey()->setShapedKey(value > 0);
     }
 };
 
@@ -1026,6 +1045,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::dskClip),value.toInt());
+        profile->downstreamKeys()->downstreamKey()->setClip(value.toInt());
     }
 };
 
@@ -1034,6 +1054,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::dskGain),value.toInt());
+        profile->downstreamKeys()->downstreamKey()->setGain(value.toInt());
     }
 };
 
@@ -1042,6 +1063,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::dskInvert),value.toInt());
+        profile->downstreamKeys()->downstreamKey()->setInvert(value > 0);
     }
 };
 
@@ -1050,6 +1072,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::dskRate),value.toInt());
+        profile->downstreamKeys()->downstreamKey()->setRate(value.toDouble());
     }
 };
 
@@ -1059,6 +1082,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::ftbRate),value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->ftb()->setRate(value.toDouble());
     }
 };
 
@@ -1068,6 +1092,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::ftbAfv),value.toInt());
+        profile->mixEffectBlocks()->mixEffectBlock()->ftb()->setAfv(value > 0);
     }
 };
 

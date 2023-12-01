@@ -108,6 +108,11 @@ void Models::init_connect()
     connect(this,&Models::keyPatternWipeSoftness,this,&Models::setKeyPatternWipeSoftness);
 
     //pip
+    connect(this,&Models::pipBorderEnable,this,&Models::setPipBorderEnable);
+    connect(this,&Models::pipBorderWidth,this,&Models::setPipBorderWidth);
+    connect(this,&Models::pipBorderColorHue,this,&Models::setPipBorderColorHue);
+    connect(this,&Models::pipBorderColorSaturation,this,&Models::setPipBorderColorSaturation);
+    connect(this,&Models::pipBorderColorBrightness,this,&Models::setPipBorderColorBrightness);
 
 
     //transition
@@ -120,6 +125,24 @@ void Models::init_connect()
     connect(this,&Models::transitionWipeSoftness,this,&Models::setTransitionWipeSoftness);
     connect(this,&Models::transitionWipeBorder,this,&Models::setTransitionWipeBorder);
     connect(this,&Models::transitionWipeFillSource,this,&Models::setTransitionWipeFillSource);
+
+    //dsk
+    connect(this,&Models::dskSourceFill,this,&Models::setDskSourceFill);
+    connect(this,&Models::dskSourceKey,this,&Models::setDskSourceKey);
+    connect(this,&Models::dskMaskEnable,this,&Models::setDskMaskEnable);
+    connect(this,&Models::dskMaskHStart,this,&Models::setDskMaskHStart);
+    connect(this,&Models::dskMaskVStart,this,&Models::setDskMaskVStart);
+    connect(this,&Models::dskMaskHEnd,this,&Models::setDskMaskHEnd);
+    connect(this,&Models::dskMaskVEnd,this,&Models::setDskMaskVEnd);
+    connect(this,&Models::dskShapedKey,this,&Models::setDskShapedKey);
+    connect(this,&Models::dskClip,this,&Models::setDskClip);
+    connect(this,&Models::dskGain,this,&Models::setDskGain);
+    connect(this,&Models::dskInvert,this,&Models::setDskInvert);
+    connect(this,&Models::dskRate,this,&Models::setDskRate);
+
+    //ftb
+    connect(this,&Models::ftbRate,this,&Models::setFtbRate);
+    connect(this,&Models::ftbAfv,this,&Models::setFtbAfv);
 
 
     //button status
@@ -1020,185 +1043,6 @@ void Models::setAudioMonitorSource()
     fpga_write(&g_fpga,MON_SOURCE,index);
 }
 
-void Models::setDSKSource()
-{
-//    DSKSource dsk;
-//    int fill = settings->listFirst()[MENU_FIRST_DSK]->second[DSK_SOURCE]->third[SOURCE_FILL]->current.toInt();
-//    int key = settings->listFirst()[MENU_FIRST_DSK]->second[DSK_SOURCE]->third[SOURCE_KEY]->current.toInt();
-
-//    //屏蔽color1、color2
-//    if(key > INPUT_SOURCE_STILL2_KEY)
-//        key +=2;
-
-//    dsk.fill = fill;
-//    dsk.key = key;
-
-//    fpga_write(&g_fpga,FPGA_DSK_SRC_SEL,*(uint16_t*)&dsk);
-}
-
-void Models::setDSKMask(int index)
-{
-//    int fpga_value = -1;
-//    float p;
-//    int value;
-//    int per;
-//    switch (index) {
-//    case MASK_H_START:
-//        fpga_value = FPGA_DSK_MASK_HSTART;
-//        per = settings->listFirst()[MENU_FIRST_DSK]->second[DSK_MASK]->third[MASK_H_START]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
-//        value = getMaskPositionH(p);
-//        break;
-//    case MASK_V_START:
-//        fpga_value = FPGA_DSK_MASK_VSTART;
-//        per = settings->listFirst()[MENU_FIRST_DSK]->second[DSK_MASK]->third[MASK_V_START]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
-//        value = getMaskPositionV(p);
-//        break;
-//    case MASK_H_END:
-//        fpga_value = FPGA_DSK_MASK_HEND;
-//        per = settings->listFirst()[MENU_FIRST_DSK]->second[DSK_MASK]->third[MASK_H_END]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
-//        value = getMaskPositionH(p);
-//        break;
-//    case MASK_V_END:
-//        fpga_value = FPGA_DSK_MASK_VEND;
-//        per = settings->listFirst()[MENU_FIRST_DSK]->second[DSK_MASK]->third[MASK_V_END]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
-//        value = getMaskPositionV(p);
-//        break;
-//    }
-
-//    if(fpga_value != -1)
-//        fpga_write(&g_fpga,fpga_value,value);
-}
-
-void Models::setDSKRate()
-{
-    float value = settings->listFirst()[MENU_FIRST_DSK]->second[DSK_RATE]->third[DSK_RATE_RATE]->current.toFloat();
-    int outFormat = getOutFormat(settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt());
-    int fpga_value = getFTBRateValue(value,outFormat);
-    fpga_write(&g_fpga,FPGA_DSK_RATE,fpga_value);
-}
-
-void Models::setDSKCtrl()
-{
-//    int value = 0;
-//    int mask = settings->listFirst()[MENU_FIRST_DSK]->second[DSK_MASK]->third[MASK_ENABLE]->current.toInt();
-//    int shaped = settings->listFirst()[MENU_FIRST_DSK]->second[DSK_CONTROL]->third[CONTROL_SHAPED_KEY]->current.toInt();
-//    int invert = settings->listFirst()[MENU_FIRST_DSK]->second[DSK_CONTROL]->third[CONTROL_INVERT]->current.toInt();
-
-//    if(mask != 0)
-//        value += 4;
-//    if(shaped != 0)
-//        value += 1;
-//    if(invert != 0)
-//        value += 2;
-
-//    fpga_write(&g_fpga,FPGA_DSK_CTRL,value);
-}
-
-void Models::setDSKGain()
-{
-//    float value = settings->listFirst()[MENU_FIRST_DSK]->second[DSK_CONTROL]->third[CONTROL_GAIN]->current.toFloat();
-//    int fpga_value = getKeyGain(value);
-//    fpga_write(&g_fpga,FPGA_DSK_GAIN,fpga_value);
-}
-
-void Models::setDSKClip()
-{
-//    float value = settings->listFirst()[MENU_FIRST_DSK]->second[DSK_CONTROL]->third[CONTROL_CLIP]->current.toFloat();
-//    int fpga_value = getKeyClip(value);
-//    fpga_write(&g_fpga,FPGA_DSK_CLIP,fpga_value);
-}
-
-
-void Models::setKeyPatternResizeSize()
-{
-//    int value = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_RESIZE]->third[RESIZE_SIZE]->current.toInt();
-//    int fpga_value;
-//    switch (value) {
-//    case KEY_SIZE_0_25:
-//        fpga_value = 0;
-//        break;
-//    case KEY_SIZE_0_33:
-//        fpga_value = 1;
-//        break;
-//    case KEY_SIZE_0_50:
-//        fpga_value = 2;
-//        break;
-//    }
-//    fpga_write(&g_fpga,PATTERN_SIZE,fpga_value);
-}
-
-void Models::setKeyPatternResizePosition(int index)
-{
-//    int fpga_value = -1;
-//    float p;
-//    int value;
-//    switch (index) {
-//    case RESIZE_X_POSITION:
-//        fpga_value = PATTERN_H_POS;
-//        p = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_RESIZE]->third[RESIZE_X_POSITION]->current.toFloat();
-//        value = getMaskPositionH(p);
-//        break;
-//    case RESIZE_Y_POSITION:
-//        fpga_value = PATTERN_V_POS;
-//        p = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_RESIZE]->third[RESIZE_Y_POSITION]->current.toFloat();
-//        value = getMaskPositionV(p);
-//        break;
-//    }
-//    if(fpga_value != -1)
-//    {
-//        fpga_write(&g_fpga,fpga_value,value);
-//    }
-}
-
-void Models::setKeyPatternMask(int index)
-{
-//    int fpga_value = -1;
-//    float p;
-//    int value;
-//    int per;
-//    switch (index) {
-//    case MASK_H_START:
-//        fpga_value = PATTERN_MASK_HSTART;
-//        per = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_MASK]->third[MASK_H_START]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
-//        value = getMaskPositionH(p);
-//        break;
-//    case MASK_V_START:
-//        fpga_value = PATTERN_MASK_VSTART;
-//        per = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_MASK]->third[MASK_V_START]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
-//        value = getMaskPositionV(p);
-//        break;
-//    case MASK_H_END:
-//        fpga_value = PATTERN_MASK_HEND;
-//        per = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_MASK]->third[MASK_H_END]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
-//        value = getMaskPositionH(p);
-//        break;
-//    case MASK_V_END:
-//        fpga_value = PATTERN_MASK_VEND;
-//        per = settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_MASK]->third[MASK_V_END]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
-//        value = getMaskPositionV(p);
-//        break;
-//    }
-
-//    if(fpga_value != -1)
-//        fpga_write(&g_fpga,fpga_value,value);
-}
-
 void Models::setChromaKeyProfile()
 {
     float foreground = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->foreground();
@@ -1456,141 +1300,70 @@ void Models::setKeyPatternPosition()
     delete pos;
 }
 
-void Models::setPipSource()
+void Models::setPipBorderEnable(bool enable)
 {
-    int index = settings->listFirst()[MENU_FIRST_PIP]->second[PIP_SOURCE]->third[PIP_SOURCE_FILL]->current.toInt();
-    fpga_write(&g_fpga,PIP_SRC_SEL,index);
-}
-
-void Models::setPipSize()
-{
-    int value = settings->listFirst()[MENU_FIRST_PIP]->second[PIP_SIZE_POSITION]->third[PIP_SIZE_SIZE]->current.toInt();
-    int fpga_value;
-    switch (value) {
-    case KEY_SIZE_0_25:
-        fpga_value = 0;
-        break;
-    case KEY_SIZE_0_33:
-        fpga_value = 1;
-        break;
-    case KEY_SIZE_0_50:
-        fpga_value = 2;
-        break;
-    }
-    fpga_write(&g_fpga,PIP_SIZE,fpga_value);
-}
-
-void Models::setPipCtrl()
-{
-//    int value = 0;
-//    int mask = settings->listFirst()[MENU_FIRST_PIP]->second[PIP_MASK]->third[MASK_ENABLE]->current.toInt();
-//    int board = settings->listFirst()[MENU_FIRST_PIP]->second[PIP_BOARD]->third[PIP_BOARD_ENABLE]->current.toInt();
-//    mask > 0 ?value += 1:value += 0;
-//    board > 0 ?value += 2:value += 0;
-
-//    fpga_write(&g_fpga,PIP_CTRL,value);
-}
-
-void Models::setPipPosition(int index)
-{
-    int fpga_value = -1;
-    float p;
-    int value;
-    switch (index) {
-    case PIP_SIZE_X_POSITION:
-        fpga_value = PIP_H_POS;
-        p = settings->listFirst()[MENU_FIRST_PIP]->second[PIP_SIZE_POSITION]->third[PIP_SIZE_X_POSITION]->current.toFloat();
-        value = getMaskPositionH(p);
-        break;
-    case PIP_SIZE_Y_POSITION:
-        fpga_value = PIP_V_POS;
-        p = settings->listFirst()[MENU_FIRST_PIP]->second[PIP_SIZE_POSITION]->third[PIP_SIZE_Y_POSITION]->current.toFloat();
-        value = getMaskPositionV(p);
-        break;
-    }
-    if(fpga_value != -1)
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->borderEnable() != enable)
     {
-        fpga_write(&g_fpga,fpga_value,value);
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setBorderEnable(enable);
+        return ;
     }
+    setKeyCtrl(Keys::PIP);
 }
 
-void Models::setPipMask(int index)
+void Models::setPipBorderWidth(int width)
 {
-//    int fpga_value = -1;
-//    float p;
-//    int value;
-//    int per;
-//    switch (index) {
-//    case MASK_H_START:
-//        fpga_value = PIP_MASK_HSTART;
-//        per = settings->listFirst()[MENU_FIRST_PIP]->second[PIP_MASK]->third[MASK_H_START]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
-//        value = getMaskPositionH(p);
-//        break;
-//    case MASK_V_START:
-//        fpga_value = PIP_MASK_VSTART;
-//        per = settings->listFirst()[MENU_FIRST_PIP]->second[PIP_MASK]->third[MASK_V_START]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
-//        value = getMaskPositionV(p);
-//        break;
-//    case MASK_H_END:
-//        fpga_value = PIP_MASK_HEND;
-//        per = settings->listFirst()[MENU_FIRST_PIP]->second[PIP_MASK]->third[MASK_H_END]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
-//        value = getMaskPositionH(p);
-//        break;
-//    case MASK_V_END:
-//        fpga_value = PIP_MASK_VEND;
-//        per = settings->listFirst()[MENU_FIRST_PIP]->second[PIP_MASK]->third[MASK_V_END]->current.toInt();
-//        p = per / 100.0;
-//        p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
-//        value = getMaskPositionV(p);
-//        break;
-//    }
-
-//    if(fpga_value != -1)
-//        fpga_write(&g_fpga,fpga_value,value);
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->borderWidth() != width)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setBorderWidth(width);
+        return ;
+    }
+    fpga_write(&g_fpga,FPGA_PIP_BOARD,width);
 }
 
-void Models::setPipBoard()
+void Models::setPipBorderColorHue(int hue)
 {
-    int value = settings->listFirst()[MENU_FIRST_PIP]->second[PIP_BOARD]->third[PIP_BORDER_WIDTH]->current.toInt();
-
-    fpga_write(&g_fpga,FPGA_PIP_BOARD,value);
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->borderColorHue() != hue)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setBorderColorHue(hue);
+        return ;
+    }
+    setPipBorderColor();
 }
 
-void Models::setPipColor(int index)
+void Models::setPipBorderColorSaturation(int saturation)
 {
-//    int Hue = settings->listFirst()[MENU_FIRST_PIP]->second[PIP_COLOR]->third[COLOR_HUE]->current.toInt();
-//    int Saturation = settings->listFirst()[MENU_FIRST_PIP]->second[PIP_COLOR]->third[COLOR_SATURATION]->current.toInt();
-//    int Brightness = settings->listFirst()[MENU_FIRST_PIP]->second[PIP_COLOR]->third[COLOR_BRIGHTNESS]->current.toInt();
-
-//    QList<int> data;
-//    data << Hue << Saturation << Brightness;
-//    settings->setColor4Data(data);
-
-//    auto color = getColorYC(Hue,Saturation,Brightness);
-
-//    fpga_write(&g_fpga,PIP_COLOR_Y,color.Y);
-//    fpga_write(&g_fpga,PIP_COLOR_C,*(uint16_t *)&(color.Cr));
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->borderColorSaturation() != saturation)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setBorderColorSaturation(saturation);
+        return ;
+    }
+    setPipBorderColor();
 }
 
-void Models::setFtbRate()
+void Models::setPipBorderColorBrightness(int brightness)
 {
-    float value = settings->listFirst()[MENU_FIRST_FTB]->second[MENU_SECOND_FTB_RATE]->third[FTB_RATE_RATE]->current.toFloat();
-    int outFormat = getOutFormat(settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt());
-    int fpga_value = getFTBRateValue(value,outFormat);
-    fpga_write(&g_fpga,FTB_RATE,fpga_value);
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->borderColorBrightness() != brightness)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->setBorderColorBrightness(brightness);
+        return ;
+    }
+    setPipBorderColor();
 }
 
-void Models::setFtbAFV()
+void Models::setPipBorderColor()
 {
-    int value = settings->listFirst()[MENU_FIRST_FTB]->second[MENU_SECOND_FTB_AUDIO]->third[FTB_AUDIO_AFV]->current.toInt();
-    fpga_write(&g_fpga,FTB_AFV,value);
+    int Hue = profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->borderColorHue();
+    int Saturation = profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->borderColorSaturation();
+    int Brightness = profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->borderColorBrightness();
+
+    settings->setColor6Data({Hue,Saturation,Brightness});
+
+    auto color = getColorYC(Hue,Saturation,Brightness);
+
+    fpga_write(&g_fpga,PIP_COLOR_Y,color.Y);
+    fpga_write(&g_fpga,PIP_COLOR_C,*(uint16_t *)&(color.Cr));
 }
+
 
 void Models::setStillSelection()
 {
@@ -4049,10 +3822,10 @@ void Models::setChromaKeyKeyEdge(int keyEdge)
     setChromaKeyProfile();
 }
 
-void Models::setTransitionRate(int index, float rate)
+void Models::setTransitionRate(int index, double rate)
 {
     //////////////
-    int outFormat = getOutFormat(0/*settings->getOutFormat()*/);
+    int outFormat = getOutFormat(60/*settings->getOutFormat()*/);
     int fpga_value = getFTBRateValue(rate,outFormat);
     int fpga_par = -1;
     if(index == TransitionStyle::MIX)
@@ -4302,6 +4075,208 @@ void Models::setTransitionWipePosition()
     fpga_write(&g_fpga,PATTERN_V_PARAM,pos->reg_v_param);
 
     delete pos;
+}
+
+void Models::setDskSourceFill(int fill)
+{
+    if(profile->downstreamKeys()->downstreamKey()->fillSource() != fill)
+    {
+        profile->downstreamKeys()->downstreamKey()->setFillSource(fill);
+        return ;
+    }
+
+    DSKSource dsk;
+    int key = profile->downstreamKeys()->downstreamKey()->keySource();
+
+    //屏蔽color1、color2
+    if(key > INPUT_SOURCE_STILL2_KEY)
+        key +=2;
+
+    dsk.fill = fill;
+    dsk.key = key;
+
+    fpga_write(&g_fpga,FPGA_DSK_SRC_SEL,*(uint16_t*)&dsk);
+}
+
+void Models::setDskSourceKey(int key)
+{
+    if(profile->downstreamKeys()->downstreamKey()->keySource() != key)
+    {
+        profile->downstreamKeys()->downstreamKey()->setKeySource(key);
+        return ;
+    }
+
+    DSKSource dsk;
+    int fill = profile->downstreamKeys()->downstreamKey()->fillSource();
+
+    //屏蔽color1、color2
+    if(key > INPUT_SOURCE_STILL2_KEY)
+        key +=2;
+
+    dsk.fill = fill;
+    dsk.key = key;
+
+    fpga_write(&g_fpga,FPGA_DSK_SRC_SEL,*(uint16_t*)&dsk);
+}
+
+void Models::setDskMaskEnable(bool enable)
+{
+    if(profile->downstreamKeys()->downstreamKey()->maskEnable() != enable)
+    {
+        profile->downstreamKeys()->downstreamKey()->setMaskEnable(enable);
+        return ;
+    }
+    setDskCtrl();
+}
+
+void Models::setDskMaskHStart(int hStart)
+{
+    if(profile->downstreamKeys()->downstreamKey()->maskHStart() != hStart)
+    {
+        profile->downstreamKeys()->downstreamKey()->setMaskHStart(hStart);
+        return ;
+    }
+    float p;
+    int value;
+    p = hStart / 100.0;
+    p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
+    value = getMaskPositionH(p);
+    fpga_write(&g_fpga,FPGA_DSK_MASK_HSTART,value);
+
+}
+
+void Models::setDskMaskVStart(int vStart)
+{
+    if(profile->downstreamKeys()->downstreamKey()->maskVStart() != vStart)
+    {
+        profile->downstreamKeys()->downstreamKey()->setMaskVStart(vStart);
+        return ;
+    }
+    float p;
+    int value;
+    p = vStart / 100.0;
+    p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
+    value = getMaskPositionV(p);
+    fpga_write(&g_fpga,FPGA_DSK_MASK_VSTART,value);
+}
+
+void Models::setDskMaskHEnd(int hEnd)
+{
+    if(profile->downstreamKeys()->downstreamKey()->maskHEnd() != hEnd)
+    {
+        profile->downstreamKeys()->downstreamKey()->setMaskHEnd(hEnd);
+        return ;
+    }
+    float p;
+    int value;
+    p = hEnd / 100.0;
+    p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
+    value = getMaskPositionH(p);
+    fpga_write(&g_fpga,FPGA_DSK_MASK_HEND,value);
+}
+
+void Models::setDskMaskVEnd(int vEnd)
+{
+    if(profile->downstreamKeys()->downstreamKey()->maskVEnd() != vEnd)
+    {
+        profile->downstreamKeys()->downstreamKey()->setMaskVEnd(vEnd);
+        return ;
+    }
+    float p;
+    int value;
+    p = vEnd / 100.0;
+    p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
+    value = getMaskPositionV(p);
+    fpga_write(&g_fpga,FPGA_DSK_MASK_VEND,value);
+}
+
+void Models::setDskShapedKey(bool enable)
+{
+    if(profile->downstreamKeys()->downstreamKey()->shapedKey() != enable)
+    {
+        profile->downstreamKeys()->downstreamKey()->setShapedKey(enable);
+        return ;
+    }
+    setDskCtrl();
+}
+
+void Models::setDskClip(int clip)
+{
+    if(profile->downstreamKeys()->downstreamKey()->clip() != clip)
+    {
+        profile->downstreamKeys()->downstreamKey()->setClip(clip);
+        return ;
+    }
+    int fpga_value = getKeyClip(clip);
+    fpga_write(&g_fpga,FPGA_DSK_CLIP,fpga_value);
+}
+
+void Models::setDskGain(int gain)
+{
+    if(profile->downstreamKeys()->downstreamKey()->gain() != gain)
+    {
+        profile->downstreamKeys()->downstreamKey()->setGain(gain);
+        return ;
+    }
+    int fpga_value = getKeyGain(gain);
+    fpga_write(&g_fpga,FPGA_DSK_GAIN,fpga_value);
+}
+
+void Models::setDskInvert(bool invert)
+{
+    if(profile->downstreamKeys()->downstreamKey()->invert() != invert)
+    {
+        profile->downstreamKeys()->downstreamKey()->setInvert(invert);
+        return ;
+    }
+    setDskCtrl();
+}
+
+void Models::setDskRate(double rate)
+{
+    ////////////////
+    if(profile->downstreamKeys()->downstreamKey()->rate() != rate)
+    {
+        profile->downstreamKeys()->downstreamKey()->setRate(rate);
+        return ;
+    }
+    int fpga_value = getFTBRateValue(rate,60 /*outFormat*/);
+    fpga_write(&g_fpga,FPGA_DSK_RATE,fpga_value);
+}
+
+void Models::setDskCtrl()
+{
+    int value = 0;
+    int mask = profile->downstreamKeys()->downstreamKey()->maskEnable();
+    int shaped = profile->downstreamKeys()->downstreamKey()->shapedKey();
+    int invert = profile->downstreamKeys()->downstreamKey()->invert();
+
+    if(mask != 0)
+        value += 4;
+    if(shaped != 0)
+        value += 1;
+    if(invert != 0)
+        value += 2;
+
+    fpga_write(&g_fpga,FPGA_DSK_CTRL,value);
+}
+
+void Models::setFtbRate(double rate)
+{
+    if(profile->mixEffectBlocks()->mixEffectBlock()->ftb()->rate() != rate)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->ftb()->setRate(rate);
+        return ;
+    }
+
+    /////////////
+    int fpga_value = getFTBRateValue(rate,60/*outFormat*/);
+    fpga_write(&g_fpga,FTB_RATE,fpga_value);
+}
+
+void Models::setFtbAfv(bool afv)
+{
+    fpga_write(&g_fpga,FTB_AFV,afv?1:0);
 }
 
 

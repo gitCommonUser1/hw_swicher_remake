@@ -89,34 +89,6 @@ public:
     void setAudioMonitorLevel();
     void setAudioMonitorSource();
 
-    //dsk
-    void setDSKSource();
-    void setDSKMask(int third);
-    void setDSKRate();
-    void setDSKCtrl();
-    void setDSKGain();
-    void setDSKClip();
-
-    //luma key
-
-    //key pattern
-    void setKeyPatternResizeSize();
-    void setKeyPatternResizePosition(int third);
-    void setKeyPatternMask(int third);
-
-    //pip
-    void setPipSource();
-    void setPipSize();
-    void setPipCtrl();
-    void setPipPosition(int third);
-    void setPipMask(int third);
-    void setPipBoard();
-    void setPipColor(int third);
-
-    //ftb
-    void setFtbRate();
-    void setFtbAFV();
-
     //still generate
     void setStillSelection();
     void setStillUpload();
@@ -196,37 +168,9 @@ signals:
     void stillImageFileNameChanged(QString name);
     void sendKey(int key);
 
-    //audio
 
-    /**/
-    void audioEnable(int audioIndex,int enable);
-    void audioFader(int audioIndex,float fader);
-    void audioBalance(int audioIndex,float balance);
-    void audioInput(int audioIndex,float input);
-    void audioDelay(int audioIndex,int delay);
-    void monitorLevel(int level);
-    void monitorSource(int source);
-    /**/
-
-
-    //dsk
-    /**/
-    void dskSourceFill(int fill);
-    void dskSourceKey(int key);
-    void dskMaskEnable(int enable);
-    void dskMaskHStart(int hStart);
-    void dskMaskVStart(int vStart);
-    void dskMaskHEnd(int hEnd);
-    void dskMaskVEnd(int vEnd);
-    void dskShapedKey(int enable);
-    void dskClip(int clip);
-    void dskGain(int gain);
-    void dskInvert(int invert);
-    void dskRate(float rate);
-    /**/
 
     //color
-
     /**/
     void colorBackHue(int colorIndex,int hue);
     void colorBackSaturation(int colorIndex,int saturation);
@@ -234,7 +178,6 @@ signals:
     /**/
 
     //super source
-
     /**/
     void superSourceEnable(int enable);
     void superSourceSource1(int source1);
@@ -254,7 +197,6 @@ signals:
     /**/
 
     //key type
-
     /**/
     void keyType(QString type);
     /**/
@@ -277,27 +219,10 @@ signals:
     void keyShapedKey(int key,bool enable);
     void keyInvert(int key,bool enable);
     /**/
-
     //luma key
-
     /**/
-
     /**/
-
-    //key pattern
-
-    /**/
-    void keyPatternWipePattern(int patternIndex);
-    void keyPatternWipeSize(int size);
-    void keyPatternWipeXPosition(double xPosition);
-    void keyPatternWipeYPosition(double yPosition);
-    void keyPatternWipeSymmetry(int symmetry);
-    void keyPatternWipeSoftness(int softness);
-    /**/
-
-
     //chroma key
-
     /**/
     void chromaKeySampleXPosition(double xPosition);
     void chromaKeySampleYPosition(double yPosition);
@@ -309,32 +234,28 @@ signals:
     void chromaKeyBackground(int background);
     void chromaKeyKeyEdge(int keyEdge);
     /**/
-
-    //pip
-
+    //key pattern
     /**/
-    void pipBorderEnable(int enable);
+    void keyPatternWipePattern(int patternIndex);
+    void keyPatternWipeSize(int size);
+    void keyPatternWipeXPosition(double xPosition);
+    void keyPatternWipeYPosition(double yPosition);
+    void keyPatternWipeSymmetry(int symmetry);
+    void keyPatternWipeSoftness(int softness);
+    /**/
+    //pip
+    /**/
+    void pipBorderEnable(bool enable);
     void pipBorderWidth(int width);
     void pipBorderColorHue(int hue);
     void pipBorderColorSaturation(int saturation);
     void pipBorderColorBrightness(int brightness);
     /**/
 
-
-
-    //ftb
-    /**/
-    void ftbRate(float rate);
-    void ftbAfv(int afv);
-    /**/
-
-
     //transition
-
     /**/
     void transitionRate(int index,double rate);
     /**/
-
     /**/
     void transitionDipSource(int source);
     void transitionWipePattern(int pattern);
@@ -345,6 +266,40 @@ signals:
     void transitionWipeSoftness(int softness);
     void transitionWipeBorder(int border);
     void transitionWipeFillSource(int fillSource);
+    /**/
+
+    //dsk
+    /**/
+    void dskSourceFill(int fill);
+    void dskSourceKey(int key);
+    void dskMaskEnable(bool enable);
+    void dskMaskHStart(int hStart);
+    void dskMaskVStart(int vStart);
+    void dskMaskHEnd(int hEnd);
+    void dskMaskVEnd(int vEnd);
+    void dskShapedKey(bool enable);
+    void dskClip(int clip);
+    void dskGain(int gain);
+    void dskInvert(bool invert);
+    void dskRate(double rate);
+    /**/
+
+    //ftb
+    /**/
+    void ftbRate(double rate);
+    void ftbAfv(bool afv);
+    /**/
+
+    //audio
+
+    /**/
+    void audioEnable(int audioIndex,int enable);
+    void audioFader(int audioIndex,double fader);
+    void audioBalance(int audioIndex,double balance);
+    void audioInput(int audioIndex,double input);
+    void audioDelay(int audioIndex,int delay);
+    void monitorLevel(int level);
+    void monitorSource(int source);
     /**/
 
 
@@ -395,7 +350,6 @@ signals:
     /**/
 
 
-
     void srcName(int third);
 
     //playback
@@ -404,7 +358,6 @@ signals:
     void playbackMode(int mode);
 
     void buttonBrightness();
-
 
 
 
@@ -501,10 +454,18 @@ public slots:
     void setKeyPatternCtrl();
     void setKeyPatternPosition();
 
+    //pip
+    void setPipBorderEnable(bool enable);
+    void setPipBorderWidth(int width);
+    void setPipBorderColorHue(int hue);
+    void setPipBorderColorSaturation(int saturation);
+    void setPipBorderColorBrightness(int brightness);
+    void setPipBorderColor();//
+
 
     //transition
     /**/
-    void setTransitionRate(int index,float rate);
+    void setTransitionRate(int index,double rate);
     /**/
 
     /**/
@@ -518,6 +479,29 @@ public slots:
     void setTransitionWipeBorder(int border);
     void setTransitionWipeFillSource(int fillSource);
     void setTransitionWipePosition();//
+    /**/
+
+    //dsk
+    /**/
+    void setDskSourceFill(int fill);
+    void setDskSourceKey(int key);
+    void setDskMaskEnable(bool enable);
+    void setDskMaskHStart(int hStart);
+    void setDskMaskVStart(int vStart);
+    void setDskMaskHEnd(int hEnd);
+    void setDskMaskVEnd(int vEnd);
+    void setDskShapedKey(bool enable);
+    void setDskClip(int clip);
+    void setDskGain(int gain);
+    void setDskInvert(bool invert);
+    void setDskRate(double rate);
+    void setDskCtrl();//
+    /**/
+
+    //ftb
+    /**/
+    void setFtbRate(double rate);
+    void setFtbAfv(bool afv);
     /**/
 
 

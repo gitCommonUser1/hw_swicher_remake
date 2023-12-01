@@ -20,5 +20,7 @@
 #include "keys.h"
 #include "key.h"
 #include "fadetoblack.h"
+#include "downstreamkeys.h"
+#include "downstreamkey.h"
 
 #endif // PROFILE_INCLUDE_H
