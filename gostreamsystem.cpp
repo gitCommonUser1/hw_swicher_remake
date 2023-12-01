@@ -8,6 +8,7 @@
 #include <QXmlStreamWriter>
 #include <QFile>
 #include "hw_config.h"
+#include "supersources.h"
 
 #define PRODUCT_NAME "GoStream Deck"
 
@@ -33,6 +34,8 @@ Profile::Profile(QObject *parent) : QObject(parent)
     m_colorBacks->setObjectName("colorBacks");
     m_downstreamKeys = new DownstreamKeys(this);
     m_downstreamKeys->setObjectName("downstreamKeys");
+    m_superSources = new SuperSources(this);
+    m_superSources->setObjectName("superSources");
 }
 
 void Profile::write(QObject *object)

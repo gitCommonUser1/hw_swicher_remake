@@ -63,19 +63,12 @@ public:
     }
 };
 
-class MenuThirdSuperSourceStyle:public MenuThird{
-public:
-    using MenuThird::MenuThird;
-    void doWork(QVariant value){
-//        models->macroInvoke((&Models::superSourceControlStyle),value.toInt());
-    }
-};
-
 class MenuThirdSuperSourceEnable:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceEnable),value.toInt());
+        profile->superSources()->superSource()->setEnable(value > 0);
     }
 };
 
@@ -84,6 +77,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceMaskEnable),SUPER_SOURCE_MASK1,value.toInt());
+        profile->superSources()->superSource()->mask1()->setEnable(value > 0);
     }
 };
 
@@ -93,6 +87,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceMaskEnable),SUPER_SOURCE_MASK2,value.toInt());
+        profile->superSources()->superSource()->mask2()->setEnable(value > 0);
     }
 };
 
@@ -101,6 +96,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceSource1),value.toInt());
+        profile->superSources()->superSource()->setSource1(value.toInt());
     }
 };
 
@@ -109,6 +105,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceSource2),value.toInt());
+        profile->superSources()->superSource()->setSource2(value.toInt());
     }
 };
 
@@ -117,6 +114,16 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceBackground),value.toInt());
+        profile->superSources()->superSource()->setBackground(value.toInt());
+    }
+};
+
+class MenuThirdSuperSourceStyle:public MenuThird{
+public:
+    using MenuThird::MenuThird;
+    void doWork(QVariant value){
+//        models->macroInvoke((&Models::superSourceControlStyle),value.toInt());
+        profile->superSources()->superSource()->setStyle(SuperSource::styleIndexToString(value.toInt()));
     }
 };
 
@@ -125,6 +132,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceControlYPosition),value.toInt());
+        profile->superSources()->superSource()->setYPosition(value.toInt());
     }
 };
 
@@ -133,6 +141,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceMaskHStart),SUPER_SOURCE_MASK1,value.toInt());
+        profile->superSources()->superSource()->mask1()->setHStart(value.toInt());
     }
 };
 
@@ -142,6 +151,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceMaskVStart),SUPER_SOURCE_MASK1,value.toInt());
+        profile->superSources()->superSource()->mask1()->setVStart(value.toInt());
     }
 };
 
@@ -151,6 +161,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceMaskHEnd),SUPER_SOURCE_MASK1,value.toInt());
+        profile->superSources()->superSource()->mask1()->setHEnd(value.toInt());
     }
 };
 
@@ -160,6 +171,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceMaskVEnd),SUPER_SOURCE_MASK1,value.toInt());
+        profile->superSources()->superSource()->mask1()->setVEnd(value.toInt());
     }
 };
 
@@ -169,6 +181,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceMaskHStart),SUPER_SOURCE_MASK2,value.toInt());
+        profile->superSources()->superSource()->mask2()->setHStart(value.toInt());
     }
 };
 
@@ -177,6 +190,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceMaskVStart),SUPER_SOURCE_MASK2,value.toInt());
+        profile->superSources()->superSource()->mask2()->setVStart(value.toInt());
     }
 };
 
@@ -185,6 +199,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceMaskHEnd),SUPER_SOURCE_MASK2,value.toInt());
+        profile->superSources()->superSource()->mask2()->setHEnd(value.toInt());
     }
 };
 
@@ -193,6 +208,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceMaskVEnd),SUPER_SOURCE_MASK2,value.toInt());
+        profile->superSources()->superSource()->mask2()->setVEnd(value.toInt());
     }
 };
 
@@ -201,6 +217,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceBorderWidth),SUPER_SOURCE_BORDER1,value.toInt());
+        profile->superSources()->superSource()->border1()->setWidth(value.toInt());
     }
 };
 
@@ -209,6 +226,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceBorderWidth),SUPER_SOURCE_BORDER2,value.toInt());
+        profile->superSources()->superSource()->border2()->setWidth(value.toInt());
     }
 };
 
@@ -217,6 +235,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceBorderColorHue),SUPER_SOURCE_BORDER1,value.toInt());
+        profile->superSources()->superSource()->border1()->setColorHue(value.toInt());
     }
 };
 
@@ -225,6 +244,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceBorderColorSaturation),SUPER_SOURCE_BORDER1,value.toInt());
+        profile->superSources()->superSource()->border1()->setColorSaturation(value.toInt());
     }
 };
 
@@ -234,6 +254,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceBorderColorBrightness),SUPER_SOURCE_BORDER1,value.toInt());
+        profile->superSources()->superSource()->border1()->setColorBrightness(value.toInt());
     }
 };
 
@@ -242,6 +263,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceBorderColorHue),SUPER_SOURCE_BORDER2,value.toInt());
+        profile->superSources()->superSource()->border2()->setColorHue(value.toInt());
     }
 };
 
@@ -250,6 +272,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceBorderColorSaturation),SUPER_SOURCE_BORDER2,value.toInt());
+        profile->superSources()->superSource()->border2()->setColorSaturation(value.toInt());
     }
 };
 
@@ -259,6 +282,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::superSourceBorderColorBrightness),SUPER_SOURCE_BORDER2,value.toInt());
+        profile->superSources()->superSource()->border2()->setColorBrightness(value.toInt());
     }
 };
 

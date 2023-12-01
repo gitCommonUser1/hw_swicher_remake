@@ -8,6 +8,7 @@ class QXmlStreamWriter;
 class MixEffectBlocks;
 class DownstreamKeys;
 class ColorBacks;
+class SuperSources;
 
 class Profile : public QObject
 {
@@ -19,6 +20,7 @@ class Profile : public QObject
     Q_PROPERTY(MixEffectBlocks* mixEffectBlocks READ mixEffectBlocks WRITE setMixEffectBlocks NOTIFY mixEffectBlocksChanged)
     Q_PROPERTY(DownstreamKeys* downstreamKeys READ downstreamKeys WRITE setDownstreamKeys NOTIFY downstreamKeysChanged)
     Q_PROPERTY(ColorBacks* colorBacks READ colorBacks WRITE setColorBacks NOTIFY colorBacksChanged)
+    Q_PROPERTY(SuperSources* superSources READ superSources WRITE setSuperSources NOTIFY superSourcesChanged)
 public:
     explicit Profile(QObject *parent = nullptr);
 
@@ -61,6 +63,11 @@ public:
     QString product() const
     {
         return m_product;
+    }
+
+    SuperSources* superSources() const
+    {
+        return m_superSources;
     }
 
 public slots:
@@ -127,6 +134,15 @@ public slots:
         emit productChanged(m_product);
     }
 
+    void setSuperSources(SuperSources* superSources)
+    {
+        if (m_superSources == superSources)
+            return;
+
+        m_superSources = superSources;
+        emit superSourcesChanged(m_superSources);
+    }
+
 private:
 
     MixEffectBlocks* m_mixEffectBlocks;
@@ -143,6 +159,8 @@ private:
 
     QString m_product;
 
+    SuperSources* m_superSources;
+
 signals:
 
 void mixEffectBlocksChanged(MixEffectBlocks* mixEffectBlocks);
@@ -152,6 +170,7 @@ void majorVersionChanged(int majorVersion);
 void minorVersionChanged(int minorVersion);
 void patchVersionChanged(int patchVersion);
 void productChanged(QString product);
+void superSourcesChanged(SuperSources* superSources);
 };
 
 #endif // GOSTREAMSYSTEM_H

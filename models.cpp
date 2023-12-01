@@ -2783,45 +2783,66 @@ void Models::setColorBack(int colorIndex,int hue,int saturation,int brightness)
     }
 }
 
-void Models::setSuperSourceEnable(int enable)
+void Models::setSuperSourceEnable(bool enable)
 {
-//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_ENABLE,SUPER_ENABLE,enable))
+    if(profile->superSources()->superSource()->enable() != enable)
+    {
+        profile->superSources()->superSource()->setEnable(enable);
         return ;
+    }
+
     setSuperSourceCtrl();
 }
 
 void Models::setSuperSourceSource1(int source1)
 {
-//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_SOURCE,SUPER_SOURCE_SOURCE_SOURCE1,source1))
+    if(profile->superSources()->superSource()->source1() != source1)
+    {
+        profile->superSources()->superSource()->setSource1(source1);
         return ;
+    }
     setSuperSource();
 }
 
 void Models::setSuperSourceSource2(int source2)
 {
-//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_SOURCE,SUPER_SOURCE_SOURCE_SOURCE2,source2))
+    if(profile->superSources()->superSource()->source2() != source2)
+    {
+        profile->superSources()->superSource()->setSource2(source2);
         return ;
+    }
     setSuperSource();
 }
 
 void Models::setSuperSourceBackground(int background)
 {
-//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_SOURCE,SUPER_SOURCE_SOURCE_BACKGROUND,background))
+    if(profile->superSources()->superSource()->background() != background)
+    {
+        profile->superSources()->superSource()->setBackground(background);
         return ;
+    }
     setSuperSource();
 }
 
-void Models::setSuperSourceControlStyle(int style)
+void Models::setSuperSourceControlStyle(QString style)
 {
-//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_CONTROL,SUPER_CONTROL_STYLE,style))
+    if(profile->superSources()->superSource()->style() != style)
+    {
+        profile->superSources()->superSource()->setStyle(style);
         return ;
+    }
+
     setSuperSourceCtrl();
 }
 
 void Models::setSuperSourceControlYPosition(int YPosition)
 {
-//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_CONTROL,SUPER_CONTROL_Y_POSITION,YPosition))
+    if(profile->superSources()->superSource()->yPosition() != YPosition)
+    {
+        profile->superSources()->superSource()->setYPosition(YPosition);
         return ;
+    }
+
     float p;
     p = YPosition / 100.0;
     p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
@@ -2829,80 +2850,137 @@ void Models::setSuperSourceControlYPosition(int YPosition)
     fpga_write(&g_fpga,SUPER_SRC_POS,value);
 }
 
-void Models::setSuperSourceMaskEnable(int maskIndex, int enable)
+void Models::setSuperSourceMaskEnable(int maskIndex, bool enable)
 {
-    int third = 0;
-    if(maskIndex == SUPER_SOURCE_MASK1)
-        third = SUPER_MASK1_ENABLE;
-    else if(maskIndex == SUPER_SOURCE_MASK2)
-        third = SUPER_MASK2_ENABLE;
-//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,maskIndex,third,enable))
-        return ;
+    if(maskIndex == SuperSource::MASK1)
+    {
+        if(profile->superSources()->superSource()->mask1()->enable() != enable)
+        {
+            profile->superSources()->superSource()->mask2()->setEnable(enable);
+            return ;
+        }
+    }
+    else if(maskIndex == SuperSource::MASK2)
+    {
+        if(profile->superSources()->superSource()->mask2()->enable() != enable)
+        {
+            profile->superSources()->superSource()->mask2()->setEnable(enable);
+            return ;
+        }
+    }
+
     setSuperSourceCtrl();
 }
 
 void Models::setSuperSourceMaskHStart(int maskIndex, int HStart)
 {
-    int third = 0;
-    if(maskIndex == SUPER_SOURCE_MASK1)
-        third = SUPER_MASK1_H_START;
-    else if(maskIndex == SUPER_SOURCE_MASK2)
-        third = SUPER_MASK2_H_START;
-//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,maskIndex,third,HStart))
-        return ;
-    setSuperSourceMask(maskIndex,third);
+    if(maskIndex == SuperSource::MASK1)
+    {
+        if(profile->superSources()->superSource()->mask1()->hStart() != HStart)
+        {
+            profile->superSources()->superSource()->mask2()->setHStart(HStart);
+            return ;
+        }
+    }
+    else if(maskIndex == SuperSource::MASK2)
+    {
+        if(profile->superSources()->superSource()->mask2()->hStart() != HStart)
+        {
+            profile->superSources()->superSource()->mask2()->setHStart(HStart);
+            return ;
+        }
+    }
+
+    setSuperSourceMask(maskIndex,SUPER_MASK1_H_START);
 }
 
 void Models::setSuperSourceMaskVStart(int maskIndex, int VStart)
 {
-    int third = 0;
-    if(maskIndex == SUPER_SOURCE_MASK1)
-        third = SUPER_MASK1_V_START;
-    else if(maskIndex == SUPER_SOURCE_MASK2)
-        third = SUPER_MASK2_V_START;
-//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,maskIndex,third,VStart))
-        return ;
-    setSuperSourceMask(maskIndex,third);
+    if(maskIndex == SuperSource::MASK1)
+    {
+        if(profile->superSources()->superSource()->mask1()->vStart() != VStart)
+        {
+            profile->superSources()->superSource()->mask2()->setVStart(VStart);
+            return ;
+        }
+    }
+    else if(maskIndex == SuperSource::MASK2)
+    {
+        if(profile->superSources()->superSource()->mask2()->vStart() != VStart)
+        {
+            profile->superSources()->superSource()->mask2()->setVStart(VStart);
+            return ;
+        }
+    }
+
+    setSuperSourceMask(maskIndex,SUPER_MASK1_V_START);
 }
 
 void Models::setSuperSourceMaskHEnd(int maskIndex, int HEnd)
 {
-    int third = 0;
-    if(maskIndex == SUPER_SOURCE_MASK1)
-        third = SUPER_MASK1_H_END;
-    else if(maskIndex == SUPER_SOURCE_MASK2)
-        third = SUPER_MASK2_H_END;
-//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,maskIndex,third,HEnd))
-        return ;
-    setSuperSourceMask(maskIndex,third);
+    if(maskIndex == SuperSource::MASK1)
+    {
+        if(profile->superSources()->superSource()->mask1()->hEnd() != HEnd)
+        {
+            profile->superSources()->superSource()->mask2()->setHEnd(HEnd);
+            return ;
+        }
+    }
+    else if(maskIndex == SuperSource::MASK2)
+    {
+        if(profile->superSources()->superSource()->mask2()->hEnd() != HEnd)
+        {
+            profile->superSources()->superSource()->mask2()->setHEnd(HEnd);
+            return ;
+        }
+    }
+
+    setSuperSourceMask(maskIndex,SUPER_MASK1_H_END);
 }
 
 void Models::setSuperSourceMaskVEnd(int maskIndex, int VEnd)
 {
-    int third = 0;
-    if(maskIndex == SUPER_SOURCE_MASK1)
-        third = SUPER_MASK1_V_END;
-    else if(maskIndex == SUPER_SOURCE_MASK2)
-        third = SUPER_MASK2_V_END;
-//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,maskIndex,third,VEnd))
-        return ;
-    setSuperSourceMask(maskIndex,third);
+    if(maskIndex == SuperSource::MASK1)
+    {
+        if(profile->superSources()->superSource()->mask1()->vEnd() != VEnd)
+        {
+            profile->superSources()->superSource()->mask2()->setVEnd(VEnd);
+            return ;
+        }
+    }
+    else if(maskIndex == SuperSource::MASK2)
+    {
+        if(profile->superSources()->superSource()->mask2()->vEnd() != VEnd)
+        {
+            profile->superSources()->superSource()->mask2()->setVEnd(VEnd);
+            return ;
+        }
+    }
+
+    setSuperSourceMask(maskIndex,SUPER_MASK1_V_END);
 }
 
 void Models::setSuperSourceBorderWidth(int borderIndex, int width)
 {
-    int third = 0;
-    if(borderIndex == SUPER_SOURCE_BORDER1)
-        third = SUPER_BORDER1_WIDTH;
-    else if(borderIndex == SUPER_SOURCE_BORDER2)
-        third = SUPER_BORDER2_WIDTH;
-//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,borderIndex,third,width))
-        return ;
     int fpga_value = -1;
-    if(borderIndex == SUPER_SOURCE_BORDER1)
+    if(borderIndex == SuperSource::BORDER1)
+    {
+        if(profile->superSources()->superSource()->border1()->width() != width)
+        {
+            profile->superSources()->superSource()->border1()->setWidth(width);
+            return ;
+        }
         fpga_value = SUPER_SRC1_BORDER;
-    else if(borderIndex == SUPER_SOURCE_BORDER1)
+    }
+    else if(borderIndex == SuperSource::BORDER2)
+    {
+        if(profile->superSources()->superSource()->border2()->width() != width)
+        {
+            profile->superSources()->superSource()->border2()->setWidth(width);
+            return ;
+        }
        fpga_value = SUPER_SRC2_BORDER;
+    }
 
     if(fpga_value != -1)
         fpga_write(&g_fpga,fpga_value,width);
@@ -2910,53 +2988,80 @@ void Models::setSuperSourceBorderWidth(int borderIndex, int width)
 
 void Models::setSuperSourceBorderColorHue(int borderIndex, int hue)
 {
-    int third = 0;
-    if(borderIndex == SUPER_SOURCE_BORDER1)
-        third = SUPER_BORDER1_HUE;
-    else if(borderIndex == SUPER_SOURCE_BORDER2)
-        third = SUPER_BORDER2_HUE;
-//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,borderIndex,third,hue))
-        return ;
+    if(borderIndex == SuperSource::MASK1)
+    {
+        if(profile->superSources()->superSource()->border1()->colorHue() != hue)
+        {
+            profile->superSources()->superSource()->border1()->setColorHue(hue);
+            return ;
+        }
+    }
+    else if(borderIndex == SuperSource::MASK2)
+    {
+        if(profile->superSources()->superSource()->border2()->colorHue() != hue)
+        {
+            profile->superSources()->superSource()->border2()->setColorHue(hue);
+            return ;
+        }
+    }
     setSuperSourceColor(borderIndex);
 }
 
 void Models::setSuperSourceBorderColorSaturation(int borderIndex, int saturation)
 {
-    int third = 0;
-    if(borderIndex == SUPER_SOURCE_BORDER1)
-        third = SUPER_BORDER1_SATURATION;
-    else if(borderIndex == SUPER_SOURCE_BORDER2)
-        third = SUPER_BORDER2_SATURATION;
-//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,borderIndex,third,saturation))
-        return ;
+    if(borderIndex == SuperSource::MASK1)
+    {
+        if(profile->superSources()->superSource()->border1()->colorSaturation() != saturation)
+        {
+            profile->superSources()->superSource()->border1()->setColorSaturation(saturation);
+            return ;
+        }
+    }
+    else if(borderIndex == SuperSource::MASK2)
+    {
+        if(profile->superSources()->superSource()->border2()->colorSaturation() != saturation)
+        {
+            profile->superSources()->superSource()->border2()->setColorSaturation(saturation);
+            return ;
+        }
+    }
     setSuperSourceColor(borderIndex);
 }
 
 void Models::setSuperSourceBorderColorBrightness(int borderIndex, int brightness)
 {
-    int third = 0;
-    if(borderIndex == SUPER_SOURCE_BORDER1)
-        third = SUPER_BORDER1_BRIGHTNESS;
-    else if(borderIndex == SUPER_SOURCE_BORDER2)
-        third = SUPER_BORDER2_BRIGHTNESS;
-//    if(!settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,borderIndex,third,brightness))
-        return ;
+    if(borderIndex == SuperSource::MASK1)
+    {
+        if(profile->superSources()->superSource()->border1()->colorBrightness() != brightness)
+        {
+            profile->superSources()->superSource()->border1()->setColorBrightness(brightness);
+            return ;
+        }
+    }
+    else if(borderIndex == SuperSource::MASK2)
+    {
+        if(profile->superSources()->superSource()->border2()->colorBrightness() != brightness)
+        {
+            profile->superSources()->superSource()->border2()->setColorBrightness(brightness);
+            return ;
+        }
+    }
     setSuperSourceColor(borderIndex);
 }
 
 void Models::setSuperSourceCtrl()
 {
     int value = 0;
-    int enable = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_ENABLE]->third[SUPER_ENABLE]->current.toInt();
-    int mask1 = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK1]->third[SUPER_MASK1_ENABLE]->current.toInt();
-    int mask2 = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK2]->third[SUPER_MASK2_ENABLE]->current.toInt();
-    int style = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_CONTROL]->third[SUPER_CONTROL_STYLE]->current.toInt();
+    int enable = profile->superSources()->superSource()->enable();
+    int mask1 = profile->superSources()->superSource()->mask1()->enable();
+    int mask2 = profile->superSources()->superSource()->mask2()->enable();
+    int style = SuperSource::styleStringToIndex(profile->superSources()->superSource()->style());
 
-    if(style == CROP_ZOOM)
+    if(style == SuperSource::CROP_ZOOM_IN)
         value += 8;
-    else if(style == ZOOM_IN_CROP)
+    else if(style == SuperSource::ZOOM_IN_CROP)
         value += 16;
-    else if(style == CROP)
+    else if(style == SuperSource::CROP)
         value += 24;
 
     enable > 0?value += 2: value += 0;
@@ -2968,9 +3073,9 @@ void Models::setSuperSourceCtrl()
 
 void Models::setSuperSource()
 {
-    int source1 = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_SOURCE]->third[SUPER_SOURCE_SOURCE_SOURCE1]->current.toInt();
-    int source2 = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_SOURCE]->third[SUPER_SOURCE_SOURCE_SOURCE2]->current.toInt();
-    int background = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_SOURCE]->third[SUPER_SOURCE_SOURCE_BACKGROUND]->current.toInt();
+    int source1 = profile->superSources()->superSource()->source1();
+    int source2 = profile->superSources()->superSource()->source2();
+    int background = profile->superSources()->superSource()->background();
 
     SuperSourceSource source;
     source.source1 = source1;
@@ -2987,20 +3092,20 @@ void Models::setSuperSourceMask(int maskIndex,int PositionIndex)
     int value;
     int per;
 
-    if(maskIndex == SUPER_SOURCE_MASK1)
+    if(maskIndex == SuperSource::MASK1)
     {
         switch (PositionIndex) {
         case SUPER_MASK1_H_START:
             //定义域取负
             fpga_value = SUPER_SRC1_MASK_HSTART;
-            per = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[maskIndex]->third[SUPER_MASK1_H_START]->current.toInt();
+            per = profile->superSources()->superSource()->mask1()->hStart();
             p = per / 100.0;
             p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
             value = getMaskPositionH(p);
             break;
         case SUPER_MASK1_V_START:
             fpga_value = SUPER_SRC1_MASK_VSTART;
-            per = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[maskIndex]->third[SUPER_MASK1_V_START]->current.toInt();
+            per = profile->superSources()->superSource()->mask1()->vStart();
             p = per / 100.0;
             p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
             value = getMaskPositionV(p);
@@ -3008,33 +3113,33 @@ void Models::setSuperSourceMask(int maskIndex,int PositionIndex)
         case SUPER_MASK1_H_END:
             //定义域取负
             fpga_value = SUPER_SRC1_MASK_HEND;
-            per = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[maskIndex]->third[SUPER_MASK1_H_END]->current.toInt();
+            per = profile->superSources()->superSource()->mask1()->hEnd();
             p = per / 100.0;
             p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
             value = getMaskPositionH(p);
             break;
         case SUPER_MASK1_V_END:
             fpga_value = SUPER_SRC1_MASK_VEND;
-            per = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[maskIndex]->third[SUPER_MASK1_V_END]->current.toInt();
+            per = profile->superSources()->superSource()->mask1()->vEnd();
             p = per / 100.0;
             p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
             value = getMaskPositionV(p);
             break;
         }
-    }else if(maskIndex == SUPER_SOURCE_MASK2)
+    }else if(maskIndex == SuperSource::MASK2)
     {
         switch (PositionIndex) {
         case SUPER_MASK2_H_START:
             //定义域取负
             fpga_value = SUPER_SRC2_MASK_HSTART;
-            per = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[maskIndex]->third[SUPER_MASK2_H_START]->current.toInt();
+            per = profile->superSources()->superSource()->mask2()->hStart();
             p = per / 100.0;
             p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
             value = getMaskPositionH(p);
             break;
         case SUPER_MASK2_V_START:
             fpga_value = SUPER_SRC2_MASK_VSTART;
-            per = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[maskIndex]->third[SUPER_MASK2_V_START]->current.toInt();
+            per = profile->superSources()->superSource()->mask2()->vStart();
             p = per / 100.0;
             p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
             value = getMaskPositionV(p);
@@ -3042,14 +3147,14 @@ void Models::setSuperSourceMask(int maskIndex,int PositionIndex)
         case SUPER_MASK2_H_END:
             //定义域取负
             fpga_value = SUPER_SRC2_MASK_HEND;
-            per = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[maskIndex]->third[SUPER_MASK2_H_END]->current.toInt();
+            per = profile->superSources()->superSource()->mask2()->hEnd();
             p = per / 100.0;
             p = (MASK_H_MAX - MASK_H_MIN) * p - MASK_H_MAX;
             value = getMaskPositionH(p);
             break;
         case SUPER_MASK2_V_END:
             fpga_value = SUPER_SRC2_MASK_VEND;
-            per = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[maskIndex]->third[SUPER_MASK2_V_END]->current.toInt();
+            per = profile->superSources()->superSource()->mask2()->vEnd();
             p = per / 100.0;
             p = (MASK_V_MAX - MASK_V_MIN) * p - MASK_V_MAX;
             value = getMaskPositionV(p);
@@ -3067,21 +3172,19 @@ void Models::setSuperSourceColor(int colorIndex)
     int Brightness = 0;
     int fpga_value_y = -1;
     int fpga_value_c = -1;
-    if(colorIndex == SUPER_SOURCE_BORDER1){
-        Hue = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[colorIndex]->third[SUPER_BORDER1_HUE]->current.toInt();
-        Saturation = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[colorIndex]->third[SUPER_BORDER1_SATURATION]->current.toInt();
-        Brightness = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[colorIndex]->third[SUPER_BORDER1_BRIGHTNESS]->current.toInt();
+    if(colorIndex == SuperSource::BORDER1){
+        Hue = profile->superSources()->superSource()->border1()->colorHue();
+        Saturation = profile->superSources()->superSource()->border1()->colorSaturation();
+        Brightness = profile->superSources()->superSource()->border1()->colorBrightness();
         settings->setColor3Data({Hue,Saturation,Brightness});
-
         fpga_value_y = SUPER_SRC1_BORDER_Y;
         fpga_value_c = SUPER_SRC1_BORDER_C;
 
-    }else if(colorIndex == SUPER_SOURCE_BORDER2){
-        Hue = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[colorIndex]->third[SUPER_BORDER2_HUE]->current.toInt();
-        Saturation = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[colorIndex]->third[SUPER_BORDER2_SATURATION]->current.toInt();
-        Brightness = settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[colorIndex]->third[SUPER_BORDER2_BRIGHTNESS]->current.toInt();
+    }else if(colorIndex == SuperSource::BORDER2){
+        Hue = profile->superSources()->superSource()->border2()->colorHue();
+        Saturation = profile->superSources()->superSource()->border2()->colorSaturation();
+        Brightness = profile->superSources()->superSource()->border2()->colorBrightness();
         settings->setColor4Data({Hue,Saturation,Brightness});
-
         fpga_value_y = SUPER_SRC2_BORDER_Y;
         fpga_value_c = SUPER_SRC2_BORDER_C;
     }

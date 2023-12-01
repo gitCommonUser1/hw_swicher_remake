@@ -872,6 +872,103 @@ void Control::connect_profile()
         models->macroInvoke(&Models::dskRate,rate);
         settings->setMenuValue(MENU_FIRST_DSK,DSK_RATE,DSK_RATE_RATE,rate);
     });
+    //superSource
+    connect(profile->superSources()->superSource(),&SuperSource::enableChanged,this,[=](bool enable){
+        models->macroInvoke(&Models::superSourceEnable,enable);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_ENABLE,SUPER_ENABLE,enable);
+    });
+    connect(profile->superSources()->superSource(),&SuperSource::source1Changed,this,[=](int source1){
+        models->macroInvoke(&Models::superSourceSource1,source1);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_SOURCE,SUPER_SOURCE_SOURCE_SOURCE1,source1);
+    });
+    connect(profile->superSources()->superSource(),&SuperSource::source2Changed,this,[=](int source2){
+        models->macroInvoke(&Models::superSourceSource2,source2);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_SOURCE,SUPER_SOURCE_SOURCE_SOURCE2,source2);
+    });
+    connect(profile->superSources()->superSource(),&SuperSource::backgroundChanged,this,[=](int background){
+        models->macroInvoke(&Models::superSourceBackground,background);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_SOURCE,SUPER_SOURCE_SOURCE_BACKGROUND,background);
+    });
+    connect(profile->superSources()->superSource(),&SuperSource::styleChanged,this,[=](QString style){
+        models->macroInvoke(&Models::superSourceControlStyle,style);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_CONTROL,SUPER_CONTROL_STYLE,style);
+    });
+    connect(profile->superSources()->superSource(),&SuperSource::yPositionChanged,this,[=](int yPosition){
+        models->macroInvoke(&Models::superSourceControlYPosition,yPosition);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_CONTROL,SUPER_CONTROL_Y_POSITION,yPosition);
+    });
+    connect(profile->superSources()->superSource()->mask1(),&SuperSourceMask::enableChanged,this,[=](bool enable){
+        models->macroInvoke(&Models::superSourceMaskEnable,SuperSource::MASK1,enable);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_MASK1,SUPER_MASK1_ENABLE,enable);
+    });
+    connect(profile->superSources()->superSource()->mask1(),&SuperSourceMask::hStartChanged,this,[=](int hStart){
+        models->macroInvoke(&Models::superSourceMaskHStart,SuperSource::MASK1,hStart);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_MASK1,SUPER_MASK1_H_START,hStart);
+    });
+    connect(profile->superSources()->superSource()->mask1(),&SuperSourceMask::vStartChanged,this,[=](int vStart){
+        models->macroInvoke(&Models::superSourceMaskVStart,SuperSource::MASK1,vStart);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_MASK1,SUPER_MASK1_V_START,vStart);
+    });
+    connect(profile->superSources()->superSource()->mask1(),&SuperSourceMask::hEndChanged,this,[=](int hEnd){
+        models->macroInvoke(&Models::superSourceMaskHEnd,SuperSource::MASK1,hEnd);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_MASK1,SUPER_MASK1_H_END,hEnd);
+    });
+    connect(profile->superSources()->superSource()->mask1(),&SuperSourceMask::vEndChanged,this,[=](int vEnd){
+        models->macroInvoke(&Models::superSourceMaskVEnd,SuperSource::MASK1,vEnd);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_MASK1,SUPER_MASK1_V_END,vEnd);
+    });
+    connect(profile->superSources()->superSource()->mask2(),&SuperSourceMask::enableChanged,this,[=](bool enable){
+        models->macroInvoke(&Models::superSourceMaskEnable,SuperSource::MASK2,enable);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_MASK2,SUPER_MASK2_ENABLE,enable);
+    });
+    connect(profile->superSources()->superSource()->mask2(),&SuperSourceMask::hStartChanged,this,[=](int hStart){
+        models->macroInvoke(&Models::superSourceMaskHStart,SuperSource::MASK2,hStart);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_MASK2,SUPER_MASK2_H_START,hStart);
+    });
+    connect(profile->superSources()->superSource()->mask2(),&SuperSourceMask::vStartChanged,this,[=](int vStart){
+        models->macroInvoke(&Models::superSourceMaskVStart,SuperSource::MASK2,vStart);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_MASK2,SUPER_MASK2_V_START,vStart);
+    });
+    connect(profile->superSources()->superSource()->mask2(),&SuperSourceMask::hEndChanged,this,[=](int hEnd){
+        models->macroInvoke(&Models::superSourceMaskHEnd,SuperSource::MASK2,hEnd);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_MASK2,SUPER_MASK2_H_END,hEnd);
+    });
+    connect(profile->superSources()->superSource()->mask2(),&SuperSourceMask::vEndChanged,this,[=](int vEnd){
+        models->macroInvoke(&Models::superSourceMaskVEnd,SuperSource::MASK2,vEnd);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_MASK2,SUPER_MASK2_V_END,vEnd);
+    });
+    connect(profile->superSources()->superSource()->border1(),&SuperSourceBorder::widthChanged,this,[=](int width){
+        models->macroInvoke(&Models::superSourceBorderWidth,SuperSource::BORDER1,width);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_BORDER1,SUPER_BORDER1_WIDTH,width);
+    });
+    connect(profile->superSources()->superSource()->border1(),&SuperSourceBorder::colorHueChanged,this,[=](int colorHue){
+        models->macroInvoke(&Models::superSourceBorderColorHue,SuperSource::BORDER1,colorHue);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_BORDER1,SUPER_BORDER1_HUE,colorHue);
+    });
+    connect(profile->superSources()->superSource()->border1(),&SuperSourceBorder::colorSaturationChanged,this,[=](int colorSaturation){
+        models->macroInvoke(&Models::superSourceBorderColorSaturation,SuperSource::BORDER1,colorSaturation);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_BORDER1,SUPER_BORDER1_SATURATION,colorSaturation);
+    });
+    connect(profile->superSources()->superSource()->border1(),&SuperSourceBorder::colorBrightnessChanged,this,[=](int colorBrightness){
+        models->macroInvoke(&Models::superSourceBorderColorBrightness,SuperSource::BORDER1,colorBrightness);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_BORDER1,SUPER_BORDER1_BRIGHTNESS,colorBrightness);
+    });
+    connect(profile->superSources()->superSource()->border2(),&SuperSourceBorder::widthChanged,this,[=](int width){
+        models->macroInvoke(&Models::superSourceBorderWidth,SuperSource::BORDER2,width);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_BORDER2,SUPER_BORDER2_WIDTH,width);
+    });
+    connect(profile->superSources()->superSource()->border2(),&SuperSourceBorder::colorHueChanged,this,[=](int colorHue){
+        models->macroInvoke(&Models::superSourceBorderColorHue,SuperSource::BORDER2,colorHue);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_BORDER2,SUPER_BORDER2_HUE,colorHue);
+    });
+    connect(profile->superSources()->superSource()->border2(),&SuperSourceBorder::colorSaturationChanged,this,[=](int colorSaturation){
+        models->macroInvoke(&Models::superSourceBorderColorSaturation,SuperSource::BORDER2,colorSaturation);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_BORDER2,SUPER_BORDER2_SATURATION,colorSaturation);
+    });
+    connect(profile->superSources()->superSource()->border2(),&SuperSourceBorder::colorBrightnessChanged,this,[=](int colorBrightness){
+        models->macroInvoke(&Models::superSourceBorderColorBrightness,SuperSource::BORDER2,colorBrightness);
+        settings->setMenuValue(MENU_FIRST_SUPER_SOURCE,SUPER_SOURCE_BORDER2,SUPER_BORDER2_BRIGHTNESS,colorBrightness);
+    });
 
     //第二遍读取，防止发多次信号
     profile->read(profile);

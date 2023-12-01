@@ -179,13 +179,13 @@ signals:
 
     //super source
     /**/
-    void superSourceEnable(int enable);
+    void superSourceEnable(bool enable);
     void superSourceSource1(int source1);
     void superSourceSource2(int source2);
     void superSourceBackground(int background);
-    void superSourceControlStyle(int style);
+    void superSourceControlStyle(QString style);
     void superSourceControlYPosition(int YPosition);
-    void superSourceMaskEnable(int maskIndex,int enable);
+    void superSourceMaskEnable(int maskIndex,bool enable);
     void superSourceMaskHStart(int maskIndex,int HStart);
     void superSourceMaskVStart(int maskIndex,int VStart);
     void superSourceMaskHEnd(int maskIndex,int HEnd);
@@ -390,13 +390,13 @@ public slots:
     void setColorBack(int colorIndex,int hue,int saturation,int brightness);
 
     //super source
-    void setSuperSourceEnable(int enable);
+    void setSuperSourceEnable(bool enable);
     void setSuperSourceSource1(int source1);
     void setSuperSourceSource2(int source2);
     void setSuperSourceBackground(int background);
-    void setSuperSourceControlStyle(int style);
+    void setSuperSourceControlStyle(QString style);
     void setSuperSourceControlYPosition(int YPosition);
-    void setSuperSourceMaskEnable(int maskIndex,int enable);
+    void setSuperSourceMaskEnable(int maskIndex,bool enable);
     void setSuperSourceMaskHStart(int maskIndex,int HStart);
     void setSuperSourceMaskVStart(int maskIndex,int VStart);
     void setSuperSourceMaskHEnd(int maskIndex,int HEnd);
@@ -405,10 +405,10 @@ public slots:
     void setSuperSourceBorderColorHue(int borderIndex,int hue);
     void setSuperSourceBorderColorSaturation(int borderIndex,int saturation);
     void setSuperSourceBorderColorBrightness(int borderIndex,int brightness);
-    void setSuperSourceCtrl();
-    void setSuperSource();
-    void setSuperSourceMask(int maskIndex,int PositionIndex);
-    void setSuperSourceColor(int colorIndex);
+    void setSuperSourceCtrl();//
+    void setSuperSource();//
+    void setSuperSourceMask(int maskIndex,int PositionIndex);//
+    void setSuperSourceColor(int colorIndex);//
 
     //key type
     void setKeyType(QString type);

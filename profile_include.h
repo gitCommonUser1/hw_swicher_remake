@@ -22,5 +22,9 @@
 #include "fadetoblack.h"
 #include "downstreamkeys.h"
 #include "downstreamkey.h"
+#include "supersources.h"
+#include "supersource.h"
+#include "supersourceborder.h"
+#include "supersourcemask.h"
 
 #endif // PROFILE_INCLUDE_H

@@ -92,6 +92,10 @@ SOURCES += \
     src/uvc_out_power.c \
     src/uvc_ports.c \
     src/w25qxx.c \
+    supersource.cpp \
+    supersourceborder.cpp \
+    supersourcemask.cpp \
+    supersources.cpp \
     testqml.cpp \
     transitionstyle.cpp \
     wipeparameters.cpp \
@@ -248,6 +252,10 @@ HEADERS += \
     settings.h \
     control.h \
     models.h \
+    supersource.h \
+    supersourceborder.h \
+    supersourcemask.h \
+    supersources.h \
     testqml.h \
     timeZone.h \
     transitionstyle.h \
