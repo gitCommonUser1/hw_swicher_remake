@@ -12,7 +12,8 @@
 #include "regexp.h"
 #include "ndi.h"
 #include "xmlprocessor.h"
-
+#include "gostreamsystem.h"
+#include "profile_include.h"
 #include <QTimer>
 
 extern Settings*settings;
@@ -21,6 +22,7 @@ extern LeftMenuModel*leftMenuModel;
 extern Media_sd *media_sd;
 extern MessageDialogControl *messageDialogControl;
 extern Ndi *ndi;
+extern Profile *profile;
 
 class KeyAbstractClass{
 public:
@@ -68,15 +70,15 @@ class KeyAudioAfv:public KeyAbstractClass{
 public:
     using KeyAbstractClass::KeyAbstractClass;
     void doWork(int status = 1){
-//        if(status != 1)
-//            return ;
-//        if(settings->lastFirstUnfold() == MENU_FIRST_AUDIO_MIXER && settings->lastSecondUnfold() >= AUDIO_MIXER_IN1 && settings->lastSecondUnfold() <= AUDIO_MIXER_AUX){
-//            int value = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[settings->lastSecondUnfold()]->third[IN_ENABLE]->current.toInt();
-//            if(value == AUDIO_OFF || value == AUDIO_ON)
-//                settings->setMenuValue(settings->lastFirstUnfold(),settings->lastSecondUnfold(),IN_ENABLE,AUDIO_AFV);
-//            else if(value == AUDIO_AFV)
-//                settings->setMenuValue(settings->lastFirstUnfold(),settings->lastSecondUnfold(),IN_ENABLE,AUDIO_OFF);
-//        }
+        if(status != 1)
+            return ;
+        if(settings->lastFirstUnfold() == MENU_FIRST_AUDIO_MIXER && settings->lastSecondUnfold() >= AUDIO_MIXER_IN1 && settings->lastSecondUnfold() <= AUDIO_MIXER_AUX){
+            int value = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[settings->lastSecondUnfold()]->third[IN1_ENABLE]->current.toInt();
+            if(value == AudioSource::ON || value == AudioSource::OFF)
+                settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[settings->lastSecondUnfold()]->third[IN1_ENABLE]->doWork(AudioSource::AFV);
+            else if(value == AudioSource::AFV)
+                settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[settings->lastSecondUnfold()]->third[IN1_ENABLE]->doWork(AudioSource::OFF);
+        }
     }
 };
 
@@ -84,25 +86,25 @@ class KeyAudioOn:public KeyAbstractClass{
 public:
     using KeyAbstractClass::KeyAbstractClass;
     void doWork(int status = 1){
-//        if(status != 1)
-//            return ;
-//        if(settings->lastFirstUnfold() == MENU_FIRST_AUDIO_MIXER){
-//            if(settings->lastSecondUnfold() >= AUDIO_MIXER_MIC1 && settings->lastSecondUnfold() <= AUDIO_MIXER_MIC2){
-//                int value = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[settings->lastSecondUnfold()]->third[MIC_ENABLE]->current.toInt();
-//                if(value == AUDIO_OFF){
-//                    settings->setMenuValue(settings->lastFirstUnfold(),settings->lastSecondUnfold(),MIC_ENABLE,AUDIO_ON);
-//                }else if(value == AUDIO_ON){
-//                    settings->setMenuValue(settings->lastFirstUnfold(),settings->lastSecondUnfold(),MIC_ENABLE,AUDIO_OFF);
-//                }
-//            }else if(settings->lastSecondUnfold() >= AUDIO_MIXER_IN1 && settings->lastSecondUnfold() <= AUDIO_MIXER_AUX){
-//                int value = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[settings->lastSecondUnfold()]->third[IN_ENABLE]->current.toInt();
-//                if(value == AUDIO_OFF || value == AUDIO_AFV){
-//                    settings->setMenuValue(settings->lastFirstUnfold(),settings->lastSecondUnfold(),IN_ENABLE,AUDIO_ON);
-//                }else if(value == AUDIO_ON){
-//                    settings->setMenuValue(settings->lastFirstUnfold(),settings->lastSecondUnfold(),IN_ENABLE,AUDIO_OFF);
-//                }
-//            }
-//        }
+        if(status != 1)
+            return ;
+        if(settings->lastFirstUnfold() == MENU_FIRST_AUDIO_MIXER){
+            if(settings->lastSecondUnfold() >= AUDIO_MIXER_MIC1 && settings->lastSecondUnfold() <= AUDIO_MIXER_MIC2){
+                int value = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[settings->lastSecondUnfold()]->third[MIC1_ENABLE]->current.toInt();
+                if(value == AudioSource::OFF){
+                    settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[settings->lastSecondUnfold()]->third[MIC1_ENABLE]->doWork(AudioSource::ON);
+                }else if(value == AudioSource::ON){
+                    settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[settings->lastSecondUnfold()]->third[MIC1_ENABLE]->doWork(AudioSource::OFF);
+                }
+            }else if(settings->lastSecondUnfold() >= AUDIO_MIXER_IN1 && settings->lastSecondUnfold() <= AUDIO_MIXER_AUX){
+                int value = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[settings->lastSecondUnfold()]->third[IN1_ENABLE]->current.toInt();
+                if(value == AudioSource::OFF || value == AudioSource::AFV){
+                    settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[settings->lastSecondUnfold()]->third[IN1_ENABLE]->doWork(AudioSource::ON);
+                }else if(value == AudioSource::ON){
+                    settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[settings->lastSecondUnfold()]->third[IN1_ENABLE]->doWork(AudioSource::OFF);
+                }
+            }
+        }
     }
 };
 

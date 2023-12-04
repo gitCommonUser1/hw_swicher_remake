@@ -69,25 +69,14 @@ public:
     void menuAudioEnableChnaged(int second,int third);
     void closeAllAudioLed();
     //音量控制
-    void setMonitorLevel(int value);
-    void setAudioFader(int value);
+//    void setMonitorLevel(int value);
+//    void setAudioFader(int value);
 
     void initDHCPNetworkData();
 
 
     //fgm tally
     int getPGMTally();
-
-
-    /*fpga*/
-    //audio
-    void setAudioVolumn(int second);
-    void setAudioDelay(int second);
-    void setAudioEnable();
-    void setAFV();
-    void setAudioOn();
-    void setAudioMonitorLevel();
-    void setAudioMonitorSource();
 
     //still generate
     void setStillSelection();
@@ -293,13 +282,13 @@ signals:
     //audio
 
     /**/
-    void audioEnable(int audioIndex,int enable);
-    void audioFader(int audioIndex,double fader);
-    void audioBalance(int audioIndex,double balance);
-    void audioInput(int audioIndex,double input);
-    void audioDelay(int audioIndex,int delay);
+    void audioEnable(QString source,int enable);
+    void audioFader(QString source,double fader);
+    void audioBalance(QString source,double balance);
+    void audioInput(QString source,double input);
+    void audioDelay(QString source,int delay);
     void monitorLevel(int level);
-    void monitorSource(int source);
+    void monitorSource(QString source);
     /**/
 
 
@@ -504,6 +493,19 @@ public slots:
     void setFtbAfv(bool afv);
     /**/
 
+    //audio mixer
+    /**/
+    void setAudioEnable(QString source,int enable);
+    void setAudioFader(QString source,double fader);
+    void setAudioBalance(QString source,double balance);
+    void setAudioInput(QString source,double input);
+    void setAudioDelay(QString source,int delay);
+    void setMonitorLevel(int level);
+    void setMonitorSource(QString source);
+    void setAudioVolumn(int index);//
+    void setAudioOn();//
+    void setAudioAfv();//
+    /**/
 
 
     //button status

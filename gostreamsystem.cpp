@@ -9,6 +9,7 @@
 #include <QFile>
 #include "hw_config.h"
 #include "supersources.h"
+#include "audiomixer.h"
 
 #define PRODUCT_NAME "GoStream Deck"
 
@@ -36,6 +37,8 @@ Profile::Profile(QObject *parent) : QObject(parent)
     m_downstreamKeys->setObjectName("downstreamKeys");
     m_superSources = new SuperSources(this);
     m_superSources->setObjectName("superSources");
+    m_audioMixer = new AudioMixer(this);
+    m_audioMixer->setObjectName("audioMixer");
 }
 
 void Profile::write(QObject *object)
@@ -100,7 +103,8 @@ void Profile::writeRecursion(QObject *object, QXmlStreamWriter &stream)
             {
                 //排除自定义类型，只读取qt内置类型
                 //这里是节点参数列表
-                stream.writeAttribute(name,property.read(object).toString());
+                if(!isHiddenProperty(object,name))
+                    stream.writeAttribute(name,property.read(object).toString());
             }
             else
             {
@@ -263,4 +267,18 @@ int Profile::read(QObject *object)
         return -1;
     }
     return 0;
+}
+
+//这里规定，如果这个类中有子类名字与属性名字相同，则不写入这个属性。
+//实现效果为，动态设置某个属性是否需要写入文件
+bool Profile::isHiddenProperty(QObject *object,QString name)
+{
+    auto children = object->children();
+    for(int i = 0;i < children.size();++i)
+    {
+        if(children[i]->objectName() == name)
+            return true;
+    }
+
+    return false;
 }

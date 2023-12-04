@@ -1126,6 +1126,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioFader),AUDIO_MIXER_MIC1,value.toInt());
+        profile->audioMixer()->audioInput()->mic1()->setFader(value.toDouble());
     }
 };
 
@@ -1134,6 +1135,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioBalance),AUDIO_MIXER_MIC1,value.toInt());
+        profile->audioMixer()->audioInput()->mic1()->setBalance(value.toDouble());
     }
 };
 
@@ -1142,6 +1144,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioInput),AUDIO_MIXER_MIC1,value.toInt());
+        profile->audioMixer()->audioInput()->mic1()->setInput(value.toDouble());
     }
 };
 
@@ -1150,6 +1153,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioDelay),AUDIO_MIXER_MIC1,value.toInt());
+        profile->audioMixer()->audioInput()->mic1()->setDelay(value.toInt());
     }
 };
 
@@ -1158,6 +1162,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioEnable),AUDIO_MIXER_MIC1,value.toInt());
+        profile->audioMixer()->audioInput()->mic1()->setEnable(value.toInt());
     }
 };
 
@@ -1168,6 +1173,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioFader),AUDIO_MIXER_MIC2,value.toInt());
+        profile->audioMixer()->audioInput()->mic2()->setFader(value.toDouble());
     }
 };
 
@@ -1176,6 +1182,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioBalance),AUDIO_MIXER_MIC2,value.toInt());
+        profile->audioMixer()->audioInput()->mic2()->setBalance(value.toDouble());
     }
 };
 
@@ -1184,6 +1191,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioInput),AUDIO_MIXER_MIC2,value.toInt());
+        profile->audioMixer()->audioInput()->mic2()->setInput(value.toDouble());
     }
 };
 
@@ -1192,6 +1200,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioDelay),AUDIO_MIXER_MIC2,value.toInt());
+        profile->audioMixer()->audioInput()->mic2()->setDelay(value.toInt());
     }
 };
 
@@ -1200,6 +1209,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioEnable),AUDIO_MIXER_MIC2,value.toInt());
+        profile->audioMixer()->audioInput()->mic2()->setEnable(value.toInt());
     }
 };
 
@@ -1211,6 +1221,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioFader),AUDIO_MIXER_IN1,value.toInt());
+        profile->audioMixer()->audioInput()->in1()->setFader(value.toDouble());
     }
 };
 
@@ -1219,6 +1230,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioBalance),AUDIO_MIXER_IN1,value.toInt());
+        profile->audioMixer()->audioInput()->in1()->setBalance(value.toDouble());
     }
 };
 
@@ -1227,6 +1239,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioInput),AUDIO_MIXER_IN1,value.toInt());
+        profile->audioMixer()->audioInput()->in1()->setInput(value.toDouble());
     }
 };
 
@@ -1235,6 +1248,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioEnable),AUDIO_MIXER_IN1,value.toInt());
+        profile->audioMixer()->audioInput()->in1()->setEnable(value.toInt());
     }
 };
 
@@ -1245,6 +1259,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioFader),AUDIO_MIXER_IN2,value.toInt());
+        profile->audioMixer()->audioInput()->in2()->setFader(value.toDouble());
     }
 };
 
@@ -1253,6 +1268,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioBalance),AUDIO_MIXER_IN2,value.toInt());
+        profile->audioMixer()->audioInput()->in2()->setBalance(value.toDouble());
     }
 };
 
@@ -1261,6 +1277,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioInput),AUDIO_MIXER_IN2,value.toInt());
+        profile->audioMixer()->audioInput()->in2()->setInput(value.toDouble());
     }
 };
 
@@ -1269,6 +1286,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioEnable),AUDIO_MIXER_IN2,value.toInt());
+        profile->audioMixer()->audioInput()->in2()->setEnable(value.toInt());
     }
 };
 
@@ -1279,6 +1297,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioFader),AUDIO_MIXER_IN3,value.toInt());
+        profile->audioMixer()->audioInput()->in3()->setFader(value.toDouble());
     }
 };
 
@@ -1287,6 +1306,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioBalance),AUDIO_MIXER_IN3,value.toInt());
+        profile->audioMixer()->audioInput()->in3()->setBalance(value.toDouble());
     }
 };
 
@@ -1295,6 +1315,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioInput),AUDIO_MIXER_IN3,value.toInt());
+        profile->audioMixer()->audioInput()->in3()->setInput(value.toDouble());
     }
 };
 
@@ -1303,6 +1324,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioEnable),AUDIO_MIXER_IN3,value.toInt());
+        profile->audioMixer()->audioInput()->in3()->setEnable(value.toInt());
     }
 };
 
@@ -1314,6 +1336,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioFader),AUDIO_MIXER_IN4,value.toInt());
+        profile->audioMixer()->audioInput()->in4()->setFader(value.toDouble());
     }
 };
 
@@ -1322,6 +1345,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioBalance),AUDIO_MIXER_IN4,value.toInt());
+        profile->audioMixer()->audioInput()->in4()->setBalance(value.toDouble());
     }
 };
 
@@ -1330,6 +1354,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioInput),AUDIO_MIXER_IN4,value.toInt());
+        profile->audioMixer()->audioInput()->in4()->setInput(value.toDouble());
     }
 };
 
@@ -1338,6 +1363,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioEnable),AUDIO_MIXER_IN4,value.toInt());
+        profile->audioMixer()->audioInput()->in4()->setEnable(value.toInt());
     }
 };
 
@@ -1348,6 +1374,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioFader),AUDIO_MIXER_AUX,value.toInt());
+        profile->audioMixer()->audioInput()->aux()->setFader(value.toDouble());
     }
 };
 
@@ -1356,6 +1383,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioBalance),AUDIO_MIXER_AUX,value.toInt());
+        profile->audioMixer()->audioInput()->aux()->setBalance(value.toDouble());
     }
 };
 
@@ -1364,6 +1392,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioInput),AUDIO_MIXER_AUX,value.toInt());
+        profile->audioMixer()->audioInput()->aux()->setInput(value.toDouble());
     }
 };
 
@@ -1372,6 +1401,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioEnable),AUDIO_MIXER_AUX,value.toInt());
+        profile->audioMixer()->audioInput()->aux()->setEnable(value.toInt());
     }
 };
 
@@ -1383,6 +1413,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::audioFader),AUDIO_MIXER_PGM,value.toInt());
+        profile->audioMixer()->audioOutput()->pgm()->setFader(value.toDouble());
     }
 };
 
@@ -1391,6 +1422,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::monitorLevel),value.toInt());
+        profile->audioMixer()->audioOutput()->monitor()->setLevel(value.toInt());
     }
 };
 
@@ -1399,6 +1431,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::monitorSource),value.toInt());
+        profile->audioMixer()->audioOutput()->monitor()->setSource(value.toInt());
     }
 };
 

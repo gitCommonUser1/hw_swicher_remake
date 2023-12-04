@@ -9,6 +9,7 @@ class MixEffectBlocks;
 class DownstreamKeys;
 class ColorBacks;
 class SuperSources;
+class AudioMixer;
 
 class Profile : public QObject
 {
@@ -17,16 +18,19 @@ class Profile : public QObject
     Q_PROPERTY(int minorVersion READ minorVersion WRITE setMinorVersion NOTIFY minorVersionChanged)
     Q_PROPERTY(int patchVersion READ patchVersion WRITE setPatchVersion NOTIFY patchVersionChanged)
     Q_PROPERTY(QString product READ product WRITE setProduct NOTIFY productChanged)
-    Q_PROPERTY(MixEffectBlocks* mixEffectBlocks READ mixEffectBlocks WRITE setMixEffectBlocks NOTIFY mixEffectBlocksChanged)
-    Q_PROPERTY(DownstreamKeys* downstreamKeys READ downstreamKeys WRITE setDownstreamKeys NOTIFY downstreamKeysChanged)
-    Q_PROPERTY(ColorBacks* colorBacks READ colorBacks WRITE setColorBacks NOTIFY colorBacksChanged)
-    Q_PROPERTY(SuperSources* superSources READ superSources WRITE setSuperSources NOTIFY superSourcesChanged)
+    Q_PROPERTY(MixEffectBlocks* mixEffectBlocks READ mixEffectBlocks)
+    Q_PROPERTY(DownstreamKeys* downstreamKeys READ downstreamKeys)
+    Q_PROPERTY(ColorBacks* colorBacks READ colorBacks)
+    Q_PROPERTY(SuperSources* superSources READ superSources)
+    Q_PROPERTY(AudioMixer* audioMixer READ audioMixer)
 public:
     explicit Profile(QObject *parent = nullptr);
 
     void write(QObject *object);
     void writeRecursion(QObject *object,QXmlStreamWriter &stream);
     int read(QObject *object);
+
+    bool isHiddenProperty(QObject *object,QString name);
 
 
 
@@ -70,34 +74,12 @@ public:
         return m_superSources;
     }
 
+    AudioMixer* audioMixer() const
+    {
+        return m_audioMixer;
+    }
+
 public slots:
-    void setMixEffectBlocks(MixEffectBlocks* mixEffectBlocks)
-    {
-        if (m_mixEffectBlocks == mixEffectBlocks)
-            return;
-
-        m_mixEffectBlocks = mixEffectBlocks;
-        emit mixEffectBlocksChanged(m_mixEffectBlocks);
-    }
-
-    void setDownstreamKeys(DownstreamKeys* downstreamKeys)
-    {
-        if (m_downstreamKeys == downstreamKeys)
-            return;
-
-        m_downstreamKeys = downstreamKeys;
-        emit downstreamKeysChanged(m_downstreamKeys);
-    }
-
-    void setColorBacks(ColorBacks* colorBacks)
-    {
-        if (m_colorBacks == colorBacks)
-            return;
-
-        m_colorBacks = colorBacks;
-        emit colorBacksChanged(m_colorBacks);
-    }
-
     void setMajorVersion(int majorVersion)
     {
         if (m_majorVersion == majorVersion)
@@ -134,14 +116,6 @@ public slots:
         emit productChanged(m_product);
     }
 
-    void setSuperSources(SuperSources* superSources)
-    {
-        if (m_superSources == superSources)
-            return;
-
-        m_superSources = superSources;
-        emit superSourcesChanged(m_superSources);
-    }
 
 private:
 
@@ -161,16 +135,14 @@ private:
 
     SuperSources* m_superSources;
 
+    AudioMixer* m_audioMixer;
+
 signals:
 
-void mixEffectBlocksChanged(MixEffectBlocks* mixEffectBlocks);
-void downstreamKeysChanged(DownstreamKeys* downstreamKeys);
-void colorBacksChanged(ColorBacks* colorBacks);
 void majorVersionChanged(int majorVersion);
 void minorVersionChanged(int minorVersion);
 void patchVersionChanged(int patchVersion);
 void productChanged(QString product);
-void superSourcesChanged(SuperSources* superSources);
 };
 
 #endif // GOSTREAMSYSTEM_H

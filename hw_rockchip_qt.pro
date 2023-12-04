@@ -33,7 +33,10 @@ LIBS += \
 
 
 SOURCES += \
+    audioinput.cpp \
     audiomixer.cpp \
+    audiooutput.cpp \
+    audiosource.cpp \
     chromaparameters.cpp \
     colorback.cpp \
     colorbacks.cpp \
@@ -127,7 +130,10 @@ HEADERS += \
     MenuDataType.h \
     MenuEnums.h \
     MenuThirdImplement.h \
+    audioinput.h \
     audiomixer.h \
+    audiooutput.h \
+    audiosource.h \
     chromaparameters.h \
     colorback.h \
     colorbacks.h \

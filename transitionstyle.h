@@ -13,9 +13,9 @@ class TransitionStyle : public QObject
     Q_PROPERTY(QString style READ style WRITE setStyle NOTIFY styleChanged)
     Q_PROPERTY(QString nextStyle READ nextStyle WRITE setNextStyle NOTIFY nextStyleChanged)
     Q_PROPERTY(bool previewTransition READ previewTransition WRITE setPreviewTransition NOTIFY previewTransitionChanged)
-    Q_PROPERTY(MixParameters* mixParameters READ mixParameters WRITE setMixParameters NOTIFY mixParametersChanged)
-    Q_PROPERTY(DipParameters* dipParameters READ dipParameters WRITE setDipParameters NOTIFY dipParametersChanged)
-    Q_PROPERTY(WipeParameters* wipeParameters READ wipeParameters WRITE setWipeParameters NOTIFY wipeParametersChanged)
+    Q_PROPERTY(MixParameters* mixParameters READ mixParameters)
+    Q_PROPERTY(DipParameters* dipParameters READ dipParameters)
+    Q_PROPERTY(WipeParameters* wipeParameters READ wipeParameters)
 
 public:
     explicit TransitionStyle(QObject *parent = nullptr);
@@ -102,33 +102,6 @@ public slots:
         emit previewTransitionChanged(m_previewTransition);
     }
 
-    void setMixParameters(MixParameters* mixParameters)
-    {
-        if (m_mixParameters == mixParameters)
-            return;
-
-        m_mixParameters = mixParameters;
-        emit mixParametersChanged(m_mixParameters);
-    }
-
-    void setDipParameters(DipParameters* dipParameters)
-    {
-        if (m_dipParameters == dipParameters)
-            return;
-
-        m_dipParameters = dipParameters;
-        emit dipParametersChanged(m_dipParameters);
-    }
-
-    void setWipeParameters(WipeParameters* wipeParameters)
-    {
-        if (m_wipeParameters == wipeParameters)
-            return;
-
-        m_wipeParameters = wipeParameters;
-        emit wipeParametersChanged(m_wipeParameters);
-    }
-
 private:
 
     QString m_style;
@@ -148,9 +121,6 @@ signals:
 void styleChanged(QString style);
 void nextStyleChanged(QString nextStyle);
 void previewTransitionChanged(bool previewTransition);
-void mixParametersChanged(MixParameters* mixParameters);
-void dipParametersChanged(DipParameters* dipParameters);
-void wipeParametersChanged(WipeParameters* wipeParameters);
 };
 
 #endif // TRANSITIONSTYLE_H

@@ -14,12 +14,12 @@ class MixEffectBlock : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int index READ index WRITE setIndex NOTIFY indexChanged)
-    Q_PROPERTY(Program* program READ program WRITE setProgram NOTIFY programChanged)
-    Q_PROPERTY(Preview* preview READ preview WRITE setPreview NOTIFY previewChanged)
-    Q_PROPERTY(NextTransition* nextTransition READ nextTransition WRITE setNextTransition NOTIFY nextTransitionChanged)
-    Q_PROPERTY(TransitionStyle* transitionStyle READ transitionStyle WRITE setTransitionStyle NOTIFY transitionStyleChanged)
-    Q_PROPERTY(Keys* keys READ keys WRITE setKeys NOTIFY keysChanged)
-    Q_PROPERTY(FadeToBlack* ftb READ ftb WRITE setFtb NOTIFY ftbChanged)
+    Q_PROPERTY(Program* program READ program)
+    Q_PROPERTY(Preview* preview READ preview)
+    Q_PROPERTY(NextTransition* nextTransition READ nextTransition)
+    Q_PROPERTY(TransitionStyle* transitionStyle READ transitionStyle)
+    Q_PROPERTY(Keys* keys READ keys)
+    Q_PROPERTY(FadeToBlack* ftb READ ftb)
 public:
     explicit MixEffectBlock(QObject *parent = nullptr);
 
@@ -80,60 +80,6 @@ public slots:
         emit indexChanged(m_index);
     }
 
-    void setProgram(Program* program)
-    {
-        if (m_program == program)
-            return;
-
-        m_program = program;
-        emit programChanged(m_program);
-    }
-
-    void setPreview(Preview* preview)
-    {
-        if (m_preview == preview)
-            return;
-
-        m_preview = preview;
-        emit previewChanged(m_preview);
-    }
-
-    void setNextTransition(NextTransition* nextTransition)
-    {
-        if (m_nextTransition == nextTransition)
-            return;
-
-        m_nextTransition = nextTransition;
-        emit nextTransitionChanged(m_nextTransition);
-    }
-
-    void setKeys(Keys* keys)
-    {
-        if (m_keys == keys)
-            return;
-
-        m_keys = keys;
-        emit keysChanged(m_keys);
-    }
-
-    void setTransitionStyle(TransitionStyle* transitionStyle)
-    {
-        if (m_transitionStyle == transitionStyle)
-            return;
-
-        m_transitionStyle = transitionStyle;
-        emit transitionStyleChanged(m_transitionStyle);
-    }
-
-    void setFtb(FadeToBlack* ftb)
-    {
-        if (m_ftb == ftb)
-            return;
-
-        m_ftb = ftb;
-        emit ftbChanged(m_ftb);
-    }
-
 private:
 
     int m_index;
@@ -153,12 +99,6 @@ private:
 signals:
 
 void indexChanged(int index);
-void programChanged(Program* program);
-void previewChanged(Preview* preview);
-void nextTransitionChanged(NextTransition* nextTransition);
-void keysChanged(Keys* keys);
-void transitionStyleChanged(TransitionStyle* transitionStyle);
-void ftbChanged(FadeToBlack* ftb);
 };
 
 #endif // MIXEFFECTBLOCK_H

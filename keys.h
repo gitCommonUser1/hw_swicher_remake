@@ -12,11 +12,11 @@ class PIPParameters;
 class Keys : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(Key* key READ key WRITE setKey NOTIFY keyChanged)
-    Q_PROPERTY(LumaParameters* lumaParameters READ lumaParameters WRITE setLumaParameters NOTIFY lumaParametersChanged)
-    Q_PROPERTY(ChromaParameters* chromaParameters READ chromaParameters WRITE setChromaParameters NOTIFY chromaParametersChanged)
-    Q_PROPERTY(PatternParameters* patternParameters READ patternParameters WRITE setPatternParameters NOTIFY patternParametersChanged)
-    Q_PROPERTY(PIPParameters* pIPParameters READ pIPParameters WRITE setPIPParameters NOTIFY pIPParametersChanged)
+    Q_PROPERTY(Key* key READ key)
+    Q_PROPERTY(LumaParameters* lumaParameters READ lumaParameters)
+    Q_PROPERTY(ChromaParameters* chromaParameters READ chromaParameters)
+    Q_PROPERTY(PatternParameters* patternParameters READ patternParameters)
+    Q_PROPERTY(PIPParameters* pIPParameters READ pIPParameters)
 
 public:
     explicit Keys(QObject *parent = nullptr);
@@ -79,51 +79,6 @@ public:
         return m_pIPParameters;
     }
 
-public slots:
-    void setKey(Key* key)
-    {
-        if (m_key == key)
-            return;
-
-        m_key = key;
-        emit keyChanged(m_key);
-    }
-
-    void setLumaParameters(LumaParameters* lumaParameters)
-    {
-        if (m_lumaParameters == lumaParameters)
-            return;
-
-        m_lumaParameters = lumaParameters;
-        emit lumaParametersChanged(m_lumaParameters);
-    }
-
-    void setChromaParameters(ChromaParameters* chromaParameters)
-    {
-        if (m_chromaParameters == chromaParameters)
-            return;
-
-        m_chromaParameters = chromaParameters;
-        emit chromaParametersChanged(m_chromaParameters);
-    }
-
-    void setPatternParameters(PatternParameters* patternParameters)
-    {
-        if (m_patternParameters == patternParameters)
-            return;
-
-        m_patternParameters = patternParameters;
-        emit patternParametersChanged(m_patternParameters);
-    }
-
-    void setPIPParameters(PIPParameters* pIPParameters)
-    {
-        if (m_pIPParameters == pIPParameters)
-            return;
-
-        m_pIPParameters = pIPParameters;
-        emit pIPParametersChanged(m_pIPParameters);
-    }
 
 private:
 
@@ -136,14 +91,6 @@ private:
     PatternParameters* m_patternParameters;
 
     PIPParameters* m_pIPParameters;
-
-signals:
-
-void keyChanged(Key* keyType);
-void lumaParametersChanged(LumaParameters* lumaParameters);
-void chromaParametersChanged(ChromaParameters* chromaParameters);
-void patternParametersChanged(PatternParameters* patternParameters);
-void pIPParametersChanged(PIPParameters* pIPParameters);
 };
 
 #endif // KEYS_H

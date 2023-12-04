@@ -26,5 +26,9 @@
 #include "supersource.h"
 #include "supersourceborder.h"
 #include "supersourcemask.h"
+#include "audiomixer.h"
+#include "audioinput.h"
+#include "audiooutput.h"
+#include "audiosource.h"
 
 #endif // PROFILE_INCLUDE_H

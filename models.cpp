@@ -144,6 +144,14 @@ void Models::init_connect()
     connect(this,&Models::ftbRate,this,&Models::setFtbRate);
     connect(this,&Models::ftbAfv,this,&Models::setFtbAfv);
 
+    //audio mixer
+    connect(this,&Models::audioEnable,this,&Models::setAudioEnable);
+    connect(this,&Models::audioFader,this,&Models::setAudioFader);
+    connect(this,&Models::audioBalance,this,&Models::setAudioBalance);
+    connect(this,&Models::audioInput,this,&Models::setAudioInput);
+    connect(this,&Models::audioDelay,this,&Models::setAudioDelay);
+    connect(this,&Models::monitorLevel,this,&Models::setMonitorLevel);
+    connect(this,&Models::monitorSource,this,&Models::setMonitorSource);
 
     //button status
     connect(this,&Models::pgmIndex,this,&Models::setPgmIndex);
@@ -717,62 +725,58 @@ void Models::resetFactory()
 
 void Models::menuAudioSelectChanged(int index)
 {
-//    for(int i = KEY_LED_AUDIO_MIC1;i <= KEY_LED_AUDIO_PGM;++i)
-//    {
-//        if(QSwitcher::get_led(i))
-//        {
-//            QSwitcher::set_led(KEY_LED_AUDIO_MIC1 + i,SWITCHER_LED_OFF);
-//            break;
-//        }
-//    }
-//    QSwitcher::set_led(KEY_LED_AUDIO_AFV,SWITCHER_LED_OFF);
-//    QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_OFF);
-//    if(index != -1)
-//    {
-//        QSwitcher::set_led(KEY_LED_AUDIO_MIC1 + index,SWITCHER_LED_ON);
+    for(int i = KEY_LED_AUDIO_MIC1;i <= KEY_LED_AUDIO_PGM;++i)
+    {
+        if(QSwitcher::get_led(i))
+        {
+            QSwitcher::set_led(KEY_LED_AUDIO_MIC1 + i,SWITCHER_LED_OFF);
+            break;
+        }
+    }
+    QSwitcher::set_led(KEY_LED_AUDIO_AFV,SWITCHER_LED_OFF);
+    QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_OFF);
+    if(index != -1)
+    {
+        QSwitcher::set_led(KEY_LED_AUDIO_MIC1 + index,SWITCHER_LED_ON);
 
-//        int value = AUDIO_OFF;
-//        if(index >= AUDIO_MIXER_MIC1 && index <= AUDIO_MIXER_MIC2){
-//            value = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[index]->third[MIC_ENABLE]->current.toInt();
-//            if(value == AUDIO_ON)
-//                QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_ON);
-//        }
-//        else if(index >= AUDIO_MIXER_IN1 && index <= AUDIO_MIXER_AUX){
-//            value = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[index]->third[IN_ENABLE]->current.toInt();
-//            if(value == AUDIO_ON)
-//                QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_ON);
-//            else if(value == AUDIO_AFV)
-//                QSwitcher::set_led(KEY_LED_AUDIO_AFV,SWITCHER_LED_ON);
-//        }
-//    }
-//    else
-//    {
-
-//    }
+        int value = AUDIO_OFF;
+        if(index >= AUDIO_MIXER_MIC1 && index <= AUDIO_MIXER_MIC2){
+            value = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[index]->third[MIC1_ENABLE]->current.toInt();
+            if(value == AUDIO_ON)
+                QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_ON);
+        }
+        else if(index >= AUDIO_MIXER_IN1 && index <= AUDIO_MIXER_AUX){
+            value = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[index]->third[IN1_ENABLE]->current.toInt();
+            if(value == AUDIO_ON)
+                QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_ON);
+            else if(value == AUDIO_AFV)
+                QSwitcher::set_led(KEY_LED_AUDIO_AFV,SWITCHER_LED_ON);
+        }
+    }
 }
 
 void Models::menuAudioEnableChnaged(int second,int third)
 {
-//    int value = AUDIO_OFF;
-//    if(second >= AUDIO_MIXER_MIC1 && second <= AUDIO_MIXER_MIC2 && third == MIC_ENABLE){
-//        value = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[second]->third[third]->current.toInt();
-//        if(value == AUDIO_ON)
-//            QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_ON);
-//        else
-//            QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_OFF);
-//    }else if(second >= AUDIO_MIXER_IN1 && second <= AUDIO_MIXER_AUX && third == IN_ENABLE){
-//        value = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[second]->third[third]->current.toInt();
-//        if(value == AUDIO_ON){
-//            QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_ON);
-//            QSwitcher::set_led(KEY_LED_AUDIO_AFV,SWITCHER_LED_OFF);
-//        }else if(value == AUDIO_AFV){
-//            QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_OFF);
-//            QSwitcher::set_led(KEY_LED_AUDIO_AFV,SWITCHER_LED_ON);
-//        }else{
-//            QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_OFF);
-//            QSwitcher::set_led(KEY_LED_AUDIO_AFV,SWITCHER_LED_OFF);
-//        }
-//    }
+    int value = AudioSource::OFF;
+    if(second >= AUDIO_MIXER_MIC1 && second <= AUDIO_MIXER_MIC2 && (third == MIC1_ENABLE)){
+        value = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[second]->third[third]->current.toInt();
+        if(value == AudioSource::ON)
+            QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_ON);
+        else
+            QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_OFF);
+    }else if(second >= AUDIO_MIXER_IN1 && second <= AUDIO_MIXER_AUX && third == IN1_ENABLE){
+        value = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[second]->third[third]->current.toInt();
+        if(value == AUDIO_ON){
+            QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_ON);
+            QSwitcher::set_led(KEY_LED_AUDIO_AFV,SWITCHER_LED_OFF);
+        }else if(value == AUDIO_AFV){
+            QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_OFF);
+            QSwitcher::set_led(KEY_LED_AUDIO_AFV,SWITCHER_LED_ON);
+        }else{
+            QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_OFF);
+            QSwitcher::set_led(KEY_LED_AUDIO_AFV,SWITCHER_LED_OFF);
+        }
+    }
 }
 
 void Models::closeAllAudioLed()
@@ -785,25 +789,180 @@ void Models::closeAllAudioLed()
     QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_OFF);
 }
 
-void Models::setMonitorLevel(int value)
-{
-//    if(value > 0)
-//    {
-//        settings->addMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_MONITOR,MONITOR_LEVEL);
-//    }
-//    else if(value < 0)
-//    {
-//        settings->subMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_MONITOR,MONITOR_LEVEL);
-//    }
+//void Models::setMonitorLevel(int value)
+//{
+//    double current = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MONITOR]->third[MONITOR_LEVEL]->current.toDouble();
+//    double step = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MONITOR]->third[MONITOR_LEVEL]->step.toDouble();
+//    double finalValue = dround(current + value * step,2);
+//        settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_MONITOR,MONITOR_LEVEL,finalValue);
+//}
 
-    double current = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MONITOR]->third[MONITOR_LEVEL]->current.toDouble();
-    double step = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MONITOR]->third[MONITOR_LEVEL]->step.toDouble();
-    double finalValue = dround(current + value * step,2);
-    settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_MONITOR,MONITOR_LEVEL,finalValue);
+void Models::setMonitorSource(QString source)
+{
+    int value = AudioSource::sourceNameStringToIndex(source);
+    if(profile->audioMixer()->audioOutput()->monitor()->source() != value)
+    {
+        profile->audioMixer()->audioOutput()->monitor()->setSource(value);
+        return ;
+    }
+    int index = AudioSource::sourceNameStringToIndex(source);
+    fpga_write(&g_fpga,MON_SOURCE,index);
 }
 
-void Models::setAudioFader(int value)
+void Models::setAudioVolumn(int index)
 {
+    //这里有菜单的每一级index来查找需要修改的音频，后续PC发起时，需要将菜单的选项先设置好，否则出错
+    int fpga_left = -1;
+    int fpga_right = -1;
+    double input,fader,balance,left,right;
+    int left_value,right_value;
+    AudioSource *source = nullptr;
+    switch (index) {
+    case AudioSource::MIC1:
+        //mic 1
+        fpga_left = FPGA_MIC1_L_LEV;
+        fpga_right = FPGA_MIC1_R_LEV;
+        source = profile->audioMixer()->audioInput()->mic1();
+        break;
+    case AudioSource::MIC2:
+        //mic 2
+        fpga_left = FPGA_MIC2_L_LEV;
+        fpga_right = FPGA_MIC2_R_LEV;
+        source = profile->audioMixer()->audioInput()->mic2();
+        break;
+    case AudioSource::IN1:
+        //in 1
+        fpga_left = FPGA_IN1_L_LEV;
+        fpga_right = FPGA_IN1_R_LEV;
+        source = profile->audioMixer()->audioInput()->in1();
+        break;
+    case AudioSource::IN2:
+        //in 2
+        fpga_left = FPGA_IN2_L_LEV;
+        fpga_right = FPGA_IN2_R_LEV;
+        source = profile->audioMixer()->audioInput()->in2();
+        break;
+    case AudioSource::IN3:
+        //in 3
+        fpga_left = FPGA_IN3_L_LEV;
+        fpga_right = FPGA_IN3_R_LEV;
+        source = profile->audioMixer()->audioInput()->in2();
+        break;
+    case AudioSource::IN4:
+        //in 4
+        fpga_left = FPGA_IN4_L_LEV;
+        fpga_right = FPGA_IN4_R_LEV;
+        source = profile->audioMixer()->audioInput()->in3();
+        break;
+    case AudioSource::AUX:
+        //aux
+        fpga_left = FPGA_AUX_L_LEV;
+        fpga_right = FPGA_AUX_R_LEV;
+        source = profile->audioMixer()->audioInput()->in4();
+        break;
+    case AudioSource::PGM:
+        //pgm
+        fpga_left = FPGA_MASTER_LEV;
+        source = profile->audioMixer()->audioOutput()->pgm();
+        break;
+    }
+
+    fader = source->fader();
+    balance = source->balance();
+    input = source->input();
+
+    if(index == AudioSource::MIC1 || index == AudioSource::MIC2)
+        input = 0;
+
+    left = input + fader;
+    right = input + fader;
+    balance < 0?left += balance:right -= balance;
+    if(index == AudioSource::PGM)
+        left = fader;
+
+    left_value = getAudioRegValue(left);
+    right_value = getAudioRegValue(right);
+
+    if(fpga_left != -1)
+        fpga_write(&g_fpga,fpga_left,left_value);
+    if(fpga_right != -1)
+        fpga_write(&g_fpga,fpga_right,right_value);
+
+    QString sFader;
+    if(fader >= 0){
+        sFader += '+';
+        if(fader < 10)
+            sFader += '0';
+    }
+    sFader += QString::number(dround(fader,3),'f',2);
+    if(sFader.indexOf('-') != -1){
+        sFader.replace('-',"\u2212");
+        if(fader > -10)
+            sFader.insert(1,'0');
+    }
+    settings->setAudioNumbers(index,sFader);
+}
+
+void Models::setAudioOn()
+{
+    int flag = 0;
+
+    int mic1 = profile->audioMixer()->audioInput()->mic1()->enable();
+    int mic2 = profile->audioMixer()->audioInput()->mic2()->enable();
+    int in1 = profile->audioMixer()->audioInput()->in1()->enable();
+    int in2 = profile->audioMixer()->audioInput()->in2()->enable();
+    int in3 = profile->audioMixer()->audioInput()->in3()->enable();
+    int in4 = profile->audioMixer()->audioInput()->in4()->enable();
+    int aux = profile->audioMixer()->audioInput()->aux()->enable();
+
+    if(in1 == AUDIO_ON)
+       flag += 1;
+    if(in2 == AUDIO_ON)
+       flag += 2;
+    if(in3 == AUDIO_ON)
+       flag += 4;
+    if(in4 == AUDIO_ON)
+       flag += 8;
+    if(aux == AUDIO_ON)
+       flag += 16;
+    if(mic1 == AUDIO_ON)
+       flag += 32;
+    if(mic2 == AUDIO_ON)
+       flag += 64;
+
+    settings->setAudioOnFlag(flag);
+
+    fpga_write(&g_fpga,FPGA_AUDIO_ON,flag);
+}
+
+void Models::setAudioAfv()
+{
+    int flag = 0;
+
+    int in1 = profile->audioMixer()->audioInput()->in1()->enable();
+    int in2 = profile->audioMixer()->audioInput()->in2()->enable();
+    int in3 = profile->audioMixer()->audioInput()->in3()->enable();
+    int in4 = profile->audioMixer()->audioInput()->in4()->enable();
+    int aux = profile->audioMixer()->audioInput()->aux()->enable();
+
+    if(in1 == AUDIO_AFV)
+       flag += 1;
+    if(in2 == AUDIO_AFV)
+       flag += 2;
+    if(in3 == AUDIO_AFV)
+       flag += 4;
+    if(in4 == AUDIO_AFV)
+       flag += 8;
+    if(aux == AUDIO_AFV)
+       flag += 16;
+
+    settings->setAudioAfvFlag(flag);
+
+    fpga_write(&g_fpga,FPGA_AUDIO_AFV,flag);
+}
+
+//void Models::setAudioFader(int value)
+//{
 //    int index = settings->lastSecondUnfold();
 //    if(index == -1)
 //        return ;
@@ -815,7 +974,7 @@ void Models::setAudioFader(int value)
 //        double finalValue = dround(current + value * step,2);
 //        settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,index,IN_FADER,finalValue);
 //    }
-}
+//}
 
 void Models::initDHCPNetworkData()
 {
@@ -843,204 +1002,6 @@ int Models::getPGMTally()
     uint16_t index;
     fpga_read(&g_fpga,FPGA_T_BAR,&index);
     return index;
-}
-
-void Models::setAudioVolumn(int index)
-{
-//    //这里有菜单的每一级index来查找需要修改的音频，后续PC发起时，需要将菜单的选项先设置好，否则出错
-//    int fpga_left = -1;
-//    int fpga_right = -1;
-//    switch (index) {
-//    case AUDIO_MIXER_MIC1:
-//        //mic 1
-//        fpga_left = FPGA_MIC1_L_LEV;
-//        fpga_right = FPGA_MIC1_R_LEV;
-//        break;
-//    case AUDIO_MIXER_MIC2:
-//        //mic 2
-//        fpga_left = FPGA_MIC2_L_LEV;
-//        fpga_right = FPGA_MIC2_R_LEV;
-//        break;
-//    case AUDIO_MIXER_IN1:
-//        //in 1
-//        fpga_left = FPGA_IN1_L_LEV;
-//        fpga_right = FPGA_IN1_R_LEV;
-//        break;
-//    case AUDIO_MIXER_IN2:
-//        //in 2
-//        fpga_left = FPGA_IN2_L_LEV;
-//        fpga_right = FPGA_IN2_R_LEV;
-//        break;
-//    case AUDIO_MIXER_IN3:
-//        //in 3
-//        fpga_left = FPGA_IN3_L_LEV;
-//        fpga_right = FPGA_IN3_R_LEV;
-//        break;
-//    case AUDIO_MIXER_IN4:
-//        //in 4
-//        fpga_left = FPGA_IN4_L_LEV;
-//        fpga_right = FPGA_IN4_R_LEV;
-//        break;
-//    case AUDIO_MIXER_AUX:
-//        //aux
-//        fpga_left = FPGA_AUX_L_LEV;
-//        fpga_right = FPGA_AUX_R_LEV;
-//        break;
-//    case AUDIO_MIXER_PGM:
-//        //pgm
-//        fpga_left = FPGA_MASTER_LEV;
-////        left = getAudioRegValue(left);
-//        break;
-//    }
-//    double input,fader,balance,left,right;
-//    int left_value,right_value;
-
-//    fader = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[index]->third[MIC_FADER]->current.toDouble();
-
-//    QString sFader;
-//    if(fader >= 0){
-//        sFader += '+';
-//        if(fader < 10)
-//            sFader += '0';
-//    }
-//    sFader += QString::number(dround(fader,3),'f',2);
-//    if(sFader.indexOf('-') != -1){
-//        sFader.replace('-',"\u2212");
-//        if(fader > -10)
-//            sFader.insert(1,'0');
-//    }
-//    settings->setAudioNumbers(index,sFader);
-
-//    if( fpga_left != FPGA_MASTER_LEV)
-//    {
-//        input = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[index]->third[MIC_INPUT]->current.toDouble();
-//        balance = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[index]->third[MIC_BALANCE]->current.toDouble();
-//        if(index == AUDIO_MIXER_MIC1 || index == AUDIO_MIXER_MIC2)
-//        {
-//            if(index == AUDIO_MIXER_MIC1)
-//            {
-//                rv_switch_set_mic0_volume(input,input);
-//            }
-//            else
-//            {
-//                rv_switch_set_mic1_volume(input,input);
-//            }
-//            input = 0;
-//        }
-//        left = input + fader;
-//        right = input + fader;
-//        balance < 0?left += balance:right -= balance;
-//    }
-//    else
-//    {
-//        left = fader;
-//    }
-//    left_value = getAudioRegValue(left);
-//    right_value = getAudioRegValue(right);
-
-//    if(fpga_left != -1)
-//        fpga_write(&g_fpga,fpga_left,left_value);
-//    if(fpga_right != -1)
-//        fpga_write(&g_fpga,fpga_right,right_value);
-}
-
-void Models::setAudioDelay(int index)
-{
-//    int value= settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[index]->third[MIC_DELAY]->current.toInt();
-//    int fpag_value = -1;
-//    switch (index) {
-//    case 0:
-//        fpag_value = FPGA_MIC1_DELAY;
-//        break;
-//    case 1:
-//        fpag_value = FPGA_MIC2_DELAY;
-//        break;
-//    }
-
-//    if(fpag_value != -1)
-//        fpga_write(&g_fpga,fpag_value,value);
-}
-
-void Models::setAudioEnable()
-{
-    setAFV();
-    setAudioOn();
-}
-
-void Models::setAFV()
-{
-//    int flag = 0;
-
-//    int in1 = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN1]->third[IN_ENABLE]->current.toInt();
-//    int in2 = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN2]->third[IN_ENABLE]->current.toInt();
-//    int in3 = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN3]->third[IN_ENABLE]->current.toInt();
-//    int in4 = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN4]->third[IN_ENABLE]->current.toInt();
-//    int aux = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_AUX]->third[IN_ENABLE]->current.toInt();
-
-//    if(in1 == AUDIO_AFV)
-//        flag += 1;
-//    if(in2 == AUDIO_AFV)
-//        flag += 2;
-//    if(in3 == AUDIO_AFV)
-//        flag += 4;
-//    if(in4 == AUDIO_AFV)
-//        flag += 8;
-//    if(aux == AUDIO_AFV)
-//        flag += 16;
-
-//    settings->setAudioAfvFlag(flag);
-
-//    fpga_write(&g_fpga,FPGA_AUDIO_AFV,flag);
-}
-
-void Models::setAudioOn()
-{
-//    int flag = 0;
-
-//    int mic1 = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC1]->third[MIC_ENABLE]->current.toInt();
-//    int mic2 = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC2]->third[MIC_ENABLE]->current.toInt();
-//    int in1 = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN1]->third[IN_ENABLE]->current.toInt();
-//    int in2 = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN2]->third[IN_ENABLE]->current.toInt();
-//    int in3 = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN3]->third[IN_ENABLE]->current.toInt();
-//    int in4 = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN4]->third[IN_ENABLE]->current.toInt();
-//    int aux = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_AUX]->third[IN_ENABLE]->current.toInt();
-
-//    if(in1 == AUDIO_ON)
-//        flag += 1;
-//    if(in2 == AUDIO_ON)
-//        flag += 2;
-//    if(in3 == AUDIO_ON)
-//        flag += 4;
-//    if(in4 == AUDIO_ON)
-//        flag += 8;
-//    if(aux == AUDIO_ON)
-//        flag += 16;
-//    if(mic1 == AUDIO_ON)
-//        flag += 32;
-//    if(mic2 == AUDIO_ON)
-//        flag += 64;
-
-//    settings->setAudioOnFlag(flag);
-
-//    fpga_write(&g_fpga,FPGA_AUDIO_ON,flag);
-}
-
-void Models::setAudioMonitorLevel()
-{
-    auto item = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MONITOR]->third[MONITOR_LEVEL];
-//    //发0~50 对应-50~0  所以需要加上50
-//    int value = item->current.toInt() + (item->max.toInt() - item->min.toInt());
-//    fpga_write(&g_fpga,MON_LEVEL,value);
-
-    double p = item->current.toDouble();
-    int value = getMonitorRegValue(p);
-    fpga_write(&g_fpga,MON_LEVEL,value);
-}
-
-void Models::setAudioMonitorSource()
-{
-    int index = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MONITOR]->third[MONITOR_SOURCE]->current.toInt();
-    fpga_write(&g_fpga,MON_SOURCE,index);
 }
 
 void Models::setChromaKeyProfile()
@@ -4380,6 +4341,348 @@ void Models::setFtbRate(double rate)
 void Models::setFtbAfv(bool afv)
 {
     fpga_write(&g_fpga,FTB_AFV,afv?1:0);
+}
+
+void Models::setAudioEnable(QString source, int enable)
+{
+    int index = AudioSource::sourceNameStringToIndex(source);
+    switch (index) {
+    case AudioSource::MIC1:
+    {
+        if(profile->audioMixer()->audioInput()->mic1()->enable() != enable)
+        {
+            profile->audioMixer()->audioInput()->mic1()->setEnable(enable);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::MIC2:
+    {
+        if(profile->audioMixer()->audioInput()->mic2()->enable() != enable)
+        {
+            profile->audioMixer()->audioInput()->mic2()->setEnable(enable);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::IN1:
+    {
+        if(profile->audioMixer()->audioInput()->in1()->enable() != enable)
+        {
+            profile->audioMixer()->audioInput()->in1()->setEnable(enable);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::IN2:
+    {
+        if(profile->audioMixer()->audioInput()->in2()->enable() != enable)
+        {
+            profile->audioMixer()->audioInput()->in2()->setEnable(enable);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::IN3:
+    {
+        if(profile->audioMixer()->audioInput()->in3()->enable() != enable)
+        {
+            profile->audioMixer()->audioInput()->in3()->setEnable(enable);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::IN4:
+    {
+        if(profile->audioMixer()->audioInput()->in4()->enable() != enable)
+        {
+            profile->audioMixer()->audioInput()->in4()->setEnable(enable);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::AUX:
+    {
+        if(profile->audioMixer()->audioInput()->aux()->enable() != enable)
+        {
+            profile->audioMixer()->audioInput()->aux()->setEnable(enable);
+            return ;
+        }
+    }
+        break;
+    }
+    if(index >= AudioSource::MIC1 && index <= AudioSource::MIC2)
+    {
+        setAudioOn();
+    }
+    else if(index >= AudioSource::IN1 && index <= AudioSource::AUX)
+    {
+        setAudioAfv();
+        setAudioOn();
+    }
+}
+
+void Models::setAudioFader(QString source, double fader)
+{
+    int index = AudioSource::sourceNameStringToIndex(source);
+    switch (index) {
+    case AudioSource::MIC1:
+    {
+        if(profile->audioMixer()->audioInput()->mic1()->fader() != fader)
+        {
+            profile->audioMixer()->audioInput()->mic1()->setFader(fader);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::MIC2:
+    {
+        if(profile->audioMixer()->audioInput()->mic2()->fader() != fader)
+        {
+            profile->audioMixer()->audioInput()->mic2()->setFader(fader);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::IN1:
+    {
+        if(profile->audioMixer()->audioInput()->in1()->fader() != fader)
+        {
+            profile->audioMixer()->audioInput()->in1()->setFader(fader);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::IN2:
+    {
+        if(profile->audioMixer()->audioInput()->in2()->fader() != fader)
+        {
+            profile->audioMixer()->audioInput()->in2()->setFader(fader);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::IN3:
+    {
+        if(profile->audioMixer()->audioInput()->in3()->fader() != fader)
+        {
+            profile->audioMixer()->audioInput()->in3()->setFader(fader);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::IN4:
+    {
+        if(profile->audioMixer()->audioInput()->in4()->fader() != fader)
+        {
+            profile->audioMixer()->audioInput()->in4()->setFader(fader);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::AUX:
+    {
+        if(profile->audioMixer()->audioInput()->aux()->fader() != fader)
+        {
+            profile->audioMixer()->audioInput()->aux()->setFader(fader);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::PGM:
+        if(profile->audioMixer()->audioOutput()->pgm()->fader() != fader)
+        {
+            profile->audioMixer()->audioOutput()->pgm()->setFader(fader);
+            return ;
+        }
+        break;
+    }
+    setAudioVolumn(index);
+}
+
+void Models::setAudioBalance(QString source, double balance)
+{
+    int index = AudioSource::sourceNameStringToIndex(source);
+    switch (index) {
+    case AudioSource::MIC1:
+    {
+        if(profile->audioMixer()->audioInput()->mic1()->balance() != balance)
+        {
+            profile->audioMixer()->audioInput()->mic1()->setBalance(balance);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::MIC2:
+    {
+        if(profile->audioMixer()->audioInput()->mic2()->balance() != balance)
+        {
+            profile->audioMixer()->audioInput()->mic2()->setBalance(balance);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::IN1:
+    {
+        if(profile->audioMixer()->audioInput()->in1()->balance() != balance)
+        {
+            profile->audioMixer()->audioInput()->in1()->setBalance(balance);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::IN2:
+    {
+        if(profile->audioMixer()->audioInput()->in2()->balance() != balance)
+        {
+            profile->audioMixer()->audioInput()->in2()->setBalance(balance);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::IN3:
+    {
+        if(profile->audioMixer()->audioInput()->in3()->balance() != balance)
+        {
+            profile->audioMixer()->audioInput()->in3()->setBalance(balance);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::IN4:
+    {
+        if(profile->audioMixer()->audioInput()->in4()->balance() != balance)
+        {
+            profile->audioMixer()->audioInput()->in4()->setBalance(balance);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::AUX:
+    {
+        if(profile->audioMixer()->audioInput()->aux()->balance() != balance)
+        {
+            profile->audioMixer()->audioInput()->aux()->setBalance(balance);
+            return ;
+        }
+    }
+        break;
+    }
+    setAudioVolumn(index);
+}
+
+void Models::setAudioInput(QString source, double input)
+{
+    int index = AudioSource::sourceNameStringToIndex(source);
+    switch (index) {
+    case AudioSource::MIC1:
+    {
+        if(profile->audioMixer()->audioInput()->mic1()->input() != input)
+        {
+            profile->audioMixer()->audioInput()->mic1()->setInput(input);
+            return ;
+        }
+        rv_switch_set_mic0_volume(input,input);
+    }
+        break;
+    case AudioSource::MIC2:
+    {
+        if(profile->audioMixer()->audioInput()->mic2()->input() != input)
+        {
+            profile->audioMixer()->audioInput()->mic2()->setInput(input);
+            return ;
+        }
+        rv_switch_set_mic1_volume(input,input);
+    }
+        break;
+    case AudioSource::IN1:
+    {
+        if(profile->audioMixer()->audioInput()->in1()->input() != input)
+        {
+            profile->audioMixer()->audioInput()->in1()->setInput(input);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::IN2:
+    {
+        if(profile->audioMixer()->audioInput()->in2()->input() != input)
+        {
+            profile->audioMixer()->audioInput()->in2()->setInput(input);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::IN3:
+    {
+        if(profile->audioMixer()->audioInput()->in3()->input() != input)
+        {
+            profile->audioMixer()->audioInput()->in3()->setInput(input);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::IN4:
+    {
+        if(profile->audioMixer()->audioInput()->in4()->input() != input)
+        {
+            profile->audioMixer()->audioInput()->in4()->setInput(input);
+            return ;
+        }
+    }
+        break;
+    case AudioSource::AUX:
+    {
+        if(profile->audioMixer()->audioInput()->aux()->input() != input)
+        {
+            profile->audioMixer()->audioInput()->aux()->setInput(input);
+            return ;
+        }
+    }
+        break;
+    }
+    setAudioVolumn(index);
+}
+
+void Models::setAudioDelay(QString source, int delay)
+{
+    int index = AudioSource::sourceNameStringToIndex(source);
+    int fpag_value = -1;
+    switch (index) {
+    case AudioSource::MIC1:
+    {
+        if(profile->audioMixer()->audioInput()->mic1()->delay() != delay)
+        {
+            profile->audioMixer()->audioInput()->mic1()->setDelay(delay);
+            return ;
+        }
+        fpag_value = FPGA_MIC1_DELAY;
+    }
+        break;
+    case AudioSource::MIC2:
+    {
+        if(profile->audioMixer()->audioInput()->mic2()->delay() != delay)
+        {
+            profile->audioMixer()->audioInput()->mic2()->setDelay(delay);
+            return ;
+        }
+        fpag_value = FPGA_MIC1_DELAY;
+    }
+        break;
+    }
+    if(fpag_value != -1)
+        fpga_write(&g_fpga,fpag_value,delay);
+}
+
+void Models::setMonitorLevel(int level)
+{
+    if(profile->audioMixer()->audioOutput()->monitor()->level() != level)
+    {
+        profile->audioMixer()->audioOutput()->monitor()->setLevel(level);
+        return ;
+    }
+    int value = getMonitorRegValue(level);
+    fpga_write(&g_fpga,MON_LEVEL,value);
 }
 
 

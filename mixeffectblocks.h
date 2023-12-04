@@ -8,7 +8,7 @@ class MixEffectBlock;
 class MixEffectBlocks : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(MixEffectBlock* mixEffectBlock READ mixEffectBlock WRITE setMixEffectBlock NOTIFY mixEffectBlockChanged)
+    Q_PROPERTY(MixEffectBlock* mixEffectBlock READ mixEffectBlock)
 public:
     explicit MixEffectBlocks(QObject *parent = nullptr);
 
@@ -17,23 +17,10 @@ public:
         return m_mixEffectBlock;
     }
 
-public slots:
-    void setMixEffectBlock(MixEffectBlock* mixEffectBlock)
-    {
-        if (m_mixEffectBlock == mixEffectBlock)
-            return;
-
-        m_mixEffectBlock = mixEffectBlock;
-        emit mixEffectBlockChanged(m_mixEffectBlock);
-    }
-
 private:
 
     MixEffectBlock* m_mixEffectBlock;
 
-signals:
-
-void mixEffectBlockChanged(MixEffectBlock* mixEffectBlock);
 };
 
 #endif // MIXEFFECTBLOCKS_H
