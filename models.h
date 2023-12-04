@@ -192,21 +192,21 @@ signals:
 
     //keys
     /**/
-    void keyMaskEnable(int key,int enable);
-    void keyMaskHStart(int key,int hStart);
-    void keyMaskVStart(int key,int vStart);
-    void keyMaskHEnd(int key,int hEnd);
-    void keyMaskVEnd(int key,int vEnd);
-    void keyResize(int key,bool resize);
-    void keySize(int key,QString size);
-    void keyXPosition(int key,double xPosition);
-    void keyYPosition(int key,double yPosition);
-    void keySourceFill(int key,int fill);
-    void keySourceKey(int key,int sourceKey);
-    void keyClip(int key,int clip);
-    void keyGain(int key,int gain);
-    void keyShapedKey(int key,bool enable);
-    void keyInvert(int key,bool enable);
+    void keyMaskEnable(QString key,int enable);
+    void keyMaskHStart(QString key,int hStart);
+    void keyMaskVStart(QString key,int vStart);
+    void keyMaskHEnd(QString key,int hEnd);
+    void keyMaskVEnd(QString key,int vEnd);
+    void keyResize(QString key,bool resize);
+    void keySize(QString key,QString size);
+    void keyXPosition(QString key,double xPosition);
+    void keyYPosition(QString key,double yPosition);
+    void keySourceFill(QString key,int fill);
+    void keySourceKey(QString key,int sourceKey);
+    void keyClip(QString key,int clip);
+    void keyGain(QString key,int gain);
+    void keyShapedKey(QString key,bool enable);
+    void keyInvert(QString key,bool enable);
     /**/
     //luma key
     /**/
@@ -243,7 +243,7 @@ signals:
 
     //transition
     /**/
-    void transitionRate(int index,double rate);
+    void transitionRate(QString index,double rate);
     /**/
     /**/
     void transitionDipSource(int source);
@@ -352,8 +352,8 @@ signals:
 
 
     //button status
-    void pgmIndex(int input);
-    void pvwIndex(int input);
+    void pgmIndex(QString input);
+    void pvwIndex(QString input);
     void nextTransition(QString source);
     void transitionStyle(QString style);
     void previewTransition(bool preview);
@@ -403,21 +403,21 @@ public slots:
     void setKeyType(QString type);
 
     //keys
-    void setKeyMaskEnable(int key,int enable);
-    void setKeyMaskHStart(int key,int hStart);
-    void setKeyMaskVStart(int key,int vStart);
-    void setKeyMaskHEnd(int key,int hEnd);
-    void setKeyMaskVEnd(int key,int vEnd);
-    void setKeyResize(int key,bool resize);
-    void setKeySize(int key,QString size);
-    void setKeyXPosition(int key,double xPosition);
-    void setKeyYPosition(int key,double yPosition);
-    void setKeySourceFill(int key,int fill);
-    void setKeySourceKey(int key,int sourceKey);
-    void setKeyClip(int key,int clip);
-    void setKeyGain(int key,int gain);
-    void setKeyShapedKey(int key,bool enable);
-    void setKeyInvert(int key,bool enable);
+    void setKeyMaskEnable(QString key,int enable);
+    void setKeyMaskHStart(QString key,int hStart);
+    void setKeyMaskVStart(QString key,int vStart);
+    void setKeyMaskHEnd(QString key,int hEnd);
+    void setKeyMaskVEnd(QString key,int vEnd);
+    void setKeyResize(QString key,bool resize);
+    void setKeySize(QString key,QString size);
+    void setKeyXPosition(QString key,double xPosition);
+    void setKeyYPosition(QString key,double yPosition);
+    void setKeySourceFill(QString key,int fill);
+    void setKeySourceKey(QString key,int sourceKey);
+    void setKeyClip(QString key,int clip);
+    void setKeyGain(QString key,int gain);
+    void setKeyShapedKey(QString key,bool enable);
+    void setKeyInvert(QString key,bool enable);
     void setKeyCtrl(int key);//
 
     //chroma key
@@ -454,7 +454,7 @@ public slots:
 
     //transition
     /**/
-    void setTransitionRate(int index,double rate);
+    void setTransitionRate(QString index,double rate);
     /**/
 
     /**/
@@ -509,8 +509,8 @@ public slots:
 
 
     //button status
-    void setPgmIndex(int index);
-    void setPvwIndex(int index);
+    void setPgmIndex(QString index);
+    void setPvwIndex(QString index);
     void setNextTransition(QString source);
     void setTransitionStyle(QString style);
     void setFtb();

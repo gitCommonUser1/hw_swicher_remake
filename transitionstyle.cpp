@@ -37,7 +37,7 @@ int TransitionStyle::styleStringToIndex(QString style)
 {
     for(int i = 0;i < styleList.size();++i)
     {
-        if(styleList[i] == style)
+        if(style.compare(styleList[i],Qt::CaseInsensitive) == 0)
         {
             return i;
         }

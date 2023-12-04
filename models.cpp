@@ -2287,8 +2287,9 @@ void Models::setButtonBrightness()
     QSwitcher::set_leds_brightness(value);
 }
 
-void Models::setPgmIndex(int index)
+void Models::setPgmIndex(QString str)
 {
+    int index = MixEffectBlock::inputStringToIndex(str);
     if(profile->mixEffectBlocks()->mixEffectBlock()->program()->input() != index)
     {
         profile->mixEffectBlocks()->mixEffectBlock()->program()->setInput(index);
@@ -2297,8 +2298,9 @@ void Models::setPgmIndex(int index)
     keyClick(KEY_LED_PGM_1 + index);
 }
 
-void Models::setPvwIndex(int index)
+void Models::setPvwIndex(QString str)
 {
+    int index = MixEffectBlock::inputStringToIndex(str);
     if(profile->mixEffectBlocks()->mixEffectBlock()->preview()->input() != index)
     {
         profile->mixEffectBlocks()->mixEffectBlock()->preview()->setInput(index);
@@ -3168,8 +3170,9 @@ void Models::setKeyType(QString type)
     fpga_write(&g_fpga,UPSTREAM_KEY_TYPE,Key::typeStringToIndex(type));
 }
 
-void Models::setKeyMaskEnable(int key, int enable)
+void Models::setKeyMaskEnable(QString keystr, int enable)
 {
+    int key = Keys::keyStringToIndex(keystr);
     switch (key) {
     case Keys::LUMA:
         if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->maskEnable() != enable)
@@ -3206,8 +3209,9 @@ void Models::setKeyMaskEnable(int key, int enable)
     setKeyCtrl(key);
 }
 
-void Models::setKeyMaskHStart(int key, int hStart)
+void Models::setKeyMaskHStart(QString keystr, int hStart)
 {
+    int key = Keys::keyStringToIndex(keystr);
     int fpga_value = -1;
     float p;
     int value;
@@ -3257,8 +3261,9 @@ void Models::setKeyMaskHStart(int key, int hStart)
         fpga_write(&g_fpga,fpga_value,value);
 }
 
-void Models::setKeyMaskVStart(int key, int vStart)
+void Models::setKeyMaskVStart(QString keystr, int vStart)
 {
+    int key = Keys::keyStringToIndex(keystr);
     int fpga_value = -1;
     float p;
     int value;
@@ -3308,8 +3313,9 @@ void Models::setKeyMaskVStart(int key, int vStart)
         fpga_write(&g_fpga,fpga_value,value);
 }
 
-void Models::setKeyMaskHEnd(int key, int hEnd)
+void Models::setKeyMaskHEnd(QString keystr, int hEnd)
 {
+    int key = Keys::keyStringToIndex(keystr);
     int fpga_value = -1;
     float p;
     int value;
@@ -3359,8 +3365,9 @@ void Models::setKeyMaskHEnd(int key, int hEnd)
         fpga_write(&g_fpga,fpga_value,value);
 }
 
-void Models::setKeyMaskVEnd(int key, int vEnd)
+void Models::setKeyMaskVEnd(QString keystr, int vEnd)
 {
+    int key = Keys::keyStringToIndex(keystr);
     int fpga_value = -1;
     float p;
     int value;
@@ -3410,8 +3417,9 @@ void Models::setKeyMaskVEnd(int key, int vEnd)
         fpga_write(&g_fpga,fpga_value,value);
 }
 
-void Models::setKeyResize(int key, bool resize)
+void Models::setKeyResize(QString keystr, bool resize)
 {
+    int key = Keys::keyStringToIndex(keystr);
     switch (key) {
     case Keys::LUMA:
         if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->resize() != resize)
@@ -3440,8 +3448,9 @@ void Models::setKeyResize(int key, bool resize)
     setKeyCtrl(key);
 }
 
-void Models::setKeySize(int key, QString size)
+void Models::setKeySize(QString keystr, QString size)
 {
+    int key = Keys::keyStringToIndex(keystr);
     int fpga_par = -1;
     int fpga_value = -1;
     switch (key) {
@@ -3496,8 +3505,9 @@ void Models::setKeySize(int key, QString size)
         fpga_write(&g_fpga,fpga_par,fpga_value);
 }
 
-void Models::setKeyXPosition(int key, double xPosition)
+void Models::setKeyXPosition(QString keystr, double xPosition)
 {
+    int key = Keys::keyStringToIndex(keystr);
     int fpga_value = -1;
     switch (key) {
     case Keys::LUMA:
@@ -3542,8 +3552,9 @@ void Models::setKeyXPosition(int key, double xPosition)
         fpga_write(&g_fpga,fpga_value,value);
 }
 
-void Models::setKeyYPosition(int key, double yPosition)
+void Models::setKeyYPosition(QString keystr, double yPosition)
 {
+    int key = Keys::keyStringToIndex(keystr);
     int fpga_value = -1;
     switch (key) {
     case Keys::LUMA:
@@ -3588,8 +3599,9 @@ void Models::setKeyYPosition(int key, double yPosition)
         fpga_write(&g_fpga,fpga_value,value);
 }
 
-void Models::setKeySourceFill(int key, int fill)
+void Models::setKeySourceFill(QString keystr, int fill)
 {
+    int key = Keys::keyStringToIndex(keystr);
     int fpga_value = -1;
     u_int16_t value = fill;;
     u_int8_t key_index = 0;
@@ -3638,8 +3650,9 @@ void Models::setKeySourceFill(int key, int fill)
         fpga_write(&g_fpga,fpga_value,value);
 }
 
-void Models::setKeySourceKey(int key, int sourceKey)
+void Models::setKeySourceKey(QString keystr, int sourceKey)
 {
+    int key = Keys::keyStringToIndex(keystr);
     if(key == Keys::LUMA)
     {
         if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->keySource() != sourceKey)
@@ -3653,8 +3666,9 @@ void Models::setKeySourceKey(int key, int sourceKey)
     }
 }
 
-void Models::setKeyClip(int key, int clip)
+void Models::setKeyClip(QString keystr, int clip)
 {
+    int key = Keys::keyStringToIndex(keystr);
     if(key == Keys::LUMA)
     {
         if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->clip() != clip)
@@ -3667,8 +3681,9 @@ void Models::setKeyClip(int key, int clip)
     }
 }
 
-void Models::setKeyGain(int key, int gain)
+void Models::setKeyGain(QString keystr, int gain)
 {
+    int key = Keys::keyStringToIndex(keystr);
     if(key == Keys::LUMA)
     {
         if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->gain() != gain)
@@ -3681,8 +3696,9 @@ void Models::setKeyGain(int key, int gain)
     }
 }
 
-void Models::setKeyShapedKey(int key, bool enable)
+void Models::setKeyShapedKey(QString keystr, bool enable)
 {
+    int key = Keys::keyStringToIndex(keystr);
     if(key == Keys::LUMA)
     {
         if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->shapedKey() != enable)
@@ -3694,8 +3710,9 @@ void Models::setKeyShapedKey(int key, bool enable)
     }
 }
 
-void Models::setKeyInvert(int key, bool enable)
+void Models::setKeyInvert(QString keystr, bool enable)
 {
+    int key = Keys::keyStringToIndex(keystr);
     if(key == Keys::LUMA)
     {
         if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->invert() != enable)
@@ -3886,8 +3903,9 @@ void Models::setChromaKeyKeyEdge(int keyEdge)
     setChromaKeyProfile();
 }
 
-void Models::setTransitionRate(int index, double rate)
+void Models::setTransitionRate(QString str, double rate)
 {
+    int index = TransitionStyle::styleStringToIndex(str);
     //////////////
     int outFormat = getOutFormat(60/*settings->getOutFormat()*/);
     int fpga_value = getFTBRateValue(rate,outFormat);

@@ -44,7 +44,7 @@ int SuperSource::styleStringToIndex(QString str)
 {
     for(int i = 0;i < styleList.size();++i)
     {
-        if(str == styleList[i])
+        if(str.compare(styleList[i],Qt::CaseInsensitive) == 0)
             return i;
     }
     return 0;

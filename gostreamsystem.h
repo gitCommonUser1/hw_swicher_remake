@@ -14,9 +14,9 @@ class AudioMixer;
 class Profile : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int majorVersion READ majorVersion WRITE setMajorVersion NOTIFY majorVersionChanged)
-    Q_PROPERTY(int minorVersion READ minorVersion WRITE setMinorVersion NOTIFY minorVersionChanged)
-    Q_PROPERTY(int patchVersion READ patchVersion WRITE setPatchVersion NOTIFY patchVersionChanged)
+    Q_PROPERTY(int majorVersion READ majorVersion WRITE setMajorVersion FINAL)
+    Q_PROPERTY(int minorVersion READ minorVersion WRITE setMinorVersion FINAL)
+    Q_PROPERTY(int patchVersion READ patchVersion WRITE setPatchVersion FINAL)
     Q_PROPERTY(QString product READ product WRITE setProduct NOTIFY productChanged)
     Q_PROPERTY(MixEffectBlocks* mixEffectBlocks READ mixEffectBlocks)
     Q_PROPERTY(DownstreamKeys* downstreamKeys READ downstreamKeys)
@@ -86,7 +86,6 @@ public slots:
             return;
 
         m_majorVersion = majorVersion;
-        emit majorVersionChanged(m_majorVersion);
     }
 
     void setMinorVersion(int minorVersion)
@@ -95,7 +94,6 @@ public slots:
             return;
 
         m_minorVersion = minorVersion;
-        emit minorVersionChanged(m_minorVersion);
     }
 
     void setPatchVersion(int patchVersion)
@@ -104,7 +102,6 @@ public slots:
             return;
 
         m_patchVersion = patchVersion;
-        emit patchVersionChanged(m_patchVersion);
     }
 
     void setProduct(QString product)
@@ -138,10 +135,6 @@ private:
     AudioMixer* m_audioMixer;
 
 signals:
-
-void majorVersionChanged(int majorVersion);
-void minorVersionChanged(int minorVersion);
-void patchVersionChanged(int patchVersion);
 void productChanged(QString product);
 };
 

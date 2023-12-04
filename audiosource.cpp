@@ -1,12 +1,12 @@
 #include "audiosource.h"
 
 static QList<QString> nameList = {
-    "mic1",
-    "mic2",
-    "in1",
-    "in2",
-    "in3",
-    "in4",
+    "mic 1",
+    "mic 2",
+    "in 1",
+    "in 2",
+    "in 3",
+    "in 4",
     "aux",
     "pgm"
 };
@@ -41,7 +41,7 @@ int AudioSource::sourceNameStringToIndex(QString name)
 {
     for(int i = 0;i < nameList.size();++i)
     {
-        if(name == nameList[i])
+        if(name.compare(nameList[i],Qt::CaseInsensitive) == 0)
             return i;
     }
 

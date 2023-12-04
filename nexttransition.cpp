@@ -60,7 +60,7 @@ int NextTransition::selectionStringToValue(QString selection)
         // 100 || 010 || 001
         for(int i = 0;i < selectionList.size();++i)
         {
-            if(selectionList[i] == selection)
+            if(selection.compare(selectionList[i],Qt::CaseInsensitive) == 0)
             {
                 if(i == 0)
                 {
@@ -82,18 +82,21 @@ int NextTransition::selectionStringToValue(QString selection)
     }
     else if(list.size() == 2)
     {
-        // 110 || 101 || 011
-        if((list[0] == selectionList[0] && list[1] == selectionList[1]) || (list[1] == selectionList[0] && list[0] == selectionList[1]))
+        // 110 || 101 || 011 list[1] == selectionList[1]
+        if((list[0].compare(selectionList[0],Qt::CaseInsensitive) == 0 && list[1].compare(selectionList[1],Qt::CaseInsensitive))
+                || (list[1].compare(selectionList[0],Qt::CaseInsensitive) && list[0].compare(selectionList[1],Qt::CaseInsensitive)))
         {
             //110
             return 0b110;
         }
-        else if((list[0] == selectionList[0] && list[1] == selectionList[2]) || (list[1] == selectionList[0] && list[0] == selectionList[2]))
+        else if((list[0].compare(selectionList[0],Qt::CaseInsensitive) && list[1].compare(selectionList[2],Qt::CaseInsensitive))
+                || (list[1].compare(selectionList[0],Qt::CaseInsensitive) && list[0].compare(selectionList[2],Qt::CaseInsensitive)))
         {
             //101
             return 0b101;
         }
-        else if((list[0] == selectionList[1] && list[1] == selectionList[2]) || (list[1] == selectionList[1] && list[0] == selectionList[2]))
+        else if((list[0].compare(selectionList[1],Qt::CaseInsensitive) && list[1].compare(selectionList[2],Qt::CaseInsensitive))
+                || (list[1].compare(selectionList[1],Qt::CaseInsensitive) && list[0].compare(selectionList[2],Qt::CaseInsensitive)))
         {
             //011
             return 0b011;
@@ -103,9 +106,9 @@ int NextTransition::selectionStringToValue(QString selection)
     else if(list.size() == 3)
     {
         // 111
-        int key = list.indexOf(selectionList[0]);
-        int dsk = list.indexOf(selectionList[1]);
-        int bkgd = list.indexOf(selectionList[2]);
+        int key = list.indexOf(selectionList[0],Qt::CaseInsensitive);
+        int dsk = list.indexOf(selectionList[1],Qt::CaseInsensitive);
+        int bkgd = list.indexOf(selectionList[2],Qt::CaseInsensitive);
 
         if((key != -1 && dsk != -1 && bkgd != -1) &&
             (key != dsk && key != bkgd && dsk != bkgd))

@@ -23,6 +23,8 @@ public:
 
     static QString sizeIndexToString(int index);
     static int sizeStringToIndex(QString size);
+    static QString keyIndexToString(int index);
+    static int keyStringToIndex(QString key);
 
     enum KEYTYPE{
         LUMA = 0,

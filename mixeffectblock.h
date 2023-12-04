@@ -23,6 +23,9 @@ class MixEffectBlock : public QObject
 public:
     explicit MixEffectBlock(QObject *parent = nullptr);
 
+    static int inputStringToIndex(QString str);
+    static QString inputIndexToString(int index);
+
     enum INPUT{
         IN1 = 0,
         IN2,

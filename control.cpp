@@ -489,11 +489,11 @@ void Control::connect_profile()
     //mixEffectBlocks
     //pgm
     connect(profile->mixEffectBlocks()->mixEffectBlock()->program(),&Program::inputChanged,this,[=](int input){
-        models->macroInvoke(&Models::pgmIndex,input);
+        models->macroInvoke(&Models::pgmIndex,MixEffectBlock::inputIndexToString(input));
     });
     //pvw
     connect(profile->mixEffectBlocks()->mixEffectBlock()->preview(),&Preview::inputChanged,this,[=](int input){
-        models->macroInvoke(&Models::pvwIndex,input);
+        models->macroInvoke(&Models::pvwIndex,MixEffectBlock::inputIndexToString(input));
     });
     //nextTransition
     connect(profile->mixEffectBlocks()->mixEffectBlock()->nextTransition(),&NextTransition::selectionChanged,this,[=](QString selection){
@@ -509,12 +509,12 @@ void Control::connect_profile()
     });
     //MixParameters
     connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->mixParameters(),&MixParameters::rateChanged,this,[=](double rate){
-        models->macroInvoke(&Models::transitionRate,TransitionStyle::MIX,rate);
+        models->macroInvoke(&Models::transitionRate,TransitionStyle::styleIndexToString(TransitionStyle::MIX),rate);
         settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_MIX,TRANSITION_MIX_RATE,rate);
     });
     //DipParameters
     connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters(),&DipParameters::rateChanged,this,[=](double rate){
-        models->macroInvoke(&Models::transitionRate,TransitionStyle::DIP,rate);
+        models->macroInvoke(&Models::transitionRate,TransitionStyle::styleIndexToString(TransitionStyle::DIP),rate);
         settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_DIP,TRANSITION_DIP_RATE,rate);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters(),&DipParameters::inputChanged,this,[=](int input){
@@ -523,7 +523,7 @@ void Control::connect_profile()
     });
     //WipeParameters
     connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters(),&WipeParameters::rateChanged,this,[=](double rate){
-        models->macroInvoke(&Models::transitionRate,TransitionStyle::WIPE,rate);
+        models->macroInvoke(&Models::transitionRate,TransitionStyle::styleIndexToString(TransitionStyle::WIPE),rate);
         settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_WIPE,TRANSITION_WIPE_RATE,rate);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters(),&WipeParameters::patternChanged,this,[=](int pattern){
@@ -568,104 +568,104 @@ void Control::connect_profile()
     });
     //LumaParameters
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::fillSourceChanged,this,[=](int fill){
-        models->macroInvoke(&Models::keySourceFill,Keys::LUMA,fill);
+        models->macroInvoke(&Models::keySourceFill,Keys::keyIndexToString(Keys::LUMA),fill);
         settings->setMenuValue(MENU_FIRST_LUMA_KEY,LUMA_KEY_SOURCE,LUMA_KEY_SOURCE_FILL,fill);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::keySourceChanged,this,[=](int key){
-        models->macroInvoke(&Models::keySourceKey,Keys::LUMA,key);
+        models->macroInvoke(&Models::keySourceKey,Keys::keyIndexToString(Keys::LUMA),key);
         settings->setMenuValue(MENU_FIRST_LUMA_KEY,LUMA_KEY_SOURCE,LUMA_KEY_SOURCE_KEY,key);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::maskEnableChanged,this,[=](bool maskEnable){
-        models->macroInvoke(&Models::keyMaskEnable,Keys::LUMA,maskEnable);
+        models->macroInvoke(&Models::keyMaskEnable,Keys::keyIndexToString(Keys::LUMA),maskEnable);
         settings->setMenuValue(MENU_FIRST_LUMA_KEY,LUMA_KEY_MASK,LUMA_KEY_MASK_ENABLE,maskEnable?1:0);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::maskHStartChanged,this,[=](int maskHStart){
-        models->macroInvoke(&Models::keyMaskHStart,Keys::LUMA,maskHStart);
+        models->macroInvoke(&Models::keyMaskHStart,Keys::keyIndexToString(Keys::LUMA),maskHStart);
         settings->setMenuValue(MENU_FIRST_LUMA_KEY,LUMA_KEY_MASK,LUMA_KEY_MASK_H_START,maskHStart);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::maskVStartChanged,this,[=](int maskVStart){
-        models->macroInvoke(&Models::keyMaskVStart,Keys::LUMA,maskVStart);
+        models->macroInvoke(&Models::keyMaskVStart,Keys::keyIndexToString(Keys::LUMA),maskVStart);
         settings->setMenuValue(MENU_FIRST_LUMA_KEY,LUMA_KEY_MASK,LUMA_KEY_MASK_V_START,maskVStart);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::maskHEndChanged,this,[=](int maskHEnd){
-        models->macroInvoke(&Models::keyMaskHEnd,Keys::LUMA,maskHEnd);
+        models->macroInvoke(&Models::keyMaskHEnd,Keys::keyIndexToString(Keys::LUMA),maskHEnd);
         settings->setMenuValue(MENU_FIRST_LUMA_KEY,LUMA_KEY_MASK,LUMA_KEY_MASK_H_END,maskHEnd);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::maskVEndChanged,this,[=](int maskVEnd){
-        models->macroInvoke(&Models::keyMaskVEnd,Keys::LUMA,maskVEnd);
+        models->macroInvoke(&Models::keyMaskVEnd,Keys::keyIndexToString(Keys::LUMA),maskVEnd);
         settings->setMenuValue(MENU_FIRST_LUMA_KEY,LUMA_KEY_MASK,LUMA_KEY_MASK_V_END,maskVEnd);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::shapedKeyChanged,this,[=](bool shapedKey){
-        models->macroInvoke(&Models::keyShapedKey,Keys::LUMA,shapedKey);
+        models->macroInvoke(&Models::keyShapedKey,Keys::keyIndexToString(Keys::LUMA),shapedKey);
         settings->setMenuValue(MENU_FIRST_LUMA_KEY,LUMA_KEY_CONTROL,LUMA_KEY_CONTROL_SHAPED_KEY,shapedKey);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::clipChanged,this,[=](int clip){
-        models->macroInvoke(&Models::keyClip,Keys::LUMA,clip);
+        models->macroInvoke(&Models::keyClip,Keys::keyIndexToString(Keys::LUMA),clip);
         settings->setMenuValue(MENU_FIRST_LUMA_KEY,LUMA_KEY_CONTROL,LUMA_KEY_CONTROL_CLIP,clip);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::gainChanged,this,[=](int gain){
-        models->macroInvoke(&Models::keyGain,Keys::LUMA,gain);
+        models->macroInvoke(&Models::keyGain,Keys::keyIndexToString(Keys::LUMA),gain);
         settings->setMenuValue(MENU_FIRST_LUMA_KEY,LUMA_KEY_CONTROL,LUMA_KEY_CONTROL_GAIN,gain);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::invertChanged,this,[=](bool invert){
-        models->macroInvoke(&Models::keyInvert,Keys::LUMA,invert);
+        models->macroInvoke(&Models::keyInvert,Keys::keyIndexToString(Keys::LUMA),invert);
         settings->setMenuValue(MENU_FIRST_LUMA_KEY,LUMA_KEY_CONTROL,LUMA_KEY_CONTROL_INVERT,invert);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::resizeChanged,this,[=](bool resize){
-        models->macroInvoke(&Models::keyResize,Keys::LUMA,resize);
+        models->macroInvoke(&Models::keyResize,Keys::keyIndexToString(Keys::LUMA),resize);
         settings->setMenuValue(MENU_FIRST_LUMA_KEY,LUMA_KEY_RESIZE,LUMA_KEY_RESIZE_RESIZE,resize);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::sizeChanged,this,[=](QString size){
-        models->macroInvoke(&Models::keySize,Keys::LUMA,size);
+        models->macroInvoke(&Models::keySize,Keys::keyIndexToString(Keys::LUMA),size);
         settings->setMenuValue(MENU_FIRST_LUMA_KEY,LUMA_KEY_RESIZE,LUMA_KEY_RESIZE_SIZE,size);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::xPositionChanged,this,[=](double xPosition){
-        models->macroInvoke(&Models::keyXPosition,Keys::LUMA,xPosition);
+        models->macroInvoke(&Models::keyXPosition,Keys::keyIndexToString(Keys::LUMA),xPosition);
         settings->setMenuValue(MENU_FIRST_LUMA_KEY,LUMA_KEY_RESIZE,LUMA_KEY_RESIZE_X_POSITION,xPosition);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::yPositionChanged,this,[=](double yPosition){
-        models->macroInvoke(&Models::keyYPosition,Keys::LUMA,yPosition);
+        models->macroInvoke(&Models::keyYPosition,Keys::keyIndexToString(Keys::LUMA),yPosition);
         settings->setMenuValue(MENU_FIRST_LUMA_KEY,LUMA_KEY_RESIZE,LUMA_KEY_RESIZE_Y_POSITION,yPosition);
     });
     //chromaParameters
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters(),&ChromaParameters::fillSourceChanged,this,[=](int fillSource){
-        models->macroInvoke(&Models::keySourceFill,Keys::CHROMA,fillSource);
+        models->macroInvoke(&Models::keySourceFill,Keys::keyIndexToString(Keys::CHROMA),fillSource);
         settings->setMenuValue(MENU_FIRST_CHROMA_KEY,CHROMA_KEY_SOURCE,CHROMA_KEY_SOURCE_FILL,fillSource);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters(),&ChromaParameters::maskEnableChanged,this,[=](bool maskEnable){
-        models->macroInvoke(&Models::keyMaskEnable,Keys::CHROMA,maskEnable);
+        models->macroInvoke(&Models::keyMaskEnable,Keys::keyIndexToString(Keys::CHROMA),maskEnable);
         settings->setMenuValue(MENU_FIRST_CHROMA_KEY,CHROMA_KEY_MASK,CHROMA_KEY_MASK_ENABLE,maskEnable?1:0);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters(),&ChromaParameters::maskHStartChanged,this,[=](int maskHStart){
-        models->macroInvoke(&Models::keyMaskHStart,Keys::CHROMA,maskHStart);
+        models->macroInvoke(&Models::keyMaskHStart,Keys::keyIndexToString(Keys::CHROMA),maskHStart);
         settings->setMenuValue(MENU_FIRST_CHROMA_KEY,CHROMA_KEY_MASK,CHROMA_KEY_MASK_H_START,maskHStart);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters(),&ChromaParameters::maskVStartChanged,this,[=](int maskVStart){
-        models->macroInvoke(&Models::keyMaskVStart,Keys::CHROMA,maskVStart);
+        models->macroInvoke(&Models::keyMaskVStart,Keys::keyIndexToString(Keys::CHROMA),maskVStart);
         settings->setMenuValue(MENU_FIRST_CHROMA_KEY,CHROMA_KEY_MASK,CHROMA_KEY_MASK_V_START,maskVStart);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters(),&ChromaParameters::maskHEndChanged,this,[=](int maskHEnd){
-        models->macroInvoke(&Models::keyMaskHEnd,Keys::CHROMA,maskHEnd);
+        models->macroInvoke(&Models::keyMaskHEnd,Keys::keyIndexToString(Keys::CHROMA),maskHEnd);
         settings->setMenuValue(MENU_FIRST_CHROMA_KEY,CHROMA_KEY_MASK,CHROMA_KEY_MASK_H_END,maskHEnd);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters(),&ChromaParameters::maskVEndChanged,this,[=](int maskVEnd){
-        models->macroInvoke(&Models::keyMaskVEnd,Keys::CHROMA,maskVEnd);
+        models->macroInvoke(&Models::keyMaskVEnd,Keys::keyIndexToString(Keys::CHROMA),maskVEnd);
         settings->setMenuValue(MENU_FIRST_CHROMA_KEY,CHROMA_KEY_MASK,CHROMA_KEY_MASK_V_END,maskVEnd);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters(),&ChromaParameters::resizeChanged,this,[=](bool resize){
-        models->macroInvoke(&Models::keyResize,Keys::CHROMA,resize);
+        models->macroInvoke(&Models::keyResize,Keys::keyIndexToString(Keys::CHROMA),resize);
         settings->setMenuValue(MENU_FIRST_CHROMA_KEY,CHROMA_KEY_RESIZE,CHROMA_KEY_RESIZE_RESIZE,resize);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters(),&ChromaParameters::sizeChanged,this,[=](QString size){
-        models->macroInvoke(&Models::keySize,Keys::CHROMA,size);
+        models->macroInvoke(&Models::keySize,Keys::keyIndexToString(Keys::CHROMA),size);
         settings->setMenuValue(MENU_FIRST_CHROMA_KEY,CHROMA_KEY_RESIZE,CHROMA_KEY_RESIZE_SIZE,size);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters(),&ChromaParameters::xPositionChanged,this,[=](double xPosition){
-        models->macroInvoke(&Models::keyXPosition,Keys::CHROMA,xPosition);
+        models->macroInvoke(&Models::keyXPosition,Keys::keyIndexToString(Keys::CHROMA),xPosition);
         settings->setMenuValue(MENU_FIRST_CHROMA_KEY,CHROMA_KEY_RESIZE,CHROMA_KEY_RESIZE_X_POSITION,xPosition);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters(),&ChromaParameters::yPositionChanged,this,[=](double yPosition){
-        models->macroInvoke(&Models::keyYPosition,Keys::CHROMA,yPosition);
+        models->macroInvoke(&Models::keyYPosition,Keys::keyIndexToString(Keys::CHROMA),yPosition);
         settings->setMenuValue(MENU_FIRST_CHROMA_KEY,CHROMA_KEY_RESIZE,CHROMA_KEY_RESIZE_Y_POSITION,yPosition);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters(),&ChromaParameters::smpXPositionChanged,this,[=](double smpXPosition){
@@ -694,7 +694,7 @@ void Control::connect_profile()
     });
     //patternParameters
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters(),&PatternParameters::fillSourceChanged,this,[=](int fillSource){
-        models->macroInvoke(&Models::keySourceFill,Keys::PATTERN,fillSource);
+        models->macroInvoke(&Models::keySourceFill,Keys::keyIndexToString(Keys::PATTERN),fillSource);
         settings->setMenuValue(MENU_FIRST_KEY_PATTERN,PATTERN_SOURCE,KEY_PATTERN_SOURCE_FILL,fillSource);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters(),&PatternParameters::patternChanged,this,[=](int pattern){
@@ -722,76 +722,76 @@ void Control::connect_profile()
         settings->setMenuValue(MENU_FIRST_KEY_PATTERN,PATTERN_WIPE,KEY_PATTERN_WIPE_SOFTNESS,wipeSoftness);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters(),&PatternParameters::maskEnableChanged,this,[=](bool maskEnable){
-        models->macroInvoke(&Models::keyMaskEnable,Keys::PATTERN,maskEnable);
+        models->macroInvoke(&Models::keyMaskEnable,Keys::keyIndexToString(Keys::PATTERN),maskEnable);
         settings->setMenuValue(MENU_FIRST_KEY_PATTERN,PATTERN_MASK,KEY_PATTERN_MASK_ENABLE,maskEnable?1:0);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters(),&PatternParameters::maskHStartChanged,this,[=](int maskHStart){
-        models->macroInvoke(&Models::keyMaskHStart,Keys::PATTERN,maskHStart);
+        models->macroInvoke(&Models::keyMaskHStart,Keys::keyIndexToString(Keys::PATTERN),maskHStart);
         settings->setMenuValue(MENU_FIRST_KEY_PATTERN,PATTERN_MASK,KEY_PATTERN_MASK_H_START,maskHStart);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters(),&PatternParameters::maskVStartChanged,this,[=](int maskVStart){
-        models->macroInvoke(&Models::keyMaskVStart,Keys::PATTERN,maskVStart);
+        models->macroInvoke(&Models::keyMaskVStart,Keys::keyIndexToString(Keys::PATTERN),maskVStart);
         settings->setMenuValue(MENU_FIRST_KEY_PATTERN,PATTERN_MASK,KEY_PATTERN_MASK_V_START,maskVStart);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters(),&PatternParameters::maskHEndChanged,this,[=](int maskHEnd){
-        models->macroInvoke(&Models::keyMaskHEnd,Keys::PATTERN,maskHEnd);
+        models->macroInvoke(&Models::keyMaskHEnd,Keys::keyIndexToString(Keys::PATTERN),maskHEnd);
         settings->setMenuValue(MENU_FIRST_KEY_PATTERN,PATTERN_MASK,KEY_PATTERN_MASK_H_END,maskHEnd);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters(),&PatternParameters::maskVEndChanged,this,[=](int maskVEnd){
-        models->macroInvoke(&Models::keyMaskVEnd,Keys::PATTERN,maskVEnd);
+        models->macroInvoke(&Models::keyMaskVEnd,Keys::keyIndexToString(Keys::PATTERN),maskVEnd);
         settings->setMenuValue(MENU_FIRST_KEY_PATTERN,PATTERN_MASK,KEY_PATTERN_MASK_V_END,maskVEnd);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters(),&PatternParameters::resizeChanged,this,[=](bool resize){
-        models->macroInvoke(&Models::keyResize,Keys::PATTERN,resize);
+        models->macroInvoke(&Models::keyResize,Keys::keyIndexToString(Keys::PATTERN),resize);
         settings->setMenuValue(MENU_FIRST_KEY_PATTERN,PATTERN_RESIZE,KEY_PATTERN_RESIZE_RESIZE,resize);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters(),&PatternParameters::sizeChanged,this,[=](QString size){
-        models->macroInvoke(&Models::keySize,Keys::PATTERN,size);
+        models->macroInvoke(&Models::keySize,Keys::keyIndexToString(Keys::PATTERN),size);
         settings->setMenuValue(MENU_FIRST_KEY_PATTERN,PATTERN_RESIZE,KEY_PATTERN_RESIZE_SIZE,size);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters(),&PatternParameters::xPositionChanged,this,[=](double xPosition){
-        models->macroInvoke(&Models::keyXPosition,Keys::PATTERN,xPosition);
+        models->macroInvoke(&Models::keyXPosition,Keys::keyIndexToString(Keys::PATTERN),xPosition);
         settings->setMenuValue(MENU_FIRST_KEY_PATTERN,PATTERN_RESIZE,KEY_PATTERN_RESIZE_X_POSITION,xPosition);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters(),&PatternParameters::yPositionChanged,this,[=](double yPosition){
-        models->macroInvoke(&Models::keyYPosition,Keys::PATTERN,yPosition);
+        models->macroInvoke(&Models::keyYPosition,Keys::keyIndexToString(Keys::PATTERN),yPosition);
         settings->setMenuValue(MENU_FIRST_KEY_PATTERN,PATTERN_RESIZE,KEY_PATTERN_RESIZE_Y_POSITION,yPosition);
     });
     //pIPParameters
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::fillSourceChanged,this,[=](int fillSource){
-        models->macroInvoke(&Models::keySourceFill,Keys::PIP,fillSource);
+        models->macroInvoke(&Models::keySourceFill,Keys::keyIndexToString(Keys::PIP),fillSource);
         settings->setMenuValue(MENU_FIRST_PIP,PIP_SOURCE,PIP_SOURCE_FILL,fillSource);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::sizeChanged,this,[=](QString size){
-        models->macroInvoke(&Models::keySize,Keys::PIP,size);
+        models->macroInvoke(&Models::keySize,Keys::keyIndexToString(Keys::PIP),size);
         settings->setMenuValue(MENU_FIRST_PIP,PIP_SIZE_POSITION,PIP_SIZE_SIZE,size);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::xPositionChanged,this,[=](double xPosition){
-        models->macroInvoke(&Models::keyXPosition,Keys::PIP,xPosition);
+        models->macroInvoke(&Models::keyXPosition,Keys::keyIndexToString(Keys::PIP),xPosition);
         settings->setMenuValue(MENU_FIRST_PIP,PIP_SIZE_POSITION,PIP_SIZE_X_POSITION,xPosition);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::yPositionChanged,this,[=](double yPosition){
-        models->macroInvoke(&Models::keyYPosition,Keys::PIP,yPosition);
+        models->macroInvoke(&Models::keyYPosition,Keys::keyIndexToString(Keys::PIP),yPosition);
         settings->setMenuValue(MENU_FIRST_PIP,PIP_SIZE_POSITION,PIP_SIZE_Y_POSITION,yPosition);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::maskEnableChanged,this,[=](bool maskEnable){
-        models->macroInvoke(&Models::keyMaskEnable,Keys::PIP,maskEnable);
+        models->macroInvoke(&Models::keyMaskEnable,Keys::keyIndexToString(Keys::PIP),maskEnable);
         settings->setMenuValue(MENU_FIRST_PIP,PIP_MASK,PIP_MASK_ENABLE,maskEnable?1:0);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::maskHStartChanged,this,[=](int maskHStart){
-        models->macroInvoke(&Models::keyMaskHStart,Keys::PIP,maskHStart);
+        models->macroInvoke(&Models::keyMaskHStart,Keys::keyIndexToString(Keys::PIP),maskHStart);
         settings->setMenuValue(MENU_FIRST_PIP,PIP_MASK,PIP_MASK_H_START,maskHStart);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::maskVStartChanged,this,[=](int maskVStart){
-        models->macroInvoke(&Models::keyMaskVStart,Keys::PIP,maskVStart);
+        models->macroInvoke(&Models::keyMaskVStart,Keys::keyIndexToString(Keys::PIP),maskVStart);
         settings->setMenuValue(MENU_FIRST_PIP,PIP_MASK,PIP_MASK_V_START,maskVStart);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::maskHEndChanged,this,[=](int maskHEnd){
-        models->macroInvoke(&Models::keyMaskHEnd,Keys::PIP,maskHEnd);
+        models->macroInvoke(&Models::keyMaskHEnd,Keys::keyIndexToString(Keys::PIP),maskHEnd);
         settings->setMenuValue(MENU_FIRST_PIP,PIP_MASK,PIP_MASK_H_END,maskHEnd);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::maskVEndChanged,this,[=](int maskVEnd){
-        models->macroInvoke(&Models::keyMaskVEnd,Keys::PIP,maskVEnd);
+        models->macroInvoke(&Models::keyMaskVEnd,Keys::keyIndexToString(Keys::PIP),maskVEnd);
         settings->setMenuValue(MENU_FIRST_PIP,PIP_MASK,PIP_MASK_V_END,maskVEnd);
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters(),&PIPParameters::borderEnableChanged,this,[=](bool borderEnable){
