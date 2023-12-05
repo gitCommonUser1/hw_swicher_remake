@@ -10,6 +10,8 @@
 #include "hw_config.h"
 #include "supersources.h"
 #include "audiomixer.h"
+#include "stillgenerator.h"
+#include "still.h"
 
 #define PRODUCT_NAME "GoStream Deck"
 
@@ -39,6 +41,8 @@ Profile::Profile(QObject *parent) : QObject(parent)
     m_superSources->setObjectName("superSources");
     m_audioMixer = new AudioMixer(this);
     m_audioMixer->setObjectName("audioMixer");
+    m_stillGenerator = new StillGenerator(this);
+    m_stillGenerator->setObjectName("stillGenerator");
 }
 
 void Profile::write(QObject *object)
@@ -96,6 +100,7 @@ void Profile::writeRecursion(QObject *object, QXmlStreamWriter &stream)
         auto property = obj->property(i);
         auto name = property.name();
         auto type = property.type();
+        auto typeName = property.typeName();
         if(strcmp(name,"objectName") != 0)
         {
             //排除objectName
@@ -108,8 +113,23 @@ void Profile::writeRecursion(QObject *object, QXmlStreamWriter &stream)
             }
             else
             {
-                //这里是子节点列表
-                writeRecursion(object->findChild<QObject*>(name),stream);
+//                这里是子节点列表
+                if(QString(typeName).indexOf("QList") != -1)
+                {
+                    QVariant v = object->property(name);
+                    QList<QObject*> stills = v.value<QList<QObject*>>();
+                    qDebug() << stills.size();
+                    //list
+                    for(int j = 0;j < stills.size();++j)
+                    {
+                        writeRecursion(stills[j],stream);
+                    }
+                }
+                else
+                {
+                    //single
+                    writeRecursion(object->findChild<QObject*>(name),stream);
+                }
             }
         }
     }

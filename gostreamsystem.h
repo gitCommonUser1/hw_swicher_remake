@@ -10,6 +10,8 @@ class DownstreamKeys;
 class ColorBacks;
 class SuperSources;
 class AudioMixer;
+class StillGenerator;
+
 
 class Profile : public QObject
 {
@@ -23,6 +25,7 @@ class Profile : public QObject
     Q_PROPERTY(ColorBacks* colorBacks READ colorBacks)
     Q_PROPERTY(SuperSources* superSources READ superSources)
     Q_PROPERTY(AudioMixer* audioMixer READ audioMixer)
+    Q_PROPERTY(StillGenerator* stillGenerator READ stillGenerator)
 public:
     explicit Profile(QObject *parent = nullptr);
 
@@ -79,6 +82,11 @@ public:
         return m_audioMixer;
     }
 
+    StillGenerator* stillGenerator() const
+    {
+        return m_stillGenerator;
+    }
+
 public slots:
     void setMajorVersion(int majorVersion)
     {
@@ -133,6 +141,8 @@ private:
     SuperSources* m_superSources;
 
     AudioMixer* m_audioMixer;
+
+    StillGenerator* m_stillGenerator;
 
 signals:
 void productChanged(QString product);

@@ -30,5 +30,9 @@
 #include "audioinput.h"
 #include "audiooutput.h"
 #include "audiosource.h"
+#include "stillgenerator.h"
+#include "still.h"
+#include "stills.h"
+#include "stillselection.h"
 
 #endif // PROFILE_INCLUDE_H

@@ -95,6 +95,10 @@ SOURCES += \
     src/uvc_out_power.c \
     src/uvc_ports.c \
     src/w25qxx.c \
+    still.cpp \
+    stillgenerator.cpp \
+    stills.cpp \
+    stillselection.cpp \
     supersource.cpp \
     supersourceborder.cpp \
     supersourcemask.cpp \
@@ -258,6 +262,10 @@ HEADERS += \
     settings.h \
     control.h \
     models.h \
+    still.h \
+    stillgenerator.h \
+    stills.h \
+    stillselection.h \
     supersource.h \
     supersourceborder.h \
     supersourcemask.h \

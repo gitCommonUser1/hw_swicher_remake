@@ -1284,6 +1284,12 @@ void setAudioNumbers(QList<QString> audioNumbers)
 
 void setAudioNumbers(int index,QString audioNumber)
 {
+    if(m_audioNumbers.size() == 0)
+    {
+        QList<QString>list;
+        list << "+00.00" << "+00.00" << "+00.00" << "+00.00" << "+00.00" << "+00.00" << "+00.00" << "+00.00";
+        setAudioNumbers(list);
+    }
     if (m_audioNumbers[index] == audioNumber)
         return;
 

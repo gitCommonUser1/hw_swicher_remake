@@ -464,6 +464,8 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("ndi",ndi);
     engine.rootContext()->setContextProperty("ndiListModelItem",ndi->ndiListModelItem());
 
+
+    qRegisterMetaType<QList<Still*>>("QList<Still*>");
     profile = new Profile;
     //控制
     Control control;

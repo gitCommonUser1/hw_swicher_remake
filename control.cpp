@@ -1026,7 +1026,6 @@ void Control::connect_profile()
         models->macroInvoke(&Models::audioEnable,AudioSource::sourceNameIndexToString(AudioSource::IN1),enable);
         settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_IN1,IN1_ENABLE,enable);
     });
-
     connect(profile->audioMixer()->audioInput()->in2(),&AudioSource::faderChanged,this,[=](double fader){
         models->macroInvoke(&Models::audioFader,AudioSource::sourceNameIndexToString(AudioSource::IN2),fader);
         settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_IN2,IN2_FADER,fader);
@@ -1043,7 +1042,6 @@ void Control::connect_profile()
         models->macroInvoke(&Models::audioEnable,AudioSource::sourceNameIndexToString(AudioSource::IN2),enable);
         settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_IN2,IN2_ENABLE,enable);
     });
-
     connect(profile->audioMixer()->audioInput()->in3(),&AudioSource::faderChanged,this,[=](double fader){
         models->macroInvoke(&Models::audioFader,AudioSource::sourceNameIndexToString(AudioSource::IN3),fader);
         settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_IN3,IN3_FADER,fader);
@@ -1060,7 +1058,6 @@ void Control::connect_profile()
         models->macroInvoke(&Models::audioEnable,AudioSource::sourceNameIndexToString(AudioSource::IN3),enable);
         settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_IN3,IN3_ENABLE,enable);
     });
-
     connect(profile->audioMixer()->audioInput()->in4(),&AudioSource::faderChanged,this,[=](double fader){
         models->macroInvoke(&Models::audioFader,AudioSource::sourceNameIndexToString(AudioSource::IN4),fader);
         settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_IN4,IN4_FADER,fader);
@@ -1077,7 +1074,6 @@ void Control::connect_profile()
         models->macroInvoke(&Models::audioEnable,AudioSource::sourceNameIndexToString(AudioSource::IN4),enable);
         settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_IN4,IN4_ENABLE,enable);
     });
-
     connect(profile->audioMixer()->audioInput()->aux(),&AudioSource::faderChanged,this,[=](double fader){
         models->macroInvoke(&Models::audioFader,AudioSource::sourceNameIndexToString(AudioSource::AUX),fader);
         settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_AUX,AUX_FADER,fader);
@@ -1094,21 +1090,20 @@ void Control::connect_profile()
         models->macroInvoke(&Models::audioEnable,AudioSource::sourceNameIndexToString(AudioSource::AUX),enable);
         settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_AUX,AUX_ENABLE,enable);
     });
-
     connect(profile->audioMixer()->audioOutput()->pgm(),&AudioSource::faderChanged,this,[=](double fader){
         models->macroInvoke(&Models::audioFader,AudioSource::sourceNameIndexToString(AudioSource::PGM),fader);
         settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_PGM,PGM_FADER,fader);
     });
-
     connect(profile->audioMixer()->audioOutput()->monitor(),&AudioSource::levelChanged,this,[=](int level){
         models->macroInvoke(&Models::monitorLevel,level);
         settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_MONITOR,MONITOR_LEVEL,level);
     });
-
     connect(profile->audioMixer()->audioOutput()->monitor(),&AudioSource::sourceChanged,this,[=](int source){
         models->macroInvoke(&Models::monitorSource,AudioSource::sourceNameIndexToString(source));
         settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_MONITOR,MONITOR_SOURCE,source);
     });
+    //still selection
+
 
 
     //第二遍读取，防止发多次信号

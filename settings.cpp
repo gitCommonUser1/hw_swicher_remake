@@ -195,12 +195,7 @@ void Settings::init_menuStatus()
 
     setPlayAutoNextFlag(0);
 
-
     setKeyboardReg(-1);
-
-    QList<QString>list;
-    list << "+00.00" << "+00.00" << "+00.00" << "+00.00" << "+00.00" << "+00.00" << "+00.00" << "+00.00";
-    setAudioNumbers(list);
 
     setListDialogVisible(0);
 }
