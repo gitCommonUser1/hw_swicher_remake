@@ -118,7 +118,6 @@ void Profile::writeRecursion(QObject *object, QXmlStreamWriter &stream)
                 {
                     QVariant v = object->property(name);
                     QList<QObject*> stills = v.value<QList<QObject*>>();
-                    qDebug() << stills.size();
                     //list
                     for(int j = 0;j < stills.size();++j)
                     {

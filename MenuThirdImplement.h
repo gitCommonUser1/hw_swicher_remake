@@ -1441,6 +1441,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::stillSelection),STILL_SELECTION_STILL1,value.toInt());
+        profile->stillGenerator()->stillSelection()->setStill1(value.toInt());
     }
 };
 
@@ -1449,6 +1450,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::stillSelection),STILL_SELECTION_STILL2,value.toInt());
+        profile->stillGenerator()->stillSelection()->setStill2(value.toInt());
     }
 };
 
@@ -1457,6 +1459,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::stillLocation),value.toInt());
+        profile->stillGenerator()->stillSelection()->setLocation(value.toInt());
     }
 };
 

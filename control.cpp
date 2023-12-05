@@ -1103,7 +1103,21 @@ void Control::connect_profile()
         settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_MONITOR,MONITOR_SOURCE,source);
     });
     //still selection
+    connect(profile->stillGenerator()->stillSelection(),&StillSelection::still1Changed,this,[=](int still1){
+        models->macroInvoke(&Models::stillSelection,StillGenerator::STILL1,still1);
+        settings->setMenuValue(MENU_FIRST_STILL_GENERATOR,STILL_GENERATE_SELECTION,STILL_SELECTION_STILL1,still1);
+    });
+    connect(profile->stillGenerator()->stillSelection(),&StillSelection::still2Changed,this,[=](int still2){
+        models->macroInvoke(&Models::stillSelection,StillGenerator::STILL2,still2);
+        settings->setMenuValue(MENU_FIRST_STILL_GENERATOR,STILL_GENERATE_SELECTION,STILL_SELECTION_STILL2,still2);
+    });
+    connect(profile->stillGenerator()->stillSelection(),&StillSelection::locationChanged,this,[=](int location){
+        models->macroInvoke(&Models::stillLocation,location);
+        settings->setMenuValue(MENU_FIRST_STILL_GENERATOR,STILL_GENERATE_UPLOAD,STILL_UPLOAD_LOCATION,location);
+    });
+    //macro
 
+    //stream
 
 
     //第二遍读取，防止发多次信号

@@ -14,6 +14,12 @@ class StillGenerator : public QObject
 public:
     explicit StillGenerator(QObject *parent = nullptr);
 
+    enum STILLS{
+        STILL1 = 0,
+        STILL2,
+        MAX
+    };
+
     StillSelection* stillSelection() const
     {
         return m_stillSelection;

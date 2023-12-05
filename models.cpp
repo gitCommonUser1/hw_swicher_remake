@@ -153,6 +153,11 @@ void Models::init_connect()
     connect(this,&Models::monitorLevel,this,&Models::setMonitorLevel);
     connect(this,&Models::monitorSource,this,&Models::setMonitorSource);
 
+
+    //still generator
+    connect(this,&Models::stillSelection,this,&Models::setStillSelection);
+    connect(this,&Models::stillLocation,this,&Models::setStillLocation);
+
     //button status
     connect(this,&Models::pgmIndex,this,&Models::setPgmIndex);
     connect(this,&Models::pvwIndex,this,&Models::setPvwIndex);
@@ -961,6 +966,49 @@ void Models::setAudioAfv()
     fpga_write(&g_fpga,FPGA_AUDIO_AFV,flag);
 }
 
+void Models::setStillSelection(int still, int selection)
+{
+    if(still == StillGenerator::STILL1)
+    {
+        if(profile->stillGenerator()->stillSelection()->still1() != selection)
+        {
+            profile->stillGenerator()->stillSelection()->setStill1(selection);
+            return ;
+        }
+    }
+    else if(still == StillGenerator::STILL2)
+    {
+        if(profile->stillGenerator()->stillSelection()->still2() != selection)
+        {
+            profile->stillGenerator()->stillSelection()->setStill2(selection);
+            return ;
+        }
+    }
+    setStillSelectionCtrl();
+}
+
+void Models::setStillLocation(int index)
+{
+    if(profile->stillGenerator()->stillSelection()->location() != index)
+    {
+        profile->stillGenerator()->stillSelection()->setLocation(index);
+        return ;
+    }
+    setStillSelectionCtrl();
+}
+
+void Models::setStillSelectionCtrl()
+{
+    int value;
+    int still1 = profile->stillGenerator()->stillSelection()->still1();
+    int still2 = profile->stillGenerator()->stillSelection()->still2();
+    int location_index = profile->stillGenerator()->stillSelection()->location();
+    location_index = location_index << 10;
+    still2 = still2 << 5;
+    value = still1 + still2 + location_index;
+    fpga_write(&g_fpga,STILL_SEL,value);
+}
+
 //void Models::setAudioFader(int value)
 //{
 //    int index = settings->lastSecondUnfold();
@@ -1325,18 +1373,6 @@ void Models::setPipBorderColor()
     fpga_write(&g_fpga,PIP_COLOR_C,*(uint16_t *)&(color.Cr));
 }
 
-
-void Models::setStillSelection()
-{
-    int value;
-    int still1 = settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_SELECTION]->third[STILL_SELECTION_STILL1]->current.toInt();
-    int still2 = settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_SELECTION]->third[STILL_SELECTION_STILL2]->current.toInt();
-    int location_index = settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_UPLOAD]->third[STILL_UPLOAD_LOCATION]->current.toInt();
-    location_index = location_index << 10;
-    still2 = still2 << 5;
-    value = still1 + still2 + location_index;
-    fpga_write(&g_fpga,STILL_SEL,value);
-}
 
 void Models::setStillUpload()
 {

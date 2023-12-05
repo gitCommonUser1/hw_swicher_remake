@@ -79,7 +79,6 @@ public:
     int getPGMTally();
 
     //still generate
-    void setStillSelection();
     void setStillUpload();
     void initStillUpload();
     void initStillUpLoadRvSwitch();
@@ -296,9 +295,11 @@ signals:
 
     /**/
     void stillSelection(int stillIndex,int index);
-//    void stillUpload();
     void stillLocation(int location);
     /**/
+
+
+
 
     //player
     void record(int status);
@@ -506,6 +507,12 @@ public slots:
     void setAudioOn();//
     void setAudioAfv();//
     /**/
+
+
+    //still generator
+    void setStillSelection(int still,int selection);
+    void setStillLocation(int index);
+    void setStillSelectionCtrl();
 
 
     //button status
