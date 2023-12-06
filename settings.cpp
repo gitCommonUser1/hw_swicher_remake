@@ -976,9 +976,7 @@ MenuSecond *Settings::new_Still_Upload()
 
     third = new MenuThirdStillLoadPicture(tr("Load picture"),"Load picture",0,0,0,1,DATATYPE_ICON);
     list_third.append(third);
-
-//    third = new MenuThirdStillCapture(tr("Capture"),0,0,2,1,DATATYPE_NUMBER);
-//    list_third.append(third);
+    third->menuType = ENTER_CALL;
 
     monitor->third = list_third;
     return monitor;
@@ -1025,12 +1023,14 @@ MenuSecond *Settings::new_Stream1()
 
     third = new MenuThirdStream1Key(tr("Key "),"Key ","","","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdStream1UploadKey(tr("Upload Key"),"Upload Key",0,0,0,1,DATATYPE_ICON); //DATATYPE_ENUM
     list_third.append(third);
+    third->menuType = ENTER_CALL;
 
-    third = new MenuThirdStream1Output(tr("Output"),"Output",0,0,2,1,DATATYPE_ENUM);
-    third->list_text << tr("On") << tr("Off");
+    third = new MenuThirdStream1Output(tr("Output"),"Output",0,1,2,1,DATATYPE_ENUM);
+    third->list_text << tr("Off") << tr("On");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
 
@@ -1058,12 +1058,14 @@ MenuSecond *Settings::new_Stream2()
 
     third = new MenuThirdStream2Key(tr("Key "),"Key ","","","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdStream2UploadKey(tr("Upload Key"),"Upload Key",0,0,0,1,DATATYPE_ICON);
     list_third.append(third);
+    third->menuType = ENTER_CALL;
 
-    third = new MenuThirdStream2Output(tr("Output"),"Output",0,1,2,1,DATATYPE_ENUM);
-    third->list_text << tr("On") << tr("Off");
+    third = new MenuThirdStream2Output(tr("Output"),"Output",0,0,2,1,DATATYPE_ENUM);
+    third->list_text << tr("Off") << tr("On");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
 
@@ -1092,12 +1094,14 @@ MenuSecond *Settings::new_Stream3()
 
     third = new MenuThirdStream3Key(tr("Key "),"Key ","","","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdStream3UploadKey(tr("Upload Key"),"Upload Key",0,0,0,1,DATATYPE_ICON);
     list_third.append(third);
+    third->menuType = ENTER_CALL;
 
-    third = new MenuThirdStream3Output(tr("Output"),"Output",0,1,2,1,DATATYPE_ENUM);
-    third->list_text << tr("On") << tr("Off");
+    third = new MenuThirdStream3Output(tr("Output"),"Output",0,0,2,1,DATATYPE_ENUM);
+    third->list_text << tr("Off") << tr("On");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
 
@@ -1169,33 +1173,33 @@ MenuSecond *Settings::new_Setting_Mv_Meter()
     monitor->name = tr("mv meter");
     monitor->ss_name = ("mv meter");
 
-    third = new MenuThirdSettingMvMeterPGM(tr("PGM"),"PGM",0,1,2,1,DATATYPE_ENUM);
-    third->list_text << tr("On") << tr("Off") ;
+    third = new MenuThirdSettingMvMeterPGM(tr("PGM"),"PGM",0,0,2,1,DATATYPE_ENUM);
+    third->list_text << tr("Off") << tr("On");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
 
-    third = new MenuThirdSettingMvMeterIn1(tr("In 1"),"In 1",0,0,2,1,DATATYPE_ENUM);
-    third->list_text << tr("On") << tr("Off") ;
+    third = new MenuThirdSettingMvMeterIn1(tr("In 1"),"In 1",0,1,2,1,DATATYPE_ENUM);
+    third->list_text << tr("Off") << tr("On");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
 
-    third = new MenuThirdSettingMvMeterIn2(tr("In 2"),"In 2",0,0,2,1,DATATYPE_ENUM);
-    third->list_text << tr("On") << tr("Off") ;
+    third = new MenuThirdSettingMvMeterIn2(tr("In 2"),"In 2",0,1,2,1,DATATYPE_ENUM);
+    third->list_text << tr("Off") << tr("On");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
 
-    third = new MenuThirdSettingMvMeterIn3(tr("In 3"),"In 3",0,0,2,1,DATATYPE_ENUM);
-    third->list_text << tr("On") << tr("Off") ;
+    third = new MenuThirdSettingMvMeterIn3(tr("In 3"),"In 3",0,1,2,1,DATATYPE_ENUM);
+    third->list_text << tr("Off") << tr("On");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
 
-    third = new MenuThirdSettingMvMeterIn4(tr("In 4"),"In 4",0,0,2,1,DATATYPE_ENUM);
-    third->list_text << tr("On") << tr("Off") ;
+    third = new MenuThirdSettingMvMeterIn4(tr("In 4"),"In 4",0,1,2,1,DATATYPE_ENUM);
+    third->list_text << tr("Off") << tr("On");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
 
-    third = new MenuThirdSettingMvMeterAux(tr("Aux"),"Aux",0,0,2,1,DATATYPE_ENUM);
-    third->list_text << tr("On") << tr("Off") ;
+    third = new MenuThirdSettingMvMeterAux(tr("Aux"),"Aux",0,1,2,1,DATATYPE_ENUM);
+    third->list_text << tr("Off") << tr("On");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
 
@@ -1228,8 +1232,8 @@ MenuSecond *Settings::new_Setting_Market()
     monitor->name = tr("marker");
     monitor->ss_name = ("marker");
 
-    third = new MenuThirdSettingMarkerPVW(tr("PVW"),"PVW",0,1,2,1,DATATYPE_ENUM);
-    third->list_text << tr("On") << tr("Off") ;
+    third = new MenuThirdSettingMarkerPVW(tr("PVW"),"PVW",0,0,2,1,DATATYPE_ENUM);
+    third->list_text << tr("Off") << tr("On");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
 
@@ -1583,6 +1587,69 @@ STREAM_PROFILE Settings::getRecordBitrate()
             return list[i];
         }
     }
+}
+
+QString Settings::platformChangedText(int index,int changeNumber)
+{
+    MenuThird *third = nullptr;
+    if(index == Streams::STREAM1)
+    {
+        third = listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_PLATFORM];
+    }
+    else if(index == Streams::STREAM2)
+    {
+        third = listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_PLATFORM];
+    }
+    else if(index == Streams::STREAM3)
+    {
+        third = listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_PLATFORM];
+    }
+
+    if(third->list_text.size() == 0)
+        return "";
+
+    if(changeNumber >= third->max.toInt())
+    {
+        return third->list_text[third->list_text.size() - 1];
+    }
+    if(changeNumber < 0)
+    {
+        return third->list_text[0];
+    }
+    return third->list_text[changeNumber];
+}
+
+QString Settings::serverChangedText(int index, int changeNumber)
+{
+    MenuThird *third = nullptr;
+    if(index == Streams::STREAM1)
+    {
+        third = listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_SERVER];
+    }
+    else if(index == Streams::STREAM2)
+    {
+        third = listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_SERVER];
+    }
+    else if(index == Streams::STREAM3)
+    {
+        third = listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_SERVER];
+    }
+
+    int size = third->list_text.size();
+    if(size == 0)
+        return "";
+
+    qDebug() << "______:" << third->list_text.size();
+
+    if(changeNumber >= size)
+    {
+        return third->list_text[size - 1];
+    }
+    if(changeNumber < 0)
+    {
+        return third->list_text[0];
+    }
+    return third->list_text[changeNumber];
 }
 
 void Settings::initStreamData()

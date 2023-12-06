@@ -319,6 +319,7 @@ int main(int argc, char *argv[])
     models = new Models();
     models->setEngine(&engine);
     settings = new Settings();
+    settings->init_menuStatus();
 
     models->initStillUpLoadRvSwitch();
 
@@ -466,6 +467,7 @@ int main(int argc, char *argv[])
 
 
     profile = new Profile;
+
     //控制
     Control control;
     engine.rootContext()->setContextProperty("control",&control);
@@ -495,24 +497,28 @@ int main(int argc, char *argv[])
 
 
 //    初始化fpga数据
-    settings->init_menuStatus();
-    auto list = settings->listFirst();
-    for(int i = 0;i < list.size();++i)
-    {
-        for(int j = 0;j < list[i]->second.size();++j)
-        {
-            for(int k = 0;k < list[i]->second[j]->third.size();++k)
-            {
-                settings->listFirst()[i]->second[j]->third[k]->doWork(settings->listFirst()[i]->second[j]->third[k]->current);
-            }
-        }
-    }
+//    settings->init_menuStatus();
+//    auto list = settings->listFirst();
+//    for(int i = 0;i < list.size();++i)
+//    {
+//        for(int j = 0;j < list[i]->second.size();++j)
+//        {
+//            for(int k = 0;k < list[i]->second[j]->third.size();++k)
+//            {
+//                settings->listFirst()[i]->second[j]->third[k]->doWork(settings->listFirst()[i]->second[j]->third[k]->current);
+//            }
+//        }
+//    }
 
     init_settings_is_ok = true;
 
     models->initDHCPNetworkData();
 
     RegExp *regExp = new RegExp();
+
+
+    //第二遍读取，防止发多次信号
+    profile->read(profile);
 
     engine.rootContext()->setContextProperty("settings",settings);
     engine.rootContext()->setContextProperty("leftMenuModel",leftMenuModel);

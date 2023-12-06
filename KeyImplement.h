@@ -183,24 +183,7 @@ public:
     void doWork(int status = 1){
         if(status != 1)
             return ;
-        int enable = settings->liveStatus();
-        if(enable == 0)
-        {
-            // open
-            int stream1 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();
-            int stream2 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();
-            int stream3 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();
-            if(!(stream1 == OUTPUT_DISABLE && stream2 == OUTPUT_DISABLE && stream3 == OUTPUT_DISABLE))
-            {
-//                if(settings->liveStreamStatus1() == E_STATUS_CLOSE && settings->liveStreamStatus2() == E_STATUS_CLOSE && settings->liveStreamStatus3() == E_STATUS_CLOSE)
-//                    models->sendKeySignalHasOneParameter(&Models::liveStatus,1);
-            }
-        }
-        else
-        {
-            // close
-//            models->sendKeySignalHasOneParameter(&Models::liveStatus,0);
-        }
+        settings->setLiveStatus(!settings->liveStatus());
     }
 };
 
@@ -232,6 +215,9 @@ public:
         if(settings->keyboardVisible()){
             if(settings->keyboardKetMoveFlag()){
                 models->sendKey(settings->keyboardCurrentIndex());
+                return ;
+            }else{
+                settings->setKeyboardVisible(0);
                 return ;
             }
         }
@@ -379,6 +365,7 @@ public:
         int first = settings->lastFirstUnfold();
         int second = settings->lastSecondUnfold();
         int third = settings->lastThirdUnfold();
+
         if(second == -1)
         {
             if(item.level() == MENU_LEVEL_FIRST)
@@ -411,148 +398,152 @@ public:
         }
         else
         {
+            auto menuType = settings->listFirst()[first]->second[second]->third[settings->rightListViewCurrent()]->menuType;
             if(third == -1)
             {
                 //进入三级菜单
+                switch (menuType) {
+                case CHANGED_CALL:
+                    models->chooseRightMenu();
+                    break;
+                case ENTER_CALL_OR_RESET:
+                    models->chooseRightMenu();
+                    break;
+                case ENTER_CALL:
+                    models->chooseRightMenu();
+                    break;
+                case EVENT_CALL:
+                    settings->listFirst()[first]->second[second]->third[settings->rightListViewCurrent()]->doEvent();
+                    break;
+                }
+//                //不可点
+//                if(settings->liveStatus() != 0 && first == MENU_FIRST_STREAM)
+//                {
+//                    //推流开启，设置Stream
+//                    return ;
+//                }
 
-                //不可点
-                if(settings->liveStatus() != 0 && first == MENU_FIRST_STREAM)
-                {
-                    //推流开启，设置Stream
-                    return ;
-                }
+//                if(first == MENU_FIRST_SETTING &&
+//                   second == SETTING_RESET &&
+//                   settings->rightListViewCurrent() == SETTING_RESET_FACTORY)
+//                {
+//                    messageDialogControl->dialogShow(QObject::tr("This will restart the device."),{QObject::tr("Cancel"),QObject::tr("Confirm")},MessageDialogControl::MESSAGE_FACTORY_RESET);
+//                    return ;
+//                }
 
-                if(first == MENU_FIRST_SETTING &&
-                   second == SETTING_RESET &&
-                   settings->rightListViewCurrent() == SETTING_RESET_FACTORY)
-                {
-                    messageDialogControl->dialogShow(QObject::tr("This will restart the device."),{QObject::tr("Cancel"),QObject::tr("Confirm")},MessageDialogControl::MESSAGE_FACTORY_RESET);
-                    return ;
-                }
+//                if(first == MENU_FIRST_SETTING &&
+//                   second == SETTING_RESET &&
+//                   settings->rightListViewCurrent() == SETTING_RESET_SD_FORMAT)
+//                {
+//                    messageDialogControl->dialogShow(QObject::tr("Your SD card will be formatted."),{QObject::tr("Cancel"),QObject::tr("Confirm")},MessageDialogControl::MESSAGE_SD_FORMAT);
+//                    return ;
+//                }
 
-                if(first == MENU_FIRST_SETTING &&
-                   second == SETTING_RESET &&
-                   settings->rightListViewCurrent() == SETTING_RESET_SD_FORMAT)
-                {
-                    messageDialogControl->dialogShow(QObject::tr("Your SD card will be formatted."),{QObject::tr("Cancel"),QObject::tr("Confirm")},MessageDialogControl::MESSAGE_SD_FORMAT);
-                    return ;
-                }
+//                //super source 只有当Style选择不为Crop时，Y position才可以调整
+//                if(first == MENU_FIRST_SUPER_SOURCE &&
+//                   second == SUPER_SOURCE_CONTROL &&
+//                   settings->rightListViewCurrent() == SUPER_CONTROL_Y_POSITION &&
+//                   settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_CONTROL]->third[SUPER_CONTROL_STYLE]->current.toInt() == CROP)
+//                {
+//                    return ;
+//                }
 
-                //super source 只有当Style选择不为Crop时，Y position才可以调整
-                if(first == MENU_FIRST_SUPER_SOURCE &&
-                   second == SUPER_SOURCE_CONTROL &&
-                   settings->rightListViewCurrent() == SUPER_CONTROL_Y_POSITION &&
-                   settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_CONTROL]->third[SUPER_CONTROL_STYLE]->current.toInt() == CROP)
-                {
-                    return ;
-                }
-
-                //可点
-                models->chooseRightMenu();
-                third = settings->lastThirdUnfold();
-                if(first == MENU_FIRST_SETTING &&
-                        second == SETTING_RECORD_FILE &&
-                        third == SETTING_RECORD_FILE_NAME)
-                {
-                    //record file
-                    settings->setKeyboardReg(REG_FILE_NAME);
-                    settings->setKeyboardVisible(1);
-                    auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_RECORD_FILE]->third[SETTING_RECORD_FILE_NAME];
-                    settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
-                }
-                else if(first == MENU_FIRST_SETTING &&
-                         second == SETTING_NETWORK &&
-                         third != NETWORK_PROTOCOL)
-                {
-                    int protocol = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PROTOCOL]->current.toInt();
-                    if(protocol == NETWORK_PROTOCOL_STATIC_IP)
-                    {
-                        settings->setKeyboardVisible(1,1);
-                        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[third];
-                        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
-                    }
-                }
-                else if(first == MENU_FIRST_STREAM &&
-                        third == MENU_THIRD_STREAM_KEY)
-                {
-                    settings->setKeyboardVisible(1);
-                    auto item = settings->listFirst()[MENU_FIRST_STREAM]->second[second]->third[MENU_THIRD_STREAM_KEY];
-                    settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
-                }
-                else if(first == MENU_FIRST_SETTING &&
-                        second == SETTING_SRC_NAME){
-                    settings->setKeyboardReg(REG_SRC_NAME);
-                    settings->setKeyboardVisible(1);
-                    auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[third];
-                    settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
-                }
+//                //可点
+//                models->chooseRightMenu();
+//                third = settings->lastThirdUnfold();
+//                if(first == MENU_FIRST_SETTING &&
+//                        second == SETTING_RECORD_FILE &&
+//                        third == SETTING_RECORD_FILE_NAME)
+//                {
+//                    //record file
+//                    settings->setKeyboardReg(REG_FILE_NAME);
+//                    settings->setKeyboardVisible(1);
+//                    auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_RECORD_FILE]->third[SETTING_RECORD_FILE_NAME];
+//                    settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
+//                }
+//                else if(first == MENU_FIRST_SETTING &&
+//                         second == SETTING_NETWORK &&
+//                         third != NETWORK_PROTOCOL)
+//                {
+//                    int protocol = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PROTOCOL]->current.toInt();
+//                    if(protocol == NETWORK_PROTOCOL_STATIC_IP)
+//                    {
+//                        settings->setKeyboardVisible(1,1);
+//                        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[third];
+//                        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
+//                    }
+//                }
+//                else if(first == MENU_FIRST_SETTING &&
+//                        second == SETTING_SRC_NAME){
+//                    settings->setKeyboardReg(REG_SRC_NAME);
+//                    settings->setKeyboardVisible(1);
+//                    auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[third];
+//                    settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
+//                }
             }
             else
             {
                 //退出三级菜单
-
-                if(first == MENU_FIRST_STILL_GENERATOR &&
-                   second == STILL_GENERATE_UPLOAD &&
-                   third == STILL_UPLOAD_LOAD_PICTURE)
-                {
-                    //still  load  picture
-//                    models->setStillUpload();
-                    models->loadStill1();
-                }
-                if(first == MENU_FIRST_MACRO &&
-                   second == MACRO_MACRO &&
-                   third == MENU_THIRD_MACRO_SLEEP)
-                {
-                    //macro send sleep
-                    int ms = settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_SLEEP]->current.toInt();
-//                    models->sendKeySignalHasOneParameter(&Models::mSleep,ms,false);
-                }
-                if(first == MENU_FIRST_SETTING &&
-                   second == SETTING_AUX_SOURCE &&
-                   third == SETTING_AUX_SOURCE_SOURCE)
-                {
-//                    models->sendMenuSignal(&Models::auxSource,first,second,third);
-                }
-                if(first == MENU_FIRST_SETTING &&
-                   second == SETTING_AUX_SOURCE &&
-                   third != SETTING_AUX_SOURCE_SOURCE)
-                {
-//                    models->sendMenuSignalHasOneParameter(&Models::srcSelection,first,second,third);
-                }
-                if(first == MENU_FIRST_SETTING &&
-                   second == SETTING_OUT_FORMAT &&
-                    third == SETTING_OUT_FORMAT_FORMAT)
-                {
-                    messageDialogControl->dialogShow(QObject::tr("This will restart the device."),{QObject::tr("Cancel"),QObject::tr("Confirm")},MessageDialogControl::MESSAGE_OUT_FORMAT);
-                }
-                if(first == MENU_FIRST_SETTING &&
-                   second == SETTING_OUT_FORMAT &&
-                   third != SETTING_OUT_FORMAT_FORMAT)
-                {
-//                    models->sendMenuSignalHasOneParameter(&Models::colorSpace,first,second,third);
-                }
-                if(first == MENU_FIRST_SETTING &&
-                   second == SETTING_OUT_SOURCE)
-                {
-//                    models->sendMenuSignal(&Models::outSource,first,second,third);
-                }
-                if(first == MENU_FIRST_STREAM &&
-                   third == MENU_THIRD_STREAM_UPLOAD_KEY)
-                {
-                    models->setLoadStreamKey(second);
-//                    models->sendMenuSignalHasOneParameter(&Models::loadStreamKey,first,second,third);
-                }
-                if(first == MENU_FIRST_MACRO &&
-                   second == MACRO_MACRO &&
-                   third == MENU_THIRD_MACRO_IMPORT)
-                {
-                    models->macroImport();
-                }
-                if(first == MENU_FIRST_MACRO &&
-                   second == MACRO_MACRO &&
-                   third == MENU_THIRD_MACRO_EXPORT)
-                {
-                    models->macroExport();
+//                if(first == MENU_FIRST_MACRO &&
+//                   second == MACRO_MACRO &&
+//                   third == MENU_THIRD_MACRO_SLEEP)
+//                {
+//                    //macro send sleep
+//                    int ms = settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_SLEEP]->current.toInt();
+////                    models->sendKeySignalHasOneParameter(&Models::mSleep,ms,false);
+//                }
+//                if(first == MENU_FIRST_SETTING &&
+//                   second == SETTING_AUX_SOURCE &&
+//                   third == SETTING_AUX_SOURCE_SOURCE)
+//                {
+////                    models->sendMenuSignal(&Models::auxSource,first,second,third);
+//                }
+//                if(first == MENU_FIRST_SETTING &&
+//                   second == SETTING_AUX_SOURCE &&
+//                   third != SETTING_AUX_SOURCE_SOURCE)
+//                {
+////                    models->sendMenuSignalHasOneParameter(&Models::srcSelection,first,second,third);
+//                }
+//                if(first == MENU_FIRST_SETTING &&
+//                   second == SETTING_OUT_FORMAT &&
+//                    third == SETTING_OUT_FORMAT_FORMAT)
+//                {
+//                    messageDialogControl->dialogShow(QObject::tr("This will restart the device."),{QObject::tr("Cancel"),QObject::tr("Confirm")},MessageDialogControl::MESSAGE_OUT_FORMAT);
+//                }
+//                if(first == MENU_FIRST_SETTING &&
+//                   second == SETTING_OUT_FORMAT &&
+//                   third != SETTING_OUT_FORMAT_FORMAT)
+//                {
+////                    models->sendMenuSignalHasOneParameter(&Models::colorSpace,first,second,third);
+//                }
+//                if(first == MENU_FIRST_SETTING &&
+//                   second == SETTING_OUT_SOURCE)
+//                {
+////                    models->sendMenuSignal(&Models::outSource,first,second,third);
+//                }
+//                if(first == MENU_FIRST_MACRO &&
+//                   second == MACRO_MACRO &&
+//                   third == MENU_THIRD_MACRO_IMPORT)
+//                {
+//                    models->macroImport();
+//                }
+//                if(first == MENU_FIRST_MACRO &&
+//                   second == MACRO_MACRO &&
+//                   third == MENU_THIRD_MACRO_EXPORT)
+//                {
+//                    models->macroExport();
+//                }
+                switch (menuType) {
+                case CHANGED_CALL:
+                    break;
+                case ENTER_CALL_OR_RESET:
+                    settings->listFirst()[first]->second[second]->third[third]->doEvent();
+                    break;
+                case ENTER_CALL:
+                    settings->listFirst()[first]->second[second]->third[third]->doEvent();
+                    break;
+                case EVENT_CALL:
+                    break;
                 }
                 models->cancelRightMenu();
             }

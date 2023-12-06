@@ -99,6 +99,8 @@ SOURCES += \
     stillgenerator.cpp \
     stills.cpp \
     stillselection.cpp \
+    stream.cpp \
+    streams.cpp \
     supersource.cpp \
     supersourceborder.cpp \
     supersourcemask.cpp \
@@ -266,6 +268,8 @@ HEADERS += \
     stillgenerator.h \
     stills.h \
     stillselection.h \
+    stream.h \
+    streams.h \
     supersource.h \
     supersourceborder.h \
     supersourcemask.h \

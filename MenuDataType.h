@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QList>
 #include <QVariant>
+#include <QDebug>
 
 #include "osee_math.h"
 
@@ -21,6 +22,19 @@ enum DATATYPE{
     DATATYPE_MAX
 };
 
+//菜单类型
+//目前支持的菜单类型有：
+//1.直接改变调用
+//2.改变后确认调用，取消则恢复之前的值
+//3.改变后确认调用，取消不恢复
+//4.按钮类型，点击进入事件，事件结束后调用
+enum MENUTYPE{
+    CHANGED_CALL = 0,//1.直接改变调用
+    ENTER_CALL_OR_RESET,//2.改变后确认调用，取消则恢复之前的值
+    ENTER_CALL,//3.改变后确认调用，取消不恢复
+    EVENT_CALL//4.按钮类型，点击进入事件，事件结束后调用
+};
+
 class MenuThird{
 
 public:
@@ -34,6 +48,7 @@ public:
         max = t_max;
         step = t_step;
         type = t_type;
+        menuType = CHANGED_CALL;
     }
     QString name;   //菜单显示
     QString ss_name; //别名，存储和读取用，不会修改
@@ -42,6 +57,7 @@ public:
     QVariant max;
     QVariant step;
     DATATYPE type;
+    MENUTYPE menuType;
     QString getText(){
         if(type == DATATYPE_NUMBER){
             return current.toString();
@@ -50,6 +66,8 @@ public:
         }else if(type == DATATYPE_FLOAT){
             return QString::number(dround(current.toDouble(),3),'f',2);
         }else if(type == DATATYPE_ENUM){
+            if(list_text.size() == 0)
+                return "";
             int index = current.toInt();
             if(index < 0)
                 index = 0;
@@ -151,22 +169,24 @@ public:
 
                 current = var;
         }else if(type == DATATYPE_ENUM){
-            bool ok = true;
-            int index = var.toInt(&ok);
-            if(ok){
-                if(index < 0)
-                    return -1;//index = 0;
-                if(index > list_text.size() - 1)
-                    return -1;//index = list_text.size() - 1;
-
-                current = index;
-            }else{
-                index = list_text.indexOf(var.toString());
+            if(var.type() == QVariant::String)
+            {
+                int index = list_text.indexOf(var.toString());
                 if(index != -1){
                     current = index;
                 }else
                     return -1;
             }
+            else
+            {
+                int index = var.toInt();
+                if(index < 0)
+                    return -1;//index = 0;
+                if(index > list_text.size() - 1)
+                    return -1;//index = list_text.size() - 1;
+                current = index;
+            }
+
         }
         else if(type == DATATYPE_TEXT){
             current = var;
@@ -176,8 +196,10 @@ public:
 
     QList<QString>list_text;
 
+    //值改变工作
     virtual void doWork(QVariant value) = 0;
-
+    //点击工作
+    virtual void doEvent(){ qDebug("doEvent !") ;}
 };
 
 struct MenuSecond{

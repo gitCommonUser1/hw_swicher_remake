@@ -455,7 +455,7 @@ Item{
             }else if(key == controlsMin + 4){
                 //ok
                 if(regExp.exactMatch(settings.keyboardReg,input.text)){
-                    settings.setMenuValue(settings.lastFirstUnfold,settings.lastSecondUnfold,settings.lastThirdUnfold,input.text)//input.text
+                    settings.setMenuValue(settings.lastFirstUnfold,settings.lastSecondUnfold,settings.rightListViewCurrent,input.text)//input.text
                 }else{
                     messageDialogControl.dialogShow(qsTr("You entered the wrong format!!"),[qsTr("Return")])
                 }

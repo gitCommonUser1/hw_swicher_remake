@@ -34,5 +34,7 @@
 #include "still.h"
 #include "stills.h"
 #include "stillselection.h"
+#include "streams.h"
+#include "stream.h"
 
 #endif // PROFILE_INCLUDE_H

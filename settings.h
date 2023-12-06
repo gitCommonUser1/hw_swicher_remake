@@ -304,7 +304,7 @@ public:
 
 
     //stream enable list  ->  audio show
-    Q_PROPERTY(QList<int> streamOutputList READ streamOutputList WRITE setStreamOutputList NOTIFY streamOutputListChanged)
+    Q_PROPERTY(QList<bool> streamOutputList READ streamOutputList WRITE setStreamOutputList NOTIFY streamOutputListChanged)
 
     //playlist dialog visible
     Q_PROPERTY(int playListDialogVisible READ playListDialogVisible WRITE setPlayListDialogVisible NOTIFY playListDialogVisibleChanged)
@@ -321,6 +321,8 @@ public:
     QString getStreamUrlIndex(int index);
     STREAM_PROFILE getStreamBitrateIndex(int index);
     STREAM_PROFILE getRecordBitrate();
+    QString platformChangedText(int index,int changeNumber);
+    QString serverChangedText(int index,int changeNumber);
 
     void initStreamData();
     void initRecordData();
@@ -544,7 +546,7 @@ int m_pgmCurrentIndex;
 
 int m_liveStatus;
 
-QList<int> m_streamOutputList;
+QList<bool> m_streamOutputList;
 
 QList<int> m_color5Data;
 
@@ -801,7 +803,7 @@ public:
         return m_liveStatus;
     }
 
-    QList<int> streamOutputList() const
+    QList<bool> streamOutputList() const
     {
         return m_streamOutputList;
     }
@@ -979,7 +981,7 @@ signals:
 
     void liveStatusChanged(int liveStatus);
 
-    void streamOutputListChanged(QList<int> streamOutputList);
+    void streamOutputListChanged(QList<bool> streamOutputList);
 
 
     void color5DataChanged(QList<int> color5Data);
@@ -1386,7 +1388,7 @@ void setLiveStatus(int liveStatus)
     m_liveStatus = liveStatus;
     emit liveStatusChanged(m_liveStatus);
 }
-void setStreamOutputList(QList<int> streamOutputList)
+void setStreamOutputList(QList<bool> streamOutputList)
 {
     if (m_streamOutputList == streamOutputList)
         return;

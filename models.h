@@ -79,9 +79,8 @@ public:
     int getPGMTally();
 
     //still generate
-    void setStillUpload();
-    void initStillUpload();
     void initStillUpLoadRvSwitch();
+    void stillLoadPictureIndexChanged(int value);
 
     Q_INVOKABLE void loadStill1();
     Q_INVOKABLE void loadStill2();
@@ -126,13 +125,13 @@ public:
     void setMSleep(int value);
     void setUserWait();
 
-    void setPlatform(int second);
-    void setStreamKey(int second);
     void setLoadStreamKey(int second);
     void setLiveStatus(int status);
     void openAllStream();
+    void openOneStream(int index);
     void closeAllStream();
-    void setStreamOutput();
+    void closeOneStream(int index);
+    void streamUploadKeyIndexChanged(int second,int value);
 
     void setSrcName(int third);
 
@@ -292,12 +291,26 @@ signals:
 
 
     //still generate
-
     /**/
     void stillSelection(int stillIndex,int index);
     void stillLocation(int location);
     /**/
 
+    //macro
+    /**/
+    /**/
+
+
+
+    //stream
+
+    /**/
+    void streamPlatform(int streamIndex,QString platform);
+    void streamServer(int streamIndex,QString server);
+    void streamUrl(int streamIndex,QString url);
+    void streamOutput(int streamIndex,bool output);
+
+    /**/
 
 
 
@@ -330,14 +343,7 @@ signals:
     void mSleep(int value);
     void userWait();
 
-    //stream
 
-    /**/
-    void platform(int streamIndex,int platform);
-    void streamServer(int streamIndex,int server);
-    void streamKey(int streamIndex,QString key);
-    void streamOutput(int streamIndex,int output);
-    /**/
 
 
     void srcName(int third);
@@ -510,9 +516,26 @@ public slots:
 
 
     //still generator
+    /**/
     void setStillSelection(int still,int selection);
     void setStillLocation(int index);
     void setStillSelectionCtrl();
+    /**/
+
+
+    //macro
+    /**/
+    /**/
+
+
+    //stream
+    /**/
+    void setStreamPlatform(int streamIndex,QString platform);
+    void setStreamServer(int streamIndex,QString server);
+    void setStreamUrl(int streamIndex,QString url);
+    void setStreamOutput(int streamIndex,bool output);
+    void updateServerArray(int streamIndex);
+    /**/
 
 
     //button status

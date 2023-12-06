@@ -126,9 +126,9 @@ void Control::init_connect()
 //        qDebug() << "liveLedStatusChanged:" << status;
 
         bool enable1,enable2,enable3;
-        enable1 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt() == OUTPUT_ENABLE;
-        enable2 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt() == OUTPUT_ENABLE;
-        enable3 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt() == OUTPUT_ENABLE;
+        enable1 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();// == OUTPUT_ENABLE;
+        enable2 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();// == OUTPUT_ENABLE;
+        enable3 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();// == OUTPUT_ENABLE;
 
         int liveStatus = settings->liveStatus();
         if(liveStatus != 0)
@@ -1117,11 +1117,40 @@ void Control::connect_profile()
     });
     //macro
 
-    //stream
-
-
-    //第二遍读取，防止发多次信号
-    profile->read(profile);
+    //stream            stream比较特殊，setMenu也在models中调用
+    connect(profile->streams()->stream1(),&Stream::platfromChanged,this,[=](QString platfrom){
+        models->macroInvoke(&Models::streamPlatform,Streams::STREAM1,platfrom);
+    });
+    connect(profile->streams()->stream1(),&Stream::serverChanged,this,[=](QString server){
+        models->macroInvoke(&Models::streamServer,Streams::STREAM1,server);
+        settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM1,MENU_THIRD_STREAM_SERVER,server);
+    });
+    connect(profile->streams()->stream1(),&Stream::outputChanged,this,[=](bool output){
+        models->macroInvoke(&Models::streamOutput,Streams::STREAM1,output);
+        settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM1,MENU_THIRD_STREAM_OUTPUT,output);
+    });
+    connect(profile->streams()->stream2(),&Stream::platfromChanged,this,[=](QString platfrom){
+        models->macroInvoke(&Models::streamPlatform,Streams::STREAM2,platfrom);
+    });
+    connect(profile->streams()->stream2(),&Stream::serverChanged,this,[=](QString server){
+        models->macroInvoke(&Models::streamServer,Streams::STREAM2,server);
+        settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM2,MENU_THIRD_STREAM_SERVER,server);
+    });
+    connect(profile->streams()->stream2(),&Stream::outputChanged,this,[=](bool output){
+        models->macroInvoke(&Models::streamOutput,Streams::STREAM2,output);
+        settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM2,MENU_THIRD_STREAM_OUTPUT,output);
+    });
+    connect(profile->streams()->stream3(),&Stream::platfromChanged,this,[=](QString platfrom){
+        models->macroInvoke(&Models::streamPlatform,Streams::STREAM3,platfrom);
+    });
+    connect(profile->streams()->stream3(),&Stream::serverChanged,this,[=](QString server){
+        models->macroInvoke(&Models::streamServer,Streams::STREAM3,server);
+        settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM3,MENU_THIRD_STREAM_SERVER,server);
+    });
+    connect(profile->streams()->stream3(),&Stream::outputChanged,this,[=](bool output){
+        models->macroInvoke(&Models::streamOutput,Streams::STREAM3,output);
+        settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM3,MENU_THIRD_STREAM_OUTPUT,output);
+    });
 }
 
 void Control::slotKnobChanged(const int knob, int value)

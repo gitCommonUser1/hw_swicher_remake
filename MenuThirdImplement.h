@@ -5,6 +5,7 @@
 #include "models.h"
 #include "MenuEnums.h"
 #include "profile_include.h"
+#include "rv_switch_api.h"
 
 extern Models *models;
 extern Profile *profile;
@@ -1467,7 +1468,10 @@ class MenuThirdStillLoadPicture:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        models->stillLoadPictureIndexChanged(value.toInt());
+    }
+    void doEvent() override{
+        models->loadStill1();
     }
 };
 
@@ -1504,6 +1508,9 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::platform),STREAM_STREAM1,value.toInt());
+        if(settings->liveStreamStatus1() != E_STATUS_CLOSE)
+            return ;
+        profile->streams()->stream1()->setPlatfrom(settings->platformChangedText(Streams::STREAM1,value.toInt()));
     }
 };
 
@@ -1512,6 +1519,9 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::streamServer),STREAM_STREAM1,value.toInt());
+        if(settings->liveStreamStatus1() != E_STATUS_CLOSE)
+            return ;
+        profile->streams()->stream1()->setServer(settings->serverChangedText(Streams::STREAM1,value.toInt()));
     }
 };
 
@@ -1522,6 +1532,13 @@ public:
     void doWork(QVariant value){
 ////        models->macroInvoke((&Models::streamKey),MACRO_STREAM1,value.toInt());
     }
+    void doEvent() override{
+        if(settings->liveStreamStatus1() != E_STATUS_CLOSE)
+            return ;
+        settings->setKeyboardVisible(1);
+        auto item = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_KEY];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
+    }
 };
 
 
@@ -1529,7 +1546,12 @@ class MenuThirdStream1UploadKey:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        models->streamUploadKeyIndexChanged(STREAM_STREAM1,value.toInt());
+    }
+    void doEvent() override{
+        if(settings->liveStreamStatus1() != E_STATUS_CLOSE)
+            return ;
+        models->setLoadStreamKey(STREAM_STREAM1);
     }
 };
 
@@ -1539,6 +1561,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::streamOutput),STREAM_STREAM1,value.toInt());
+        profile->streams()->stream1()->setOutput(value > 0);
     }
 };
 
@@ -1553,6 +1576,9 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::platform),STREAM_STREAM2,value.toInt());
+        if(settings->liveStreamStatus2() != E_STATUS_CLOSE)
+            return ;
+        profile->streams()->stream2()->setPlatfrom(settings->platformChangedText(Streams::STREAM2,value.toInt()));
     }
 };
 
@@ -1561,6 +1587,9 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::streamServer),STREAM_STREAM2,value.toInt());
+        if(settings->liveStreamStatus2() != E_STATUS_CLOSE)
+            return ;
+        profile->streams()->stream2()->setServer(settings->serverChangedText(Streams::STREAM2,value.toInt()));
     }
 };
 
@@ -1571,6 +1600,13 @@ public:
     void doWork(QVariant value){
 ////        models->macroInvoke((&Models::streamKey),MACRO_STREAM2,value.toInt());
     }
+    void doEvent() override{
+        if(settings->liveStreamStatus2() != E_STATUS_CLOSE)
+            return ;
+        settings->setKeyboardVisible(1);
+        auto item = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_KEY];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
+    }
 };
 
 
@@ -1578,7 +1614,12 @@ class MenuThirdStream2UploadKey:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        models->streamUploadKeyIndexChanged(STREAM_STREAM2,value.toInt());
+    }
+    void doEvent() override{
+        if(settings->liveStreamStatus2() != E_STATUS_CLOSE)
+            return ;
+        models->setLoadStreamKey(STREAM_STREAM2);
     }
 };
 
@@ -1588,6 +1629,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::streamOutput),STREAM_STREAM2,value.toInt());
+        profile->streams()->stream2()->setOutput(value > 0);
     }
 };
 
@@ -1601,6 +1643,9 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::platform),STREAM_STREAM3,value.toInt());
+        if(settings->liveStreamStatus3() != E_STATUS_CLOSE)
+            return ;
+        profile->streams()->stream3()->setPlatfrom(settings->platformChangedText(Streams::STREAM3,value.toInt()));
     }
 };
 
@@ -1609,6 +1654,9 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::streamServer),STREAM_STREAM3,value.toInt());
+        if(settings->liveStreamStatus3() != E_STATUS_CLOSE)
+            return ;
+        profile->streams()->stream3()->setServer(settings->serverChangedText(Streams::STREAM3,value.toInt()));
     }
 };
 
@@ -1619,6 +1667,13 @@ public:
     void doWork(QVariant value){
 ////        models->macroInvoke((&Models::streamKey),MACRO_STREAM3,value.toInt());
     }
+    void doEvent() override{
+        if(settings->liveStreamStatus3() != E_STATUS_CLOSE)
+            return ;
+        settings->setKeyboardVisible(1);
+        auto item = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_KEY];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
+    }
 };
 
 
@@ -1626,7 +1681,12 @@ class MenuThirdStream3UploadKey:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        models->streamUploadKeyIndexChanged(STREAM_STREAM3,value.toInt());
+    }
+    void doEvent() override{
+        if(settings->liveStreamStatus3() != E_STATUS_CLOSE)
+            return ;
+        models->setLoadStreamKey(STREAM_STREAM3);
     }
 };
 
@@ -1636,6 +1696,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::streamOutput),STREAM_STREAM3,value.toInt());
+        profile->streams()->stream3()->setOutput(value > 0);
     }
 };
 

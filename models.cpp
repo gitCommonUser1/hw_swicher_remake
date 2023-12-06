@@ -158,6 +158,13 @@ void Models::init_connect()
     connect(this,&Models::stillSelection,this,&Models::setStillSelection);
     connect(this,&Models::stillLocation,this,&Models::setStillLocation);
 
+
+    //streams
+    connect(this,&Models::streamPlatform,this,&Models::setStreamPlatform);
+    connect(this,&Models::streamServer,this,&Models::setStreamServer);
+    connect(this,&Models::streamUrl,this,&Models::setStreamUrl);
+    connect(this,&Models::streamOutput,this,&Models::setStreamOutput);
+
     //button status
     connect(this,&Models::pgmIndex,this,&Models::setPgmIndex);
     connect(this,&Models::pvwIndex,this,&Models::setPvwIndex);
@@ -1009,6 +1016,213 @@ void Models::setStillSelectionCtrl()
     fpga_write(&g_fpga,STILL_SEL,value);
 }
 
+void Models::setStreamPlatform(int streamIndex, QString platform)
+{
+    switch (streamIndex) {
+    case Streams::STREAM1:
+        if(settings->liveStreamStatus1() != E_STATUS_CLOSE)
+            return ;
+        if(profile->streams()->stream1()->platfrom() != platform)
+        {
+            profile->streams()->stream1()->setPlatfrom(platform);
+            return ;
+        }
+        updateServerArray(streamIndex);
+        settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM1,MENU_THIRD_STREAM_PLATFORM,platform);
+        setStreamServer(streamIndex,profile->streams()->stream1()->server());
+        break;
+    case Streams::STREAM2:
+        if(settings->liveStreamStatus2() != E_STATUS_CLOSE)
+            return ;
+        if(profile->streams()->stream2()->platfrom() != platform)
+        {
+            profile->streams()->stream2()->setPlatfrom(platform);
+            return ;
+        }
+        updateServerArray(streamIndex);
+        settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM2,MENU_THIRD_STREAM_PLATFORM,platform);
+        setStreamServer(streamIndex,profile->streams()->stream2()->server());
+        break;
+    case Streams::STREAM3:
+        if(settings->liveStreamStatus3() != E_STATUS_CLOSE)
+            return ;
+        if(profile->streams()->stream3()->platfrom() != platform)
+        {
+            profile->streams()->stream3()->setPlatfrom(platform);
+            return ;
+        }
+        updateServerArray(streamIndex);
+        settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM3,MENU_THIRD_STREAM_PLATFORM,platform);
+        setStreamServer(streamIndex,profile->streams()->stream3()->server());
+        break;
+    }
+}
+
+void Models::setStreamServer(int streamIndex, QString server)
+{
+    int index = -1;
+    switch (streamIndex) {
+    case Streams::STREAM1:
+        if(settings->liveStreamStatus1() != E_STATUS_CLOSE)
+            return ;
+        index = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_SERVER]->list_text.indexOf(server);
+        if(index == -1)
+            server = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_SERVER]->list_text[0];
+        else
+            server = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_SERVER]->list_text[index];
+        if(profile->streams()->stream1()->server() != server)
+        {
+            profile->streams()->stream1()->setServer(server);
+            return ;
+        }
+        settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM1,MENU_THIRD_STREAM_SERVER,server);
+        break;
+    case Streams::STREAM2:
+        if(settings->liveStreamStatus2() != E_STATUS_CLOSE)
+            return ;
+        index = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_SERVER]->list_text.indexOf(server);
+        if(index == -1)
+            server = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_SERVER]->list_text[0];
+        else
+            server = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_SERVER]->list_text[index];
+        if(profile->streams()->stream2()->server() != server)
+        {
+            profile->streams()->stream2()->setServer(server);
+            return ;
+        }
+        settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM2,MENU_THIRD_STREAM_SERVER,server);
+        break;
+    case Streams::STREAM3:
+        if(settings->liveStreamStatus3() != E_STATUS_CLOSE)
+            return ;
+        index = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_SERVER]->list_text.indexOf(server);
+        if(index == -1)
+            server = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_SERVER]->list_text[0];
+        else
+            server = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_SERVER]->list_text[index];
+        if(profile->streams()->stream3()->server() != server)
+        {
+            profile->streams()->stream3()->setServer(server);
+            return ;
+        }
+        settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM3,MENU_THIRD_STREAM_SERVER,server);
+        break;
+    }
+}
+
+void Models::setStreamUrl(int streamIndex, QString url)
+{
+    switch (streamIndex) {
+    case Streams::STREAM1:
+        if(settings->liveStreamStatus1() != E_STATUS_CLOSE)
+            return ;
+        if(profile->streams()->stream1()->url() != url)
+        {
+            profile->streams()->stream1()->setUrl(url);
+            return ;
+        }
+        break;
+    case Streams::STREAM2:
+        if(settings->liveStreamStatus2() != E_STATUS_CLOSE)
+            return ;
+        if(profile->streams()->stream2()->url() != url)
+        {
+            profile->streams()->stream2()->setUrl(url);
+            return ;
+        }
+        break;
+    case Streams::STREAM3:
+        if(settings->liveStreamStatus3() != E_STATUS_CLOSE)
+            return ;
+        if(profile->streams()->stream3()->url() != url)
+        {
+            profile->streams()->stream3()->setUrl(url);
+            return ;
+        }
+        break;
+    }
+}
+
+void Models::setStreamOutput(int streamIndex, bool output)
+{
+    switch (streamIndex) {
+    case Streams::STREAM1:
+        if(profile->streams()->stream1()->output() != output)
+        {
+            profile->streams()->stream1()->setOutput(output);
+            return ;
+        }
+        break;
+    case Streams::STREAM2:
+        if(profile->streams()->stream2()->output() != output)
+        {
+            profile->streams()->stream2()->setOutput(output);
+            return ;
+        }
+        break;
+    case Streams::STREAM3:
+        if(profile->streams()->stream3()->output() != output)
+        {
+            profile->streams()->stream3()->setOutput(output);
+            return ;
+        }
+        break;
+    }
+
+    if(settings->liveStatus())
+    {
+        if(output)
+            openOneStream(streamIndex);
+        else
+            closeOneStream(streamIndex);
+    }
+
+    bool output1 = profile->streams()->stream1()->output();
+    bool output2 = profile->streams()->stream2()->output();
+    bool output3 = profile->streams()->stream3()->output();
+    settings->setStreamOutputList({output1,output2,output3});
+}
+
+void Models::updateServerArray(int streamIndex)
+{
+    QString platform ,server;
+    MenuThird *third = nullptr;
+    Stream *stream = nullptr;
+    if(streamIndex == Streams::STREAM1)
+    {
+        third = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_SERVER];
+        platform = profile->streams()->stream1()->platfrom();
+        server = profile->streams()->stream1()->server();
+        stream = profile->streams()->stream1();
+    }
+    else if(streamIndex == Streams::STREAM2)
+    {
+        third = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_SERVER];
+        platform = profile->streams()->stream2()->platfrom();
+        server = profile->streams()->stream2()->server();
+        stream = profile->streams()->stream2();
+    }
+    else if(streamIndex == Streams::STREAM3)
+    {
+        third = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_SERVER];
+        platform = profile->streams()->stream3()->platfrom();
+        server = profile->streams()->stream3()->server();
+        stream = profile->streams()->stream3();
+    }
+
+    if(third == nullptr)
+        return ;
+
+    auto servers = settings->streamData[platform].name_url;
+    (third)->list_text.clear();
+    for(auto it = servers.begin();it != servers.end(); it++)
+    {
+        (third)->list_text << it->first;
+    }
+    (third)->max = (third)->list_text.size() - 1;
+//    stream->setServer(server);
+}
+
 //void Models::setAudioFader(int value)
 //{
 //    int index = settings->lastSecondUnfold();
@@ -1373,112 +1587,6 @@ void Models::setPipBorderColor()
     fpga_write(&g_fpga,PIP_COLOR_C,*(uint16_t *)&(color.Cr));
 }
 
-
-void Models::setStillUpload()
-{
-    QString name = settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_UPLOAD]->third[STILL_UPLOAD_LOAD_PICTURE]->getText();
-
-    if(name == "")
-        return ;
-
-    int location_index = settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_UPLOAD]->third[STILL_UPLOAD_LOCATION]->current.toInt();
-    int still1_index = settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_SELECTION]->third[STILL_SELECTION_STILL1]->current.toInt();
-    int still2_index = settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_SELECTION]->third[STILL_SELECTION_STILL2]->current.toInt();
-    still2_index = still2_index << 5;
-
-    //设置加载文件名
-    myProvider->setStillImageFileName(SD_IMAGE_PATH + name);
-    //1.设置配置文件中location 位置对应文件名
-    settings->setStillImages(location_index,name);
-    //2.copy SD卡文件到userdata
-    QString cmd = "cp " SD_IMAGE_PATH + name + " " STILLPATH + name;
-    std::string s_cmd = cmd.toStdString();
-    system(s_cmd.data());
-
-    location_index = location_index << 10;
-
-    QtConcurrent::run([=]() {
-        //set still1 index = location index
-//        fpga_write(&g_fpga,STILL_SEL,still2_index + location_index);//still2 5-9  still1  0-4
-
-        //set upload
-        fpga_write(&g_fpga,STILL_SEL,still1_index + still2_index + location_index);//still2 5-9  still1  0-4
-
-        //开始上传
-        fpga_write(&g_fpga,STILL_UPLOAD,1 << 2);//100
-        //上传fill
-        fpga_write(&g_fpga,STILL_UPLOAD,(1 << 2) + (1 << 1));//110
-        emit loadStillImage(1,"fill");
-        usleep(1000000);
-        //上传fill 结束
-//        fpga_write(&g_fpga,STILL_UPLOAD,1 << 2);//100
-//        emit loadStillImage(0,"fill");
-//        usleep(50000);
-        //上传key
-        fpga_write(&g_fpga,STILL_UPLOAD,(1 << 2) + 1);//101
-        emit loadStillImage(1,"key");
-        usleep(1500000);
-        fpga_write(&g_fpga,STILL_UPLOAD,1 << 2);//100
-        fpga_write(&g_fpga,STILL_SEL,still2_index + still1_index);
-        emit loadStillImage(0,"key");
-        usleep(1000000);
-        //上传key 结束
-        fpga_write(&g_fpga,STILL_UPLOAD,0);//000
-    });
-}
-
-void Models::initStillUpload()
-{
-    QMutex mutex;
-    QString fileName;
-    int still1_index = settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_SELECTION]->third[STILL_SELECTION_STILL1]->current.toInt();
-    int still2_index = settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_SELECTION]->third[STILL_SELECTION_STILL2]->current.toInt();
-    still2_index = still2_index << 5;
-    for(int i = 0;i < STILLMAX;++i)
-    {
-        fileName = settings->stillImages()[i];
-        if(fileName != "")
-        {
-            initStillMutex = 1;
-            QtConcurrent::run([=]() {
-                myProvider->setStillImageFileName(STILLPATH + fileName);
-                qDebug() << "i:" << i << "   STILLPATH + fileName:" << STILLPATH + fileName;
-                //set still1 index = location index
-                fpga_write(&g_fpga,STILL_SEL,still2_index + i);
-                //开始上传
-                fpga_write(&g_fpga,STILL_UPLOAD,1 << 2);
-                //上传fill
-                fpga_write(&g_fpga,STILL_UPLOAD,(1 << 2) + (1 << 1));
-                emit loadStillImage(1,"fill");
-                usleep(1000000);
-//                上传fill 结束
-//                fpga_write(&g_fpga,STILL_UPLOAD,1 << 2);
-//                emit loadStillImage(0,"fill");
-//                usleep(500000);
-                //上传key
-                fpga_write(&g_fpga,STILL_UPLOAD,(1 << 2) + 1);
-                emit loadStillImage(1,"key");
-                usleep(1500000);
-
-                //set still1 index = still1 index
-                fpga_write(&g_fpga,STILL_SEL,still2_index + still1_index);
-                fpga_write(&g_fpga,STILL_UPLOAD,1 << 2);//100
-                emit loadStillImage(0,"key");
-
-                usleep(1000000);
-                //上传key 结束
-                fpga_write(&g_fpga,STILL_UPLOAD,0);
-
-
-                initStillMutex = 0;
-            });
-            while(initStillMutex){
-                usleep(2000);
-            }
-        }
-    }
-}
-
 void Models::initStillUpLoadRvSwitch()
 {
     const char *png_path[STILLMAX] = {0};
@@ -1494,6 +1602,18 @@ void Models::initStillUpLoadRvSwitch()
         }
     }
     rv_switch_still_upload(png_path,STILLMAX);
+}
+
+void Models::stillLoadPictureIndexChanged(int value)
+{
+    int size = settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_UPLOAD]->third[STILL_UPLOAD_LOAD_PICTURE]->list_text.size();
+    if(size == 0)
+        return ;
+    if(value < 0)
+        value = 0;
+    if(value >= size)
+        value = size - 1;
+    settings->setMenuValue(MENU_FIRST_STILL_GENERATOR,STILL_GENERATE_UPLOAD,STILL_UPLOAD_LOAD_PICTURE,value);
 }
 
 #define LOADSLEEP 100
@@ -1789,9 +1909,9 @@ void Models::openAllStream()
     s_rtmp2 = rtmp2.toStdString();
     rtmp3 = settings->getStreamUrlIndex(STREAM_STREAM3);
     s_rtmp3 = rtmp3.toStdString();
-    enable1 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt() == OUTPUT_ENABLE;
-    enable2 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt() == OUTPUT_ENABLE;
-    enable3 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt() == OUTPUT_ENABLE;
+    enable1 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();// == OUTPUT_ENABLE;
+    enable2 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();// == OUTPUT_ENABLE;
+    enable3 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();// == OUTPUT_ENABLE;
     if(enable1)
     {
         qDebug() << "rtmp1:" << rtmp1 << "  bitrate:" << bitrate1.bitrate << "  audio_bitrate:"<< bitrate1.audio_bitrate;
@@ -1809,12 +1929,35 @@ void Models::openAllStream()
     }
 }
 
+void Models::openOneStream(int index)
+{
+    QString rtmp;
+    std::string s_rtmp;
+    rtmp = settings->getStreamUrlIndex(index);;
+    s_rtmp = rtmp.toStdString();
+    if(index == Streams::STREAM1)
+    {
+        qDebug() << "start one:" << 0;
+        rv_switch_push_start0((char*)(s_rtmp.data()),(rk_switch_cb)(pushCallBack1),0);
+    }
+    else if(index == Streams::STREAM2)
+    {
+        qDebug() << "start one:" << 1;
+        rv_switch_push_start1((char*)(s_rtmp.data()),(rk_switch_cb)(pushCallBack2),0);
+    }
+    else if(index == Streams::STREAM3)
+    {
+        qDebug() << "start one:" << 2;
+        rv_switch_push_start2((char*)(s_rtmp.data()),(rk_switch_cb)(pushCallBack3),0);
+    }
+}
+
 void Models::closeAllStream()
 {
     bool enable1,enable2,enable3;
-    enable1 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt() == OUTPUT_ENABLE;
-    enable2 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt() == OUTPUT_ENABLE;
-    enable3 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt() == OUTPUT_ENABLE;
+    enable1 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();// == OUTPUT_ENABLE;
+    enable2 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();// == OUTPUT_ENABLE;
+    enable3 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();// == OUTPUT_ENABLE;
     if(enable1)
     {
         rv_switch_push_stop0(pushCallBack1,0);
@@ -1829,27 +1972,26 @@ void Models::closeAllStream()
     }
 }
 
-void Models::setStreamOutput()
+void Models::closeOneStream(int index)
 {
-    int output1 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();
-    int output2 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();
-    int output3 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();
+    if(index == Streams::STREAM1)
+        rv_switch_push_stop0(pushCallBack1,0);
+    else if(index == Streams::STREAM2)
+        rv_switch_push_stop1(pushCallBack2,0);
+    else if(index == Streams::STREAM3)
+        rv_switch_push_stop2(pushCallBack3,0);
+}
 
-    auto list = settings->streamOutputList();
-    list.clear();
-    list.push_back(output1);
-    list.push_back(output2);
-    list.push_back(output3);
-
-    settings->setStreamOutputList(list);
-
-//    if(output1 == 0 && output2 == 0 && output3 == 0)
-//    {
-//        if(settings->liveStatus() != 0)
-//        {
-//            settings->setLiveStatus(0);
-//        }
-    //    }
+void Models::streamUploadKeyIndexChanged(int second, int value)
+{
+    int size = settings->listFirst()[MENU_FIRST_STREAM]->second[second]->third[MENU_THIRD_STREAM_UPLOAD_KEY]->list_text.size();
+    if(size == 0)
+        return ;
+    if(value < 0)
+        value = 0;
+    if(value >= size)
+        value = size - 1;
+    settings->setMenuValue(MENU_FIRST_STREAM,second,MENU_THIRD_STREAM_UPLOAD_KEY,value);
 }
 
 void Models::setSrcName(int third)
@@ -2251,33 +2393,14 @@ void Models::setUserWait()
 
 }
 
-void Models::setPlatform(int second)
-{
-    QString platform = settings->listFirst()[MENU_FIRST_STREAM]->second[second]->third[MENU_THIRD_STREAM_PLATFORM]->getText();
-    qDebug() << "platform:" << platform;
-
-    auto servers = settings->streamData[platform].name_url;
-    auto third = &settings->listFirst()[MENU_FIRST_STREAM]->second[second]->third[MENU_THIRD_STREAM_SERVER];
-    (*third)->list_text.clear();
-    for(auto it = servers.begin();it != servers.end(); it++)
-    {
-        (*third)->list_text << it->first;
-    }
-    (*third)->max = (*third)->list_text.size() - 1;
-    int current = settings->getIniValue(MENU_FIRST_STREAM,second,MENU_THIRD_STREAM_SERVER).toInt();
-    if(current > (*third)->max.toInt())
-        current = 0;
-
-    settings->setMenuValue(MENU_FIRST_STREAM,second,MENU_THIRD_STREAM_SERVER,current);
-}
-
-void Models::setStreamKey(int second)
-{
-
-}
-
 void Models::setLoadStreamKey(int second)
 {
+    if(second == STREAM_STREAM1 && settings->liveStreamStatus1() != E_STATUS_CLOSE)
+        return ;
+    if(second == STREAM_STREAM2 && settings->liveStreamStatus2() != E_STATUS_CLOSE)
+        return ;
+    if(second == STREAM_STREAM3 && settings->liveStreamStatus3() != E_STATUS_CLOSE)
+        return ;
     QString fileName = settings->listFirst()[MENU_FIRST_STREAM]->second[second]->third[MENU_THIRD_STREAM_UPLOAD_KEY]->getText();
     fileName = SD_STREAM_KEY_PATH + fileName;
     qDebug() << fileName;

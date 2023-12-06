@@ -75,7 +75,7 @@ Item {
                 width:20
                 height:20
                 source:{
-                    if(!settings.streamOutputList[0])
+                    if(settings.streamOutputList[0])
                         "file:./images/stream_enabled.png"
                     else
                         "file:./images/stream_disabled.png"
@@ -121,7 +121,7 @@ Item {
                 width:20
                 height:20
                 source:{
-                    if(!settings.streamOutputList[1])
+                    if(settings.streamOutputList[1])
                         "file:./images/stream_enabled.png"
                     else
                         "file:./images/stream_disabled.png"
@@ -168,7 +168,7 @@ Item {
                 width:20
                 height:20
                 source:{
-                    if(!settings.streamOutputList[2])
+                    if(settings.streamOutputList[2])
                         "file:./images/stream_enabled.png"
                     else
                         "file:./images/stream_disabled.png"

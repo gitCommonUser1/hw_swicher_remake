@@ -12,6 +12,7 @@
 #include "audiomixer.h"
 #include "stillgenerator.h"
 #include "still.h"
+#include "streams.h"
 
 #define PRODUCT_NAME "GoStream Deck"
 
@@ -43,6 +44,8 @@ Profile::Profile(QObject *parent) : QObject(parent)
     m_audioMixer->setObjectName("audioMixer");
     m_stillGenerator = new StillGenerator(this);
     m_stillGenerator->setObjectName("stillGenerator");
+    m_streams = new Streams(this);
+    m_streams->setObjectName("streams");
 }
 
 void Profile::write(QObject *object)
