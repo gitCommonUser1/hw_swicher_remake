@@ -472,6 +472,8 @@ int main(int argc, char *argv[])
     Control control;
     engine.rootContext()->setContextProperty("control",&control);
 
+    profile->emitSignals();
+
 
     //调试用，正式版本删除
     models->changeLanguage(0);
@@ -515,10 +517,6 @@ int main(int argc, char *argv[])
     models->initDHCPNetworkData();
 
     RegExp *regExp = new RegExp();
-
-
-    //第二遍读取，防止发多次信号
-    profile->read(profile);
 
     engine.rootContext()->setContextProperty("settings",settings);
     engine.rootContext()->setContextProperty("leftMenuModel",leftMenuModel);

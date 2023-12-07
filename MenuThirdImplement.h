@@ -1531,6 +1531,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 ////        models->macroInvoke((&Models::streamKey),MACRO_STREAM1,value.toInt());
+        profile->streams()->stream1()->setUrl(value.toString());
     }
     void doEvent() override{
         if(settings->liveStreamStatus1() != E_STATUS_CLOSE)
@@ -1552,6 +1553,7 @@ public:
         if(settings->liveStreamStatus1() != E_STATUS_CLOSE)
             return ;
         models->setLoadStreamKey(STREAM_STREAM1);
+        profile->streams()->stream1()->setUrl(settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_KEY]->current.toString());
     }
 };
 
@@ -1599,6 +1601,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 ////        models->macroInvoke((&Models::streamKey),MACRO_STREAM2,value.toInt());
+        profile->streams()->stream2()->setUrl(value.toString());
     }
     void doEvent() override{
         if(settings->liveStreamStatus2() != E_STATUS_CLOSE)
@@ -1620,6 +1623,7 @@ public:
         if(settings->liveStreamStatus2() != E_STATUS_CLOSE)
             return ;
         models->setLoadStreamKey(STREAM_STREAM2);
+        profile->streams()->stream2()->setUrl(settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_KEY]->current.toString());
     }
 };
 
@@ -1666,6 +1670,7 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 ////        models->macroInvoke((&Models::streamKey),MACRO_STREAM3,value.toInt());
+        profile->streams()->stream3()->setUrl(value.toString());
     }
     void doEvent() override{
         if(settings->liveStreamStatus3() != E_STATUS_CLOSE)
@@ -1687,6 +1692,7 @@ public:
         if(settings->liveStreamStatus3() != E_STATUS_CLOSE)
             return ;
         models->setLoadStreamKey(STREAM_STREAM3);
+        profile->streams()->stream3()->setUrl(settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_KEY]->current.toString());
     }
 };
 
@@ -1741,6 +1747,12 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 
+    }
+    void doEvent() override{
+        settings->setKeyboardReg(REG_SRC_NAME);
+        settings->setKeyboardVisible(1);
+        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_PGM];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
     }
 };
 

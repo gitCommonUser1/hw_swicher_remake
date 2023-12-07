@@ -165,6 +165,11 @@ void Models::init_connect()
     connect(this,&Models::streamUrl,this,&Models::setStreamUrl);
     connect(this,&Models::streamOutput,this,&Models::setStreamOutput);
 
+    //playback
+
+    //setting
+    connect(this,&Models::srcName,this,&Models::setSrcName);
+
     //button status
     connect(this,&Models::pgmIndex,this,&Models::setPgmIndex);
     connect(this,&Models::pvwIndex,this,&Models::setPvwIndex);
@@ -1060,6 +1065,7 @@ void Models::setStreamPlatform(int streamIndex, QString platform)
 
 void Models::setStreamServer(int streamIndex, QString server)
 {
+    qDebug() << "streamIndex :" << streamIndex;
     int index = -1;
     switch (streamIndex) {
     case Streams::STREAM1:
@@ -1220,7 +1226,67 @@ void Models::updateServerArray(int streamIndex)
         (third)->list_text << it->first;
     }
     (third)->max = (third)->list_text.size() - 1;
-//    stream->setServer(server);
+    //    stream->setServer(server);
+}
+
+void Models::setSrcName(QString srcName, QString name)
+{
+    int index = SrcNames::srcNameStringToIndex(srcName);
+    std::string s_text = name.toUtf8().toStdString();
+    auto s_name = s_text.data();
+    struct umd_config_t cfg = {
+        .font = FONT_PATH,
+        .font_size = 20,
+
+        .italic = 0,
+        .bold = 0,
+        .align = ALIGN_CENTER,
+
+        .width = 160,
+        .height = 40,
+    };
+
+    if(index > SrcNames::PVW){
+        cfg.width = 128;
+        cfg.height = 30;
+        cfg.font_size = 16;
+    }
+
+    int fpga_add = 0;
+    switch (index) {
+    case SrcNames::PGM:
+        fpga_add = UMD_PGM;
+        break;
+    case SrcNames::PVW:
+        fpga_add = UMD_PVW;
+        break;
+    case SrcNames::IN1:
+        fpga_add = UMD_IN1;
+        break;
+    case SrcNames::IN2:
+        fpga_add = UMD_IN2;
+        break;
+    case SrcNames::IN3:
+        fpga_add = UMD_IN3;
+        break;
+    case SrcNames::IN4:
+        fpga_add = UMD_IN4;
+        break;
+    case SrcNames::AUX:
+        fpga_add = UMD_AUX;
+        break;
+    case SrcNames::STILL1:
+        fpga_add = UMD_STILL1;
+        break;
+    case SrcNames::STILL2:
+        fpga_add = UMD_STILL2;
+        break;
+    default:
+        return ;
+    }
+    str2umd(s_name,strlen(s_name),&cfg);
+    fpga_write_buffer(&g_fpga,fpga_add,(uint8_t*)cfg.buffer,cfg.bufsize);
+    free(cfg.buffer);
 }
 
 //void Models::setAudioFader(int value)
@@ -1769,6 +1835,8 @@ void Models::setPlay(int status)
 
 void Models::recordStart()
 {
+    return ;
+
     if(!media_sd->is_online())
         return ;
     int second = models->sd_remaintime_calc();
@@ -1790,6 +1858,8 @@ void Models::recordStart()
 
 void Models::recordStop()
 {
+    return ;
+
     if(settings->recordFileName() == "")
         return ;
 
@@ -1992,66 +2062,6 @@ void Models::streamUploadKeyIndexChanged(int second, int value)
     if(value >= size)
         value = size - 1;
     settings->setMenuValue(MENU_FIRST_STREAM,second,MENU_THIRD_STREAM_UPLOAD_KEY,value);
-}
-
-void Models::setSrcName(int third)
-{
-    QString text = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[third]->getText();
-    std::string s_text = text.toUtf8().toStdString();
-    auto name = s_text.data();
-    struct umd_config_t cfg = {
-        .font = FONT_PATH,
-        .font_size = 20,
-
-        .italic = 0,
-        .bold = 0,
-        .align = ALIGN_CENTER,
-
-        .width = 160,
-        .height = 40,
-    };
-
-    if(third > SRC_NAME_PVW){
-        cfg.width = 128;
-        cfg.height = 30;
-        cfg.font_size = 16;
-    }
-
-    int fpga_add = 0;
-    switch (third) {
-    case SRC_NAME_PGM:
-        fpga_add = UMD_PGM;
-        break;
-    case SRC_NAME_PVW:
-        fpga_add = UMD_PVW;
-        break;
-    case SRC_NAME_IN1:
-        fpga_add = UMD_IN1;
-        break;
-    case SRC_NAME_IN2:
-        fpga_add = UMD_IN2;
-        break;
-    case SRC_NAME_IN3:
-        fpga_add = UMD_IN3;
-        break;
-    case SRC_NAME_IN4:
-        fpga_add = UMD_IN4;
-        break;
-    case SRC_NAME_AUX:
-        fpga_add = UMD_AUX;
-        break;
-    case SRC_NAME_STILL1:
-        fpga_add = UMD_STILL1;
-        break;
-    case SRC_NAME_STILL2:
-        fpga_add = UMD_STILL2;
-        break;
-    default:
-        return ;
-    }
-    str2umd(name,strlen(name),&cfg);
-    fpga_write_buffer(&g_fpga,fpga_add,(uint8_t*)cfg.buffer,cfg.bufsize);
-    free(cfg.buffer);
 }
 
 void Models::setPlaybackMode()

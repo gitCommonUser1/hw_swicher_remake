@@ -36,5 +36,8 @@
 #include "stillselection.h"
 #include "streams.h"
 #include "stream.h"
+#include "setting.h"
+#include "srcnames.h"
+#include "srcname.h"
 
 #endif // PROFILE_INCLUDE_H

@@ -1136,30 +1136,39 @@ MenuSecond *Settings::new_Setting_Src_Name()
 
     third = new MenuThirdSettingSrcNamePGM(tr("PGM"),"PGM","","Program","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdSettingSrcNamePVW(tr("PVW"),"PVW","","Preview","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdSettingSrcNameIn1(tr("In 1"),"In 1","","HDMI 1","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdSettingSrcNameIn2(tr("In 2"),"In 2","","HDMI 2","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdSettingSrcNameIn3(tr("In 3"),"In 3","","HDMI 3","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdSettingSrcNameIn4(tr("In 4"),"In 4","","HDMI 4","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdSettingSrcNameAux(tr("Aux"),"Aux","","Aux","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdSettingSrcNameStill1(tr("Still 1"),"Still 1","","Still 1","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdSettingSrcNameStill2(tr("Still 2"),"Still 2","","Still 2","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     monitor->third = list_third;
     return monitor;

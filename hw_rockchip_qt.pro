@@ -71,6 +71,7 @@ SOURCES += \
     resizeparameters.cpp \
     rightmenumodel.cpp \
     sdimages.cpp \
+    setting.cpp \
     settings.cpp \
     control.cpp \
     models.cpp \
@@ -95,6 +96,8 @@ SOURCES += \
     src/uvc_out_power.c \
     src/uvc_ports.c \
     src/w25qxx.c \
+    srcname.cpp \
+    srcnames.cpp \
     still.cpp \
     stillgenerator.cpp \
     stills.cpp \
@@ -261,9 +264,12 @@ HEADERS += \
     resizeparameters.h \
     rightmenumodel.h \
     sdimages.h \
+    setting.h \
     settings.h \
     control.h \
     models.h \
+    srcname.h \
+    srcnames.h \
     still.h \
     stillgenerator.h \
     stills.h \

@@ -116,6 +116,7 @@ public:
         if(status != 1)
             return ;
 //        models->sendKeySignalHasOneParameter(&Models::record,1);
+        models->recordStart();
     }
 };
 
@@ -126,6 +127,7 @@ public:
         if(status != 1)
             return ;
 //        models->sendKeySignalHasOneParameter(&Models::record,0);
+        models->recordStop();
     }
 };
 

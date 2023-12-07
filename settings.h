@@ -1020,6 +1020,8 @@ signals:
 
     void keyboardTypeChanged(int keyboardType);
 
+    void keyboardOk(int first,int second,int third,QString value);
+
 public slots:
 void sdImagesChanged(QList<QString> list);
 void streamKeyListChanged(QList<QString> list);

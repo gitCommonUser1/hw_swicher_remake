@@ -46,6 +46,50 @@ Profile::Profile(QObject *parent) : QObject(parent)
     m_stillGenerator->setObjectName("stillGenerator");
     m_streams = new Streams(this);
     m_streams->setObjectName("streams");
+
+    read(this);
+}
+
+void Profile::emitSignals()
+{
+    emitSignal(this);
+}
+
+void Profile::emitSignal(QObject *object)
+{
+    auto metaObject = object->metaObject();
+    for(int i = 0;i < metaObject->propertyCount();++i)
+    {
+        auto property = metaObject->property(i);
+        auto typeName = property.typeName();
+        auto name = property.name();
+        if(property.type() == QVariant::UserType)
+        {
+//                这里是子节点列表
+            if(QString(typeName).indexOf("QList") != -1)
+            {
+                QVariant v = object->property(name);
+                QList<QObject*> objects = v.value<QList<QObject*>>();
+                //list
+                for(int j = 0;j < objects.size();++j)
+                {
+                    emitSignal(objects[i]);
+                }
+            }
+            else
+            {
+                //single
+                emitSignal(object->findChild<QObject*>(name));
+            }
+        }
+        else
+        {
+            if(property.hasNotifySignal() && !isHiddenProperty(object,name))
+            {
+                property.notifySignal().invoke(object,QGenericArgument(" ",property.read(object).data()));
+            }
+        }
+    }
 }
 
 void Profile::write(QObject *object)
@@ -249,6 +293,7 @@ int Profile::read(QObject *object)
                 {
                     auto property = obj->property(i);
                     auto propertyName = property.name();
+                    qDebug() << "propertyName: " << propertyName;
                     if(attributes.hasAttribute(propertyName))
                     {
                         if(property.type()  == QVariant::Int)
@@ -264,7 +309,7 @@ int Profile::read(QObject *object)
                                 property.write(object,false);
                         }
 
-                        property.notifySignal().invoke(object,QGenericArgument(" ",property.read(object).data()));
+//                        property.notifySignal().invoke(object,QGenericArgument(" ",property.read(object).data()));
                     }
                 }
                 break;

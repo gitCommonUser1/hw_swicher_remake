@@ -453,13 +453,22 @@ void Control::init_connect()
             }
         }
     });
+
+    //key board input ok
+    connect(settings,&Settings::keyboardOk,[=](int first,int second,int third,QString value){
+        if(first == -1)
+            return ;
+        if(second == -1)
+            return ;
+        if(third == -1)
+            return ;
+
+        settings->listFirst()[first]->second[second]->third[third]->doWork(value);
+    });
 }
 
 void Control::connect_profile()
 {
-    //先把所有值初始化
-    profile->read(profile);
-
     //color back
     connect(profile->colorBacks()->colorBack1(),&ColorBack::hueChanged,this,[=](int hue){
         models->macroInvoke(&Models::colorBackHue,ColorBacks::COLOR1,hue);
@@ -1125,10 +1134,15 @@ void Control::connect_profile()
         models->macroInvoke(&Models::streamServer,Streams::STREAM1,server);
         settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM1,MENU_THIRD_STREAM_SERVER,server);
     });
+    connect(profile->streams()->stream1(),&Stream::urlChanged,this,[=](QString url){
+        settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM1,MENU_THIRD_STREAM_KEY,url);
+    });
     connect(profile->streams()->stream1(),&Stream::outputChanged,this,[=](bool output){
         models->macroInvoke(&Models::streamOutput,Streams::STREAM1,output);
         settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM1,MENU_THIRD_STREAM_OUTPUT,output);
     });
+    auto third = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_PLATFORM];
+    profile->streams()->stream1()->setPlatfrom(third->list_text[third->current.toInt()]);
     connect(profile->streams()->stream2(),&Stream::platfromChanged,this,[=](QString platfrom){
         models->macroInvoke(&Models::streamPlatform,Streams::STREAM2,platfrom);
     });
@@ -1136,10 +1150,16 @@ void Control::connect_profile()
         models->macroInvoke(&Models::streamServer,Streams::STREAM2,server);
         settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM2,MENU_THIRD_STREAM_SERVER,server);
     });
+    connect(profile->streams()->stream2(),&Stream::urlChanged,this,[=](QString url){
+        settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM2,MENU_THIRD_STREAM_KEY,url);
+    });
     connect(profile->streams()->stream2(),&Stream::outputChanged,this,[=](bool output){
         models->macroInvoke(&Models::streamOutput,Streams::STREAM2,output);
         settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM2,MENU_THIRD_STREAM_OUTPUT,output);
     });
+    //不调崩溃
+    third = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_PLATFORM];
+    profile->streams()->stream2()->setPlatfrom(third->list_text[third->current.toInt()]);
     connect(profile->streams()->stream3(),&Stream::platfromChanged,this,[=](QString platfrom){
         models->macroInvoke(&Models::streamPlatform,Streams::STREAM3,platfrom);
     });
@@ -1147,10 +1167,20 @@ void Control::connect_profile()
         models->macroInvoke(&Models::streamServer,Streams::STREAM3,server);
         settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM3,MENU_THIRD_STREAM_SERVER,server);
     });
+    connect(profile->streams()->stream3(),&Stream::urlChanged,this,[=](QString url){
+        settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM3,MENU_THIRD_STREAM_KEY,url);
+    });
     connect(profile->streams()->stream3(),&Stream::outputChanged,this,[=](bool output){
         models->macroInvoke(&Models::streamOutput,Streams::STREAM3,output);
         settings->setMenuValue(MENU_FIRST_STREAM,STREAM_STREAM3,MENU_THIRD_STREAM_OUTPUT,output);
     });
+    //不调崩溃
+    third = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_PLATFORM];
+    profile->streams()->stream3()->setPlatfrom(third->list_text[third->current.toInt()]);
+    //Setting
+//    connect(profile->setting()->srcNmaes()->pgm(),&SrcName::nameChanged,this,[=](QString name){
+//        models->macroInvoke(&Models::srcName,SrcNames::srcNameIndexToString(SrcNames::PGM),name);
+//    });
 }
 
 void Control::slotKnobChanged(const int knob, int value)

@@ -133,10 +133,9 @@ public:
     void closeOneStream(int index);
     void streamUploadKeyIndexChanged(int second,int value);
 
-    void setSrcName(int third);
-
     //playback
     void setPlaybackMode();
+
 
     void setButtonBrightness();
 
@@ -345,16 +344,18 @@ signals:
 
 
 
-
-    void srcName(int third);
-
     //playback
 
     /**/
     void playbackMode(int mode);
 
-    void buttonBrightness();
 
+
+    //setting
+    /**/
+    void srcName(QString srcName,QString name);
+    void buttonBrightness();
+    /**/
 
 
 
@@ -535,6 +536,17 @@ public slots:
     void setStreamUrl(int streamIndex,QString url);
     void setStreamOutput(int streamIndex,bool output);
     void updateServerArray(int streamIndex);
+    /**/
+
+
+    //playback
+    /**/
+    /**/
+
+
+    //setting
+    /**/
+    void setSrcName(QString srcName,QString name);
     /**/
 
 

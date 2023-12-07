@@ -12,6 +12,7 @@ class SuperSources;
 class AudioMixer;
 class StillGenerator;
 class Streams;
+class Setting;
 
 
 class Profile : public QObject
@@ -28,8 +29,12 @@ class Profile : public QObject
     Q_PROPERTY(AudioMixer* audioMixer READ audioMixer)
     Q_PROPERTY(StillGenerator* stillGenerator READ stillGenerator)
     Q_PROPERTY(Streams* streams READ streams)
+//    Q_PROPERTY(Setting* setting READ setting)
 public:
     explicit Profile(QObject *parent = nullptr);
+
+    void emitSignals();
+    void emitSignal(QObject *object);
 
     void write(QObject *object);
     void writeRecursion(QObject *object,QXmlStreamWriter &stream);
@@ -94,6 +99,11 @@ public:
         return m_streams;
     }
 
+    Setting* setting() const
+    {
+        return m_setting;
+    }
+
 public slots:
     void setMajorVersion(int majorVersion)
     {
@@ -152,6 +162,8 @@ private:
     StillGenerator* m_stillGenerator;
 
     Streams* m_streams;
+
+    Setting* m_setting;
 
 signals:
 void productChanged(QString product);
