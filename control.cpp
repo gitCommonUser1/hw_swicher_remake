@@ -1177,10 +1177,58 @@ void Control::connect_profile()
     //不调崩溃
     third = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_PLATFORM];
     profile->streams()->stream3()->setPlatfrom(third->list_text[third->current.toInt()]);
-    //Setting
-//    connect(profile->setting()->srcNmaes()->pgm(),&SrcName::nameChanged,this,[=](QString name){
-//        models->macroInvoke(&Models::srcName,SrcNames::srcNameIndexToString(SrcNames::PGM),name);
-//    });
+//    Setting
+    connect(profile->setting()->srcNames()->pgm(),&SrcName::nameChanged,this,[=](QString name){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_SRC_NAME,SRC_NAME_PGM,name);
+    });
+    connect(profile->setting()->srcNames()->pvw(),&SrcName::nameChanged,this,[=](QString name){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_SRC_NAME,SRC_NAME_PVW,name);
+    });
+    connect(profile->setting()->srcNames()->in1(),&SrcName::nameChanged,this,[=](QString name){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_SRC_NAME,SRC_NAME_IN1,name);
+    });
+    connect(profile->setting()->srcNames()->in2(),&SrcName::nameChanged,this,[=](QString name){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_SRC_NAME,SRC_NAME_IN2,name);
+    });
+    connect(profile->setting()->srcNames()->in3(),&SrcName::nameChanged,this,[=](QString name){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_SRC_NAME,SRC_NAME_IN3,name);
+    });
+    connect(profile->setting()->srcNames()->in4(),&SrcName::nameChanged,this,[=](QString name){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_SRC_NAME,SRC_NAME_IN4,name);
+    });
+    connect(profile->setting()->srcNames()->aux(),&SrcName::nameChanged,this,[=](QString name){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_SRC_NAME,SRC_NAME_AUX,name);
+    });
+    connect(profile->setting()->srcNames()->still1(),&SrcName::nameChanged,this,[=](QString name){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_SRC_NAME,SRC_NAME_STILL1,name);
+    });
+    connect(profile->setting()->srcNames()->still2(),&SrcName::nameChanged,this,[=](QString name){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_SRC_NAME,SRC_NAME_STILL2,name);
+    });
+    connect(profile->setting()->mvMeters()->pgm(),&MvMeter::enableChanged,this,[=](bool enable){
+        models->macroInvoke(&Models::mvMeter,MvMeters::mvMeterIndexToString(MvMeters::PGM),enable);
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_MV_METER,MV_METER_PGM,enable);
+    });
+    connect(profile->setting()->mvMeters()->in1(),&MvMeter::enableChanged,this,[=](bool enable){
+        models->macroInvoke(&Models::mvMeter,MvMeters::mvMeterIndexToString(MvMeters::IN1),enable);
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_MV_METER,MV_METER_IN1,enable);
+    });
+    connect(profile->setting()->mvMeters()->in2(),&MvMeter::enableChanged,this,[=](bool enable){
+        models->macroInvoke(&Models::mvMeter,MvMeters::mvMeterIndexToString(MvMeters::IN2),enable);
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_MV_METER,MV_METER_IN2,enable);
+    });
+    connect(profile->setting()->mvMeters()->in3(),&MvMeter::enableChanged,this,[=](bool enable){
+        models->macroInvoke(&Models::mvMeter,MvMeters::mvMeterIndexToString(MvMeters::IN3),enable);
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_MV_METER,MV_METER_IN3,enable);
+    });
+    connect(profile->setting()->mvMeters()->in4(),&MvMeter::enableChanged,this,[=](bool enable){
+        models->macroInvoke(&Models::mvMeter,MvMeters::mvMeterIndexToString(MvMeters::IN4),enable);
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_MV_METER,MV_METER_IN4,enable);
+    });
+    connect(profile->setting()->mvMeters()->aux(),&MvMeter::enableChanged,this,[=](bool enable){
+        models->macroInvoke(&Models::mvMeter,MvMeters::mvMeterIndexToString(MvMeters::AUX),enable);
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_MV_METER,MV_METER_AUX,enable);
+    });
 }
 
 void Control::slotKnobChanged(const int knob, int value)

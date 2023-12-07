@@ -169,6 +169,7 @@ void Models::init_connect()
 
     //setting
     connect(this,&Models::srcName,this,&Models::setSrcName);
+    connect(this,&Models::mvMeter,this,&Models::setMvMeter);
 
     //button status
     connect(this,&Models::pgmIndex,this,&Models::setPgmIndex);
@@ -620,21 +621,21 @@ void Models::setUMDVisivle(int visible)
 
 void Models::setMvMeterVisivle(int visible)
 {
-    int pgm = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_METER]->third[MV_METER_PGM]->current.toInt();
-    int in1 = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_METER]->third[MV_METER_IN1]->current.toInt();
-    int in2 = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_METER]->third[MV_METER_IN2]->current.toInt();
-    int in3 = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_METER]->third[MV_METER_IN3]->current.toInt();
-    int in4 = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_METER]->third[MV_METER_IN4]->current.toInt();
-    int aux = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_METER]->third[MV_METER_AUX]->current.toInt();
+    bool pgm = profile->setting()->mvMeters()->pgm()->enable();
+    bool in1 = profile->setting()->mvMeters()->in1()->enable();
+    bool in2 = profile->setting()->mvMeters()->in2()->enable();
+    bool in3 = profile->setting()->mvMeters()->in3()->enable();
+    bool in4 = profile->setting()->mvMeters()->in4()->enable();
+    bool aux = profile->setting()->mvMeters()->aux()->enable();
 
     int value = 0;
-    in1 == MENU_ON?value += 1:value += 0;
-    in2 == MENU_ON?value += 2:value += 0;
-    in3 == MENU_ON?value += 4:value += 0;
+    in1?value += 1:value += 0;
+    in2?value += 2:value += 0;
+    in3?value += 4:value += 0;
 //    in4 == MENU_ON?value += 8:value += 0;
-    aux == MENU_ON?value += 16:value += 0;
-    pgm == MENU_ON?value += 32:value += 0;
-    if(visible != 0 && in4 == MENU_ON){
+    aux?value += 16:value += 0;
+    pgm?value += 32:value += 0;
+    if(visible != 0 && in4){
         value += 8;
     }
     fpga_write(&g_fpga,AUDIO_MET_DISP,value);
@@ -1255,30 +1256,75 @@ void Models::setSrcName(QString srcName, QString name)
     int fpga_add = 0;
     switch (index) {
     case SrcNames::PGM:
+        if(profile->setting()->srcNames()->pgm()->name() != name)
+        {
+            profile->setting()->srcNames()->pgm()->setName(name);
+            return ;
+        }
         fpga_add = UMD_PGM;
         break;
     case SrcNames::PVW:
+        if(profile->setting()->srcNames()->pvw()->name() != name)
+        {
+            profile->setting()->srcNames()->pvw()->setName(name);
+            return ;
+        }
         fpga_add = UMD_PVW;
         break;
     case SrcNames::IN1:
+        if(profile->setting()->srcNames()->in1()->name() != name)
+        {
+            profile->setting()->srcNames()->in1()->setName(name);
+            return ;
+        }
         fpga_add = UMD_IN1;
         break;
     case SrcNames::IN2:
+        if(profile->setting()->srcNames()->in2()->name() != name)
+        {
+            profile->setting()->srcNames()->in2()->setName(name);
+            return ;
+        }
         fpga_add = UMD_IN2;
         break;
     case SrcNames::IN3:
+        if(profile->setting()->srcNames()->in3()->name() != name)
+        {
+            profile->setting()->srcNames()->in3()->setName(name);
+            return ;
+        }
         fpga_add = UMD_IN3;
         break;
     case SrcNames::IN4:
+        if(profile->setting()->srcNames()->in4()->name() != name)
+        {
+            profile->setting()->srcNames()->in4()->setName(name);
+            return ;
+        }
         fpga_add = UMD_IN4;
         break;
     case SrcNames::AUX:
+        if(profile->setting()->srcNames()->aux()->name() != name)
+        {
+            profile->setting()->srcNames()->aux()->setName(name);
+            return ;
+        }
         fpga_add = UMD_AUX;
         break;
     case SrcNames::STILL1:
+        if(profile->setting()->srcNames()->still1()->name() != name)
+        {
+            profile->setting()->srcNames()->still1()->setName(name);
+            return ;
+        }
         fpga_add = UMD_STILL1;
         break;
     case SrcNames::STILL2:
+        if(profile->setting()->srcNames()->still2()->name() != name)
+        {
+            profile->setting()->srcNames()->still2()->setName(name);
+            return ;
+        }
         fpga_add = UMD_STILL2;
         break;
     default:
@@ -1287,6 +1333,70 @@ void Models::setSrcName(QString srcName, QString name)
     str2umd(s_name,strlen(s_name),&cfg);
     fpga_write_buffer(&g_fpga,fpga_add,(uint8_t*)cfg.buffer,cfg.bufsize);
     free(cfg.buffer);
+}
+
+void Models::setMvMeter(QString src, bool enable)
+{
+    int index = MvMeters::mvMeterStringToIndex(src);
+    switch (index) {
+    case MvMeters::PGM:
+        if(profile->setting()->mvMeters()->pgm()->enable() != enable)
+        {
+            profile->setting()->mvMeters()->pgm()->setEnable(enable);
+            return ;
+        }
+        break;
+    case MvMeters::IN1:
+        if(profile->setting()->mvMeters()->in1()->enable() != enable)
+        {
+            profile->setting()->mvMeters()->in1()->setEnable(enable);
+            return ;
+        }
+        break;
+    case MvMeters::IN2:
+        if(profile->setting()->mvMeters()->in2()->enable() != enable)
+        {
+            profile->setting()->mvMeters()->in2()->setEnable(enable);
+            return ;
+        }
+        break;
+    case MvMeters::IN3:
+        if(profile->setting()->mvMeters()->in3()->enable() != enable)
+        {
+            profile->setting()->mvMeters()->in3()->setEnable(enable);
+            return ;
+        }
+        break;
+    case MvMeters::IN4:
+        if(profile->setting()->mvMeters()->in4()->enable() != enable)
+        {
+            profile->setting()->mvMeters()->in4()->setEnable(enable);
+            return ;
+        }
+        break;
+    case MvMeters::AUX:
+        if(profile->setting()->mvMeters()->aux()->enable() != enable)
+        {
+            profile->setting()->mvMeters()->aux()->setEnable(enable);
+            return ;
+        }
+        break;
+    }
+    bool pgm = profile->setting()->mvMeters()->pgm()->enable();
+    bool in1 = profile->setting()->mvMeters()->in1()->enable();
+    bool in2 = profile->setting()->mvMeters()->in2()->enable();
+    bool in3 = profile->setting()->mvMeters()->in3()->enable();
+    bool in4 = profile->setting()->mvMeters()->in4()->enable();
+    bool aux = profile->setting()->mvMeters()->aux()->enable();
+
+    int value = 0;
+    in1?value += 1:value += 0;
+    in2?value += 2:value += 0;
+    in3?value += 4:value += 0;
+    in4?value += 8:value += 0;
+    aux?value += 16:value += 0;
+    pgm?value += 32:value += 0;
+    fpga_write(&g_fpga,AUDIO_MET_DISP,value);
 }
 
 //void Models::setAudioFader(int value)
@@ -2124,26 +2234,6 @@ void Models::setSrcSelection(int third)
     else if(third == SETTING_AUX_SOURCE_IN4)
         settings->setReallySrcSelectionIn4(value);
     set_hdmi_in_colorspace(third,(hdmi_in_colorspace_t)value);
-}
-
-void Models::setMvMeter()
-{
-    int pgm = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_METER]->third[MV_METER_PGM]->current.toInt();
-    int in1 = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_METER]->third[MV_METER_IN1]->current.toInt();
-    int in2 = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_METER]->third[MV_METER_IN2]->current.toInt();
-    int in3 = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_METER]->third[MV_METER_IN3]->current.toInt();
-    int in4 = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_METER]->third[MV_METER_IN4]->current.toInt();
-    int aux = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_METER]->third[MV_METER_AUX]->current.toInt();
-
-    int value = 0;
-    in1 == MENU_ON?value += 1:value += 0;
-    in2 == MENU_ON?value += 2:value += 0;
-    in3 == MENU_ON?value += 4:value += 0;
-    in4 == MENU_ON?value += 8:value += 0;
-    aux == MENU_ON?value += 16:value += 0;
-    pgm == MENU_ON?value += 32:value += 0;
-
-    fpga_write(&g_fpga,AUDIO_MET_DISP,value);
 }
 
 void Models::setMvLayout()

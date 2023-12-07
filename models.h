@@ -103,7 +103,6 @@ public:
     void setAuxSource();
     void setSrcSelection(int third);
 
-    void setMvMeter();
     void setMvLayout();
     void setMarket();
 
@@ -323,7 +322,6 @@ signals:
     void srcSelection(int third);
     void auxSource();
 
-    void mvMeter();
     void mvLayout();
     void market();
 
@@ -354,6 +352,7 @@ signals:
     //setting
     /**/
     void srcName(QString srcName,QString name);
+    void mvMeter(QString src,bool enable);
     void buttonBrightness();
     /**/
 
@@ -547,6 +546,7 @@ public slots:
     //setting
     /**/
     void setSrcName(QString srcName,QString name);
+    void setMvMeter(QString src,bool enable);
     /**/
 
 

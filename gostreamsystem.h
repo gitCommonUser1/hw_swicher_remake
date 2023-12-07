@@ -29,7 +29,7 @@ class Profile : public QObject
     Q_PROPERTY(AudioMixer* audioMixer READ audioMixer)
     Q_PROPERTY(StillGenerator* stillGenerator READ stillGenerator)
     Q_PROPERTY(Streams* streams READ streams)
-//    Q_PROPERTY(Setting* setting READ setting)
+    Q_PROPERTY(Setting* setting READ setting)
 public:
     explicit Profile(QObject *parent = nullptr);
 

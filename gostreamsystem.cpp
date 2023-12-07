@@ -13,6 +13,7 @@
 #include "stillgenerator.h"
 #include "still.h"
 #include "streams.h"
+#include "setting.h"
 
 #define PRODUCT_NAME "GoStream Deck"
 
@@ -46,6 +47,8 @@ Profile::Profile(QObject *parent) : QObject(parent)
     m_stillGenerator->setObjectName("stillGenerator");
     m_streams = new Streams(this);
     m_streams->setObjectName("streams");
+    m_setting = new Setting(this);
+    m_setting->setObjectName("setting");
 
     read(this);
 }
@@ -63,6 +66,7 @@ void Profile::emitSignal(QObject *object)
         auto property = metaObject->property(i);
         auto typeName = property.typeName();
         auto name = property.name();
+        qDebug() << name;
         if(property.type() == QVariant::UserType)
         {
 //                这里是子节点列表

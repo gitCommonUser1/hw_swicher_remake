@@ -475,13 +475,6 @@ public:
 //                        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
 //                    }
 //                }
-//                else if(first == MENU_FIRST_SETTING &&
-//                        second == SETTING_SRC_NAME){
-//                    settings->setKeyboardReg(REG_SRC_NAME);
-//                    settings->setKeyboardVisible(1);
-//                    auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[third];
-//                    settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
-//                }
             }
             else
             {

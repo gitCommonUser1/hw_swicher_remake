@@ -39,5 +39,7 @@
 #include "setting.h"
 #include "srcnames.h"
 #include "srcname.h"
+#include "mvmeters.h"
+#include "mvmeter.h"
 
 #endif // PROFILE_INCLUDE_H

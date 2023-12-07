@@ -1746,7 +1746,7 @@ class MenuThirdSettingSrcNamePGM:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->srcNames()->pgm()->setName(value.toString());
     }
     void doEvent() override{
         settings->setKeyboardReg(REG_SRC_NAME);
@@ -1760,7 +1760,13 @@ class MenuThirdSettingSrcNamePVW:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->srcNames()->pvw()->setName(value.toString());
+    }
+    void doEvent() override{
+        settings->setKeyboardReg(REG_SRC_NAME);
+        settings->setKeyboardVisible(1);
+        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_PVW];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
     }
 };
 
@@ -1768,7 +1774,13 @@ class MenuThirdSettingSrcNameIn1:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->srcNames()->in1()->setName(value.toString());
+    }
+    void doEvent() override{
+        settings->setKeyboardReg(REG_SRC_NAME);
+        settings->setKeyboardVisible(1);
+        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_IN1];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
     }
 };
 
@@ -1776,7 +1788,13 @@ class MenuThirdSettingSrcNameIn2:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->srcNames()->in2()->setName(value.toString());
+    }
+    void doEvent() override{
+        settings->setKeyboardReg(REG_SRC_NAME);
+        settings->setKeyboardVisible(1);
+        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_IN2];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
     }
 };
 
@@ -1784,7 +1802,13 @@ class MenuThirdSettingSrcNameIn3:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->srcNames()->in3()->setName(value.toString());
+    }
+    void doEvent() override{
+        settings->setKeyboardReg(REG_SRC_NAME);
+        settings->setKeyboardVisible(1);
+        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_IN3];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
     }
 };
 
@@ -1792,7 +1816,13 @@ class MenuThirdSettingSrcNameIn4:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->srcNames()->in4()->setName(value.toString());
+    }
+    void doEvent() override{
+        settings->setKeyboardReg(REG_SRC_NAME);
+        settings->setKeyboardVisible(1);
+        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_IN4];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
     }
 };
 
@@ -1800,7 +1830,13 @@ class MenuThirdSettingSrcNameAux:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->srcNames()->aux()->setName(value.toString());
+    }
+    void doEvent() override{
+        settings->setKeyboardReg(REG_SRC_NAME);
+        settings->setKeyboardVisible(1);
+        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_AUX];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
     }
 };
 
@@ -1808,7 +1844,13 @@ class MenuThirdSettingSrcNameStill1:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->srcNames()->still1()->setName(value.toString());
+    }
+    void doEvent() override{
+        settings->setKeyboardReg(REG_SRC_NAME);
+        settings->setKeyboardVisible(1);
+        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_STILL1];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
     }
 };
 
@@ -1816,7 +1858,13 @@ class MenuThirdSettingSrcNameStill2:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->srcNames()->still2()->setName(value.toString());
+    }
+    void doEvent() override{
+        settings->setKeyboardReg(REG_SRC_NAME);
+        settings->setKeyboardVisible(1);
+        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_STILL2];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
     }
 };
 
@@ -1824,7 +1872,7 @@ class MenuThirdSettingMvMeterPGM:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->mvMeters()->pgm()->setEnable(value > 0);
     }
 };
 
@@ -1832,7 +1880,7 @@ class MenuThirdSettingMvMeterIn1:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->mvMeters()->in1()->setEnable(value > 0);
     }
 };
 
@@ -1840,7 +1888,7 @@ class MenuThirdSettingMvMeterIn2:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->mvMeters()->in2()->setEnable(value > 0);
     }
 };
 
@@ -1848,7 +1896,7 @@ class MenuThirdSettingMvMeterIn3:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->mvMeters()->in3()->setEnable(value > 0);
     }
 };
 
@@ -1856,7 +1904,7 @@ class MenuThirdSettingMvMeterIn4:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->mvMeters()->in4()->setEnable(value > 0);
     }
 };
 
@@ -1864,7 +1912,7 @@ class MenuThirdSettingMvMeterAux:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->mvMeters()->aux()->setEnable(value > 0);
     }
 };
 

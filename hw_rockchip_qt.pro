@@ -58,6 +58,8 @@ SOURCES += \
     mixeffectblock.cpp \
     mixeffectblocks.cpp \
     mixparameters.cpp \
+    mvmeter.cpp \
+    mvmeters.cpp \
     myprovider.cpp \
     ndi.cpp \
     ndilistmodelitem.cpp \
@@ -250,6 +252,8 @@ HEADERS += \
     mixeffectblocks.h \
     mixparameters.h \
     mp4.h \
+    mvmeter.h \
+    mvmeters.h \
     myprovider.h \
     ndi.h \
     ndilistmodelitem.h \
