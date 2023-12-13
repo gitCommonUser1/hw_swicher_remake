@@ -44,6 +44,7 @@ SOURCES += \
     downstreamkey.cpp \
     downstreamkeys.cpp \
     fadetoblack.cpp \
+    format.cpp \
     gostreamsystem.cpp \
     key.cpp \
     keyboardevent.cpp \
@@ -69,6 +70,10 @@ SOURCES += \
     ndilistmodelitem.cpp \
     nexttransition.cpp \
     osee_math.cpp \
+    outformat.cpp \
+    outputcolorspace.cpp \
+    outsource.cpp \
+    outsources.cpp \
     patternparameters.cpp \
     pipparameters.cpp \
     preview.cpp \
@@ -159,6 +164,7 @@ HEADERS += \
     downstreamkey.h \
     downstreamkeys.h \
     fadetoblack.h \
+    format.h \
     gostreamsystem.h \
     include/crc32.h \
     include/data_list.h \
@@ -270,6 +276,10 @@ HEADERS += \
     ndilistmodelitem.h \
     nexttransition.h \
     osee_math.h \
+    outformat.h \
+    outputcolorspace.h \
+    outsource.h \
+    outsources.h \
     patternparameters.h \
     pipparameters.h \
     preview.h \

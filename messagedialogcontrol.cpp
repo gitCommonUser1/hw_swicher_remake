@@ -5,8 +5,11 @@
 #include "rv_switch_api.h"
 #include <QEventLoop>
 #include <QApplication>
+#include "gostreamsystem.h"
+#include "profile_include.h"
 
 extern Models *models;
+extern Profile* profile;
 
 MessageDialogControl::MessageDialogControl(QObject *parent) : QObject(parent)
 {
@@ -42,14 +45,10 @@ void MessageDialogControl::buttonClicked()
             // ok!
             if(settings->recordLedStatus() != E_STATUS_FAILED){
                 dialogShow(tr("You are recording, please end the recording first."),{"Ok"});
-                int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt();
-                    if(index != settings->reallyOutFormat())
-                        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_FORMAT,settings->reallyOutFormat());
                 return ;
             }else{
                 models->resetFactory();
             }
-//            dialogShow("Resetting is done, please restart the device.",{"Ok"});
         }
         break;
     case MESSAGE_SD_FORMAT:
@@ -63,20 +62,21 @@ void MessageDialogControl::buttonClicked()
             // ok!
             if(settings->recordLedStatus() != E_STATUS_FAILED){
                 dialogShow(tr("You are recording, please end the recording first."),{"Ok"});
-                int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt();
-                    if(index != settings->reallyOutFormat())
-                        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_FORMAT,settings->reallyOutFormat());
+                settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_FORMAT,
+                    profile->setting()->outFormat()->format()->outFormat());
                 return ;
             }else{
-                models->setOutFormat();
+//                models->setOutFormat();
+                profile->setting()->outFormat()->format()->setOutFormat(
+                    settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt());
+                profile->write(profile);
                 system("killall qt_monitor.sh");
                 system("reboot");
             }
         }else{
             // cancel
-            int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt();
-                if(index != settings->reallyOutFormat())
-                    settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_FORMAT,settings->reallyOutFormat());
+            settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_FORMAT,
+                profile->setting()->outFormat()->format()->outFormat());
         }
         break;
     }

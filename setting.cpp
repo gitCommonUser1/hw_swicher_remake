@@ -6,6 +6,8 @@
 #include "micinputs.h"
 #include "record.h"
 #include "srcselections.h"
+#include "outformat.h"
+#include "outsources.h"
 
 Setting::Setting(QObject *parent) : QObject(parent)
 {
@@ -29,4 +31,10 @@ Setting::Setting(QObject *parent) : QObject(parent)
 
     m_srcSelections = new SrcSelections(this);
     m_srcSelections->setObjectName("srcSelections");
+
+    m_outFormat = new OutFormat(this);
+    m_outFormat->setObjectName("outFormat");
+
+    m_outSources = new OutSources(this);
+    m_outSources->setObjectName("outSources");
 }

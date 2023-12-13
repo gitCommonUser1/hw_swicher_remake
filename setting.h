@@ -10,6 +10,8 @@ class Marker;
 class MicInputs;
 class Record;
 class SrcSelections;
+class OutFormat;
+class OutSources;
 
 class Setting : public QObject
 {
@@ -21,6 +23,8 @@ class Setting : public QObject
     Q_PROPERTY(MicInputs* micInputs READ micInputs)
     Q_PROPERTY(Record* record READ record)
     Q_PROPERTY(SrcSelections* srcSelections READ srcSelections)
+    Q_PROPERTY(OutFormat* outFormat READ outFormat)
+    Q_PROPERTY(OutSources* outSources READ outSources)
 
 public:
     explicit Setting(QObject *parent = nullptr);
@@ -60,6 +64,16 @@ public:
         return m_srcSelections;
     }
 
+    OutFormat* outFormat() const
+    {
+        return m_outFormat;
+    }
+
+    OutSources* outSources() const
+    {
+        return m_outSources;
+    }
+
 private:
     SrcNames* m_srcNames;
 
@@ -74,6 +88,10 @@ private:
     Record* m_record;
 
     SrcSelections* m_srcSelections;
+
+    OutFormat* m_outFormat;
+
+    OutSources* m_outSources;
 
 signals:
 

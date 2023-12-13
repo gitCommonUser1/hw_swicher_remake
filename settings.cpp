@@ -1377,16 +1377,19 @@ MenuSecond *Settings::new_Setting_Out_Format()
     third->list_text << tr("1080p24") << tr("1080p25") << tr("1080p30") << tr("1080p50") << tr("1080p60");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
+    third->menuType = ENTER_CALL_OR_RESET;
 
     third = new MenuThirdSettingOutFormatOut1ColorSpace(tr("Output 1 Color Space"),"Output 1 Color Space",0,0,7,1,DATATYPE_ENUM);
     third->list_text << tr("Auto") << tr("RGB Full") << tr("RGB Limit") << tr("YCbCr422 Full") << tr("YCbCr422 Limit") << tr("YCbCr444 Full") << tr("YCbCr444 Limit");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
+    third->menuType = ENTER_CALL_OR_RESET;
 
     third = new MenuThirdSettingOutFormatOut2ColorSpace(tr("Output 2 Color Space"),"Output 2 Color Space",0,0,7,1,DATATYPE_ENUM);
     third->list_text << tr("Auto") << tr("RGB Full") << tr("RGB Limit") << tr("YCbCr422 Full") << tr("YCbCr422 Limit") << tr("YCbCr444 Full") << tr("YCbCr444 Limit");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
+    third->menuType = ENTER_CALL_OR_RESET;
 
     out_format->third = list_third;
     return out_format;
@@ -1404,16 +1407,19 @@ MenuSecond *Settings::new_Setting_Out_Source()
     third->list_text << tr("In 1") << tr("In 2") << tr("In 3") << tr("In 4") << tr("Aux") << tr("PGM") << tr("PVW") << tr("Multiview");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
+    third->menuType = ENTER_CALL_OR_RESET;
 
     third = new MenuThirdSettingOutSourceHDMI2(tr("HDMI 2"),"HDMI 2",0,0,0,1,DATATYPE_ENUM);
     third->list_text << tr("Multiview");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
+    third->menuType = ENTER_CALL_OR_RESET;
 
     third = new MenuThirdSettingOutSourceUVC(tr("Streaming / Recording / UVC"),"Streaming / Recording / UVC",0,5,2,1,DATATYPE_ENUM);
     third->list_text << tr("In 1") << tr("In 2") << tr("In 3") << tr("In 4") << tr("Aux") << tr("PGM") << tr("PVW") << tr("Multiview");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
+    third->menuType = ENTER_CALL_OR_RESET;
 
     out_format->third = list_third;
     return out_format;

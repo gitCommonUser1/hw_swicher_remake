@@ -6,9 +6,11 @@
 #include "MenuEnums.h"
 #include "profile_include.h"
 #include "rv_switch_api.h"
+#include "messagedialogcontrol.h"
 
 extern Models *models;
 extern Profile *profile;
+extern MessageDialogControl* messageDialogControl;
 
 class MenuThirdColorBackColor1Hue:public MenuThird{
 public:
@@ -2050,7 +2052,14 @@ class MenuThirdSettingOutFormat:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        if(value >= OutFormat::OUT_1080pMAX)
+            value = OutFormat::OUT_1080pMAX - 1;
+        if(value <= 0)
+            value = 0;
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_FORMAT,value.toInt());
+    }
+    void doEvent() override{
+        messageDialogControl->dialogShow(QObject::tr("This will restart the device."),{QObject::tr("Cancel"),QObject::tr("Confirm")},MessageDialogControl::MESSAGE_OUT_FORMAT);
     }
 };
 
@@ -2058,7 +2067,15 @@ class MenuThirdSettingOutFormatOut1ColorSpace:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        if(value >= SrcSelections::INPUT_MAX)
+            value = SrcSelections::INPUT_MAX - 1;
+        if(value <= 0)
+            value = 0;
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_OUTPUT1_COLOR_SPACE,value.toInt());
+    }
+    void doEvent() override{
+        profile->setting()->outFormat()->out1ColorSpace()->setColorSpace(
+            settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_OUTPUT1_COLOR_SPACE]->current.toInt());
     }
 };
 
@@ -2066,7 +2083,15 @@ class MenuThirdSettingOutFormatOut2ColorSpace:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        if(value >= SrcSelections::INPUT_MAX)
+            value = SrcSelections::INPUT_MAX - 1;
+        if(value <= 0)
+            value = 0;
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_OUTPUT2_COLOR_SPACE,value.toInt());
+    }
+    void doEvent() override{
+        profile->setting()->outFormat()->out2ColorSpace()->setColorSpace(
+            settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_OUTPUT2_COLOR_SPACE]->current.toInt());
     }
 };
 
@@ -2075,7 +2100,15 @@ class MenuThirdSettingOutSourceHDMI1:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        if(value >= OutSources::MAX)
+            value = OutSources::MAX - 1;
+        if(value <= 0)
+            value = 0;
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_SOURCE,SETTING_OUT_SOURCE_HDMI1,value.toInt());
+    }
+    void doEvent() override{
+        profile->setting()->outSources()->hdmi1()->setSource(
+            settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_SOURCE]->third[SETTING_OUT_SOURCE_HDMI1]->current.toInt());
     }
 };
 
@@ -2085,13 +2118,24 @@ public:
     void doWork(QVariant value){
 
     }
+    void doEvent() override{
+
+    }
 };
 
 class MenuThirdSettingOutSourceUVC:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        if(value >= OutSources::MAX)
+            value = OutSources::MAX - 1;
+        if(value <= 0)
+            value = 0;
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_SOURCE,SETTING_OUT_SOURCE_AUX,value.toInt());
+    }
+    void doEvent() override{
+        profile->setting()->outSources()->uvc()->setSource(
+            settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_SOURCE]->third[SETTING_OUT_SOURCE_AUX]->current.toInt());
     }
 };
 

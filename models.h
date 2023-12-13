@@ -104,8 +104,6 @@ public:
 
     int getOutFormatIndexForEnum(int index);
     int getOutFormat(int index);
-    void setOutFormat();
-    void setOutSource();
     void setColorSpace(int third);
 
     void setQuality(int third);
@@ -313,9 +311,6 @@ signals:
     void playPrevious();
 
     void auxSource();
-
-    void outFormat();
-    void outSource();
     void colorSpace(int third);
 
     void quality(int third);
@@ -345,6 +340,9 @@ signals:
     void micInput(QString src,QString input);
     void recordFileName(QString fileName);
     void srcSelection(QString src,QString selection);
+    void outFormat(QString outFormat);
+    void outputColorSpace(QString src,QString colorSpace);
+    void outSource(QString src,QString source);
     void buttonBrightness();
     /**/
 
@@ -545,6 +543,9 @@ public slots:
     void setMicInput(QString src,QString input);
     void setRecordFileName(QString fileName);
     void setSrcSelection(QString src,QString selection);
+    void setOutFormat(QString outFormat);
+    void setOutputColorSpace(QString src,QString colorSpace);
+    void setOutSource(QString src,QString source);
     /**/
 
 

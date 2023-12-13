@@ -473,6 +473,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("control",&control);
 
     profile->emitSignals();
+    init_settings_is_ok = true;
 
 
     //调试用，正式版本删除
@@ -480,13 +481,6 @@ int main(int argc, char *argv[])
 
     //init color
     //这里必须调用一次，初始化后color应该是绿色，否则颜色不对
-//    models->setChromaKeySampleColor();
-//    QFileInfo chromaColor(CHROMAKEY_SMP_COLOR_PATH);
-//    if(chromaColor.exists()){
-//        settings->init_chromaColor();
-//    }else{
-//        models->setChromaKeySampleColor();
-//    }
     //初始化 chroma  smp color
     int r = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->red();
     int g = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->green();
@@ -497,22 +491,6 @@ int main(int argc, char *argv[])
     settings->setColor5Data({r,g,b});
     settings->setChromakeySMPColorYcbcr({y,cb,cr});
 
-
-//    初始化fpga数据
-//    settings->init_menuStatus();
-//    auto list = settings->listFirst();
-//    for(int i = 0;i < list.size();++i)
-//    {
-//        for(int j = 0;j < list[i]->second.size();++j)
-//        {
-//            for(int k = 0;k < list[i]->second[j]->third.size();++k)
-//            {
-//                settings->listFirst()[i]->second[j]->third[k]->doWork(settings->listFirst()[i]->second[j]->third[k]->current);
-//            }
-//        }
-//    }
-
-    init_settings_is_ok = true;
 
     models->initDHCPNetworkData();
 

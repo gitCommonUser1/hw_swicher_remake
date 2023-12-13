@@ -1268,6 +1268,26 @@ void Control::connect_profile()
         settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_SOURCE,selection);
         models->macroInvoke(&Models::srcSelection,SrcSelections::sourceIndexToString(SrcSelections::AUX),SrcSelections::auxIndexToString(selection));
     });
+    connect(profile->setting()->outFormat()->format(),&Format::outFormatChanged,this,[=](int outFormat){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_FORMAT,outFormat);
+        models->macroInvoke(&Models::outFormat,OutFormat::outFormatIndexToString(outFormat));
+    });
+    connect(profile->setting()->outFormat()->out1ColorSpace(),&OutputColorSpace::colorSpaceChanged,this,[=](int colorSpace){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_OUTPUT1_COLOR_SPACE,colorSpace);
+        models->macroInvoke(&Models::outputColorSpace,OutFormat::outputIndexToString(OutFormat::OUTPUT1),SrcSelections::selectionIndexToString(colorSpace));
+    });
+    connect(profile->setting()->outFormat()->out2ColorSpace(),&OutputColorSpace::colorSpaceChanged,this,[=](int colorSpace){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_OUTPUT2_COLOR_SPACE,colorSpace);
+        models->macroInvoke(&Models::outputColorSpace,OutFormat::outputIndexToString(OutFormat::OUTPUT2),SrcSelections::selectionIndexToString(colorSpace));
+    });
+    connect(profile->setting()->outSources()->hdmi1(),&OutSource::sourceChanged,this,[=](int source){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_SOURCE,SETTING_OUT_SOURCE_HDMI1,source);
+        models->macroInvoke(&Models::outSource,OutSources::srcIndexToString(OutSources::HDMI1),OutSources::sourceIndexToString(source));
+    });
+    connect(profile->setting()->outSources()->uvc(),&OutSource::sourceChanged,this,[=](int source){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_SOURCE,SETTING_OUT_SOURCE_AUX,source);
+        models->macroInvoke(&Models::outSource,OutSources::srcIndexToString(OutSources::UVC),OutSources::sourceIndexToString(source));
+    });
 
 }
 

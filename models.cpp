@@ -176,6 +176,9 @@ void Models::init_connect()
     connect(this,&Models::micInput,this,&Models::setMicInput);
     connect(this,&Models::recordFileName,this,&Models::setRecordFileName);
     connect(this,&Models::srcSelection,this,&Models::setSrcSelection);
+    connect(this,&Models::outFormat,this,&Models::setOutFormat);
+    connect(this,&Models::outputColorSpace,this,&Models::setOutputColorSpace);
+    connect(this,&Models::outSource,this,&Models::setOutSource);
 
     //button status
     connect(this,&Models::pgmIndex,this,&Models::setPgmIndex);
@@ -1521,7 +1524,6 @@ void Models::setSrcSelection(QString src, QString selection)
 
     if(index < SrcSelections::AUX)
     {
-        qDebug() << "111";
         set_hdmi_in_colorspace(index,(hdmi_in_colorspace_t)int_selection);
     }
     else if(index == SrcSelections::AUX)
@@ -1532,6 +1534,88 @@ void Models::setSrcSelection(QString src, QString selection)
             profile->setting()->srcSelections()->aux()->setSelection(SrcSelections::SD_CARD);
         }
     }
+}
+
+void Models::setOutFormat(QString outFormat)
+{
+    int value = OutFormat::outFormatStringToIndex(outFormat);
+    if(profile->setting()->outFormat()->format()->outFormat() != value)
+    {
+        profile->setting()->outFormat()->format()->setOutFormat(value);
+        return ;
+    }
+
+    int fpga_value = getOutFormatIndexForEnum(value);
+    //开机初始化不执行
+    if(!init_settings_is_ok)
+    {
+        return ;
+    }
+
+    //set qt resolution
+    rv_switch_resolutionset(fpga_value);
+}
+
+void Models::setOutputColorSpace(QString src, QString colorSpace)
+{
+    int index = OutFormat::outputStringToIndex(src);
+    int color_space = SrcSelections::selectionStringToIndex(colorSpace);
+    //output 1
+    if(index == OutFormat::OUTPUT1)
+    {
+        if(profile->setting()->outFormat()->out1ColorSpace()->colorSpace() != color_space)
+        {
+            profile->setting()->outFormat()->out1ColorSpace()->setColorSpace(color_space);
+            return ;
+        }
+        set_hdmi_out_colorspace(OutFormat::OUTPUT1,(hdmi_out_colorspace_t)color_space);
+    }
+    //output 2
+    else if(index == OutFormat::OUTPUT2)
+    {
+        if(profile->setting()->outFormat()->out2ColorSpace()->colorSpace() != color_space)
+        {
+            profile->setting()->outFormat()->out2ColorSpace()->setColorSpace(color_space);
+            return ;
+        }
+        set_hdmi_out_colorspace(OutFormat::OUTPUT2,(hdmi_out_colorspace_t)color_space);
+    }
+}
+
+void Models::setOutSource(QString src, QString source)
+{
+    int src_index = OutSources::srcStringToIndex(src);
+    int source_index = OutSources::sourceStringToIndex(source);
+    switch (src_index) {
+    case OutSources::HDMI1:
+        if(profile->setting()->outSources()->hdmi1()->source() != source_index)
+        {
+            profile->setting()->outSources()->hdmi1()->setSource(source_index);
+            return ;
+        }
+        break;
+    case OutSources::HDMI2:
+        break;
+    case OutSources::UVC:
+        if(profile->setting()->outSources()->uvc()->source() != source_index)
+        {
+            profile->setting()->outSources()->uvc()->setSource(source_index);
+            return ;
+        }
+        break;
+    }
+
+    int hdmi1 = profile->setting()->outSources()->hdmi1()->source();
+    //hdmi2 = mutilView
+    int hdmi2 = OutSources::MULTIVIEW;
+    int uvc = profile->setting()->outSources()->uvc()->source();
+
+    Outsource ss;
+    ss.hdmi1 = hdmi1;
+    ss.hdmi2 = hdmi2;
+    ss.uvc = uvc;
+    qDebug() << "hdmi1:" << hdmi1 << "hdmi2:" << hdmi2 << "uvc:" << uvc;
+    fpga_write(&g_fpga,OUT_SEL,*(uint16_t*)&ss);
 }
 
 //void Models::setAudioFader(int value)
@@ -2357,43 +2441,29 @@ void Models::setAuxSource()
     }
 }
 
-//void Models::setSrcSelection(int third)
-//{
-//    int value = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[third]->current.toInt();
-//    if(third == SETTING_AUX_SOURCE_IN1)
-//        settings->setReallySrcSelectionIn1(value);
-//    else if(third == SETTING_AUX_SOURCE_IN2)
-//        settings->setReallySrcSelectionIn2(value);
-//    else if(third == SETTING_AUX_SOURCE_IN3)
-//        settings->setReallySrcSelectionIn3(value);
-//    else if(third == SETTING_AUX_SOURCE_IN4)
-//        settings->setReallySrcSelectionIn4(value);
-//    set_hdmi_in_colorspace(third,(hdmi_in_colorspace_t)value);
-//}
-
 int Models::getOutFormatIndexForEnum(int index)
 {
     int value = 0;
     switch (index) {
-    case OUT_FORMAT_1080P24:
+    case OutFormat::OUT_1080p24:
         value = 0x0;
         break;
-    case OUT_FORMAT_1080P25:
+    case OutFormat::OUT_1080p25:
         value = 0x1;
         break;
-    case OUT_FORMAT_1080P30:
+    case OutFormat::OUT_1080p30:
         value = 0x2;
         break;
-    case OUT_FORMAT_1080P50:
+    case OutFormat::OUT_1080p50:
         value = 0x3;
         break;
-    case OUT_FORMAT_1080P60:
+    case OutFormat::OUT_1080p60:
         value = 0x4;
         break;
     }
-    if(index < OUT_FORMAT_1080P24)
+    if(index < OutFormat::OUT_1080p24)
         value = 0x0;
-    if(index > OUT_FORMAT_1080P60)
+    if(index > OutFormat::OUT_1080p60)
         value = 0x4;
 
     return value;
@@ -2403,68 +2473,28 @@ int Models::getOutFormat(int index)
 {
     int value = 30;
     switch (index) {
-    case OUT_FORMAT_1080P24:
+    case OutFormat::OUT_1080p24:
         value = 24;
         break;
-    case OUT_FORMAT_1080P25:
+    case OutFormat::OUT_1080p25:
         value = 25;
         break;
-    case OUT_FORMAT_1080P30:
+    case OutFormat::OUT_1080p30:
         value = 30;
         break;
-    case OUT_FORMAT_1080P50:
+    case OutFormat::OUT_1080p50:
         value = 50;
         break;
-    case OUT_FORMAT_1080P60:
+    case OutFormat::OUT_1080p60:
         value = 60;
         break;
     }
-    if(index < OUT_FORMAT_1080P24)
+    if(index < OutFormat::OUT_1080p24)
         value = 24;
-    if(index > OUT_FORMAT_1080P60)
+    if(index > OutFormat::OUT_1080p60)
         value = 60;
 
     return value;
-}
-
-void Models::setOutFormat()
-{
-    int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt();
-
-    settings->setReallyOutFormat(index);
-
-    int fpga_value = getOutFormatIndexForEnum(index);
-
-    //开机初始化不执行
-    if(!init_settings_is_ok)
-    {
-        return ;
-    }
-
-    //set qt resolution
-    rv_switch_resolutionset(fpga_value);
-}
-
-void Models::setOutSource()
-{
-    int hdmi1 = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_SOURCE]->third[SETTING_OUT_SOURCE_HDMI1]->current.toInt();
-//    int hdmi2 = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_SOURCE]->third[SETTING_OUT_SOURCE_HDMI2]->current.toInt();
-    //hdmi2 = mutilView
-    int hdmi2 = 7;
-    int uvc = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_SOURCE]->third[SETTING_OUT_SOURCE_AUX]->current.toInt();
-
-    settings->setReallyOutSourceHDMI1(hdmi1);
-    settings->setReallyOutSourceHDMI2(hdmi2);
-    settings->setReallyOutSourceUVC(uvc);
-
-    OutSource source;
-    source.hdmi1 = hdmi1;
-    source.hdmi2 = hdmi2;
-    source.uvc = uvc;
-
-    qDebug() << "hdmi1:" << hdmi1 << "hdmi2:" << hdmi2 << "uvc:" << uvc;
-
-    fpga_write(&g_fpga,OUT_SEL,*(uint16_t*)&source);
 }
 
 void Models::setColorSpace(int third)

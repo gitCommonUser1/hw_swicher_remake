@@ -48,5 +48,10 @@
 #include "record.h"
 #include "srcselection.h"
 #include "srcselections.h"
+#include "outformat.h"
+#include "format.h"
+#include "outputcolorspace.h"
+#include "outsources.h"
+#include "outsource.h"
 
 #endif // PROFILE_INCLUDE_H

@@ -48,7 +48,7 @@ struct DSKSource{
     u_int8_t key:4;
 };
 
-struct OutSource{
+struct Outsource{
     u_int16_t hdmi1:3;
     u_int16_t hdmi2:3;
     u_int16_t uvc:3;
