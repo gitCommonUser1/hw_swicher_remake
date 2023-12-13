@@ -4301,7 +4301,7 @@ void Models::setTransitionRate(QString str, double rate)
 {
     int index = TransitionStyle::styleStringToIndex(str);
     //////////////
-    int outFormat = getOutFormat(60/*settings->getOutFormat()*/);
+    int outFormat = getOutFormat(profile->setting()->outFormat()->format()->outFormat());
     int fpga_value = getFTBRateValue(rate,outFormat);
     int fpga_par = -1;
     if(index == TransitionStyle::MIX)
@@ -4716,7 +4716,7 @@ void Models::setDskRate(double rate)
         profile->downstreamKeys()->downstreamKey()->setRate(rate);
         return ;
     }
-    int fpga_value = getFTBRateValue(rate,60 /*outFormat*/);
+    int fpga_value = getFTBRateValue(rate,getOutFormat(profile->setting()->outFormat()->format()->outFormat()));
     fpga_write(&g_fpga,FPGA_DSK_RATE,fpga_value);
 }
 
@@ -4746,7 +4746,7 @@ void Models::setFtbRate(double rate)
     }
 
     /////////////
-    int fpga_value = getFTBRateValue(rate,60/*outFormat*/);
+    int fpga_value = getFTBRateValue(rate,getOutFormat(profile->setting()->outFormat()->format()->outFormat()));
     fpga_write(&g_fpga,FTB_RATE,fpga_value);
 }
 
