@@ -12,17 +12,17 @@ static QList<QString > mvMeterList{
 
 MvMeters::MvMeters(QObject *parent) : QObject(parent)
 {
-    m_pgm = new MvMeter("PGM",this);
+    m_pgm = new MvMeter(mvMeterList[PGM],this);
     m_pgm->setObjectName("pgm");
-    m_in1 = new MvMeter("In 1",this);
+    m_in1 = new MvMeter(mvMeterList[IN1],this);
     m_in1->setObjectName("in1");
-    m_in2 = new MvMeter("In 2",this);
+    m_in2 = new MvMeter(mvMeterList[IN2],this);
     m_in2->setObjectName("in2");
-    m_in3 = new MvMeter("In 3",this);
+    m_in3 = new MvMeter(mvMeterList[IN3],this);
     m_in3->setObjectName("in3");
-    m_in4 = new MvMeter("In 4",this);
+    m_in4 = new MvMeter(mvMeterList[IN4],this);
     m_in4->setObjectName("in4");
-    m_aux = new MvMeter("Aux",this);
+    m_aux = new MvMeter(mvMeterList[AUX],this);
     m_aux->setObjectName("aux");
 }
 

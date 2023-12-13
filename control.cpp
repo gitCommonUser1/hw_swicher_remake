@@ -1229,6 +1229,46 @@ void Control::connect_profile()
         models->macroInvoke(&Models::mvMeter,MvMeters::mvMeterIndexToString(MvMeters::AUX),enable);
         settings->setMenuValue(MENU_FIRST_SETTING,SETTING_MV_METER,MV_METER_AUX,enable);
     });
+    connect(profile->setting()->mvLayout(),&MvLayout::layoutChanged,this,[=](int layout){
+        models->macroInvoke(&Models::mvLayout,MvLayout::mvLayoutIndexToString(layout));
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_MV_LAYOUT,MV_LAYOUT_SWAP,layout);
+    });
+    connect(profile->setting()->marker(),&Marker::pvwMarkerChanged,this,[=](bool pvwMarker){
+        models->macroInvoke(&Models::marker,pvwMarker);
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_MARKER,MARKER_PVW,pvwMarker);
+    });
+    connect(profile->setting()->micInputs()->mic1(),&MicInput::inputChanged,this,[=](int input){
+        models->macroInvoke(&Models::micInput,"mic1",MicInputs::micInputIndexToString(input));
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_MIC_INPUT,MENU_THIRD_MIC_INPUT_MIC_1_INPUT,input);
+    });
+    connect(profile->setting()->micInputs()->mic2(),&MicInput::inputChanged,this,[=](int input){
+        models->macroInvoke(&Models::micInput,"mic2",MicInputs::micInputIndexToString(input));
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_MIC_INPUT,MENU_THIRD_MIC_INPUT_MIC_2_INPUT,input);
+    });
+    connect(profile->setting()->record(),&Record::fileNameChanged,this,[=](QString fileName){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_RECORD_FILE,SETTING_RECORD_FILE_NAME,fileName);
+    });
+    connect(profile->setting()->srcSelections()->in1(),&SrcSelection::selectionChanged,this,[=](int selection){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_IN1,selection);
+        models->macroInvoke(&Models::srcSelection,SrcSelections::sourceIndexToString(SrcSelections::IN1),SrcSelections::selectionIndexToString(selection));
+    });
+    connect(profile->setting()->srcSelections()->in2(),&SrcSelection::selectionChanged,this,[=](int selection){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_IN2,selection);
+        models->macroInvoke(&Models::srcSelection,SrcSelections::sourceIndexToString(SrcSelections::IN2),SrcSelections::selectionIndexToString(selection));
+    });
+    connect(profile->setting()->srcSelections()->in3(),&SrcSelection::selectionChanged,this,[=](int selection){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_IN3,selection);
+        models->macroInvoke(&Models::srcSelection,SrcSelections::sourceIndexToString(SrcSelections::IN3),SrcSelections::selectionIndexToString(selection));
+    });
+    connect(profile->setting()->srcSelections()->in4(),&SrcSelection::selectionChanged,this,[=](int selection){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_IN4,selection);
+        models->macroInvoke(&Models::srcSelection,SrcSelections::sourceIndexToString(SrcSelections::IN4),SrcSelections::selectionIndexToString(selection));
+    });
+    connect(profile->setting()->srcSelections()->aux(),&SrcSelection::selectionChanged,this,[=](int selection){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_SOURCE,selection);
+        models->macroInvoke(&Models::srcSelection,SrcSelections::sourceIndexToString(SrcSelections::AUX),SrcSelections::auxIndexToString(selection));
+    });
+
 }
 
 void Control::slotKnobChanged(const int knob, int value)

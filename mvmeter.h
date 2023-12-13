@@ -7,7 +7,7 @@ class MvMeter : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool enable READ enable WRITE setEnable NOTIFY enableChanged)
-    Q_PROPERTY(QString name READ name WRITE setName)
+    Q_PROPERTY(QString name READ name WRITE setName FINAL)
 public:
     explicit MvMeter(QString name,QObject *parent = nullptr);
 

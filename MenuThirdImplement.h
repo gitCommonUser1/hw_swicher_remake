@@ -1921,7 +1921,7 @@ class MenuThirdSettingMvLayout:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->mvLayout()->setLayout(value.toInt());
     }
 };
 
@@ -1929,7 +1929,7 @@ class MenuThirdSettingMarkerPVW:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->marker()->setPvwMarker(value > 0);
     }
 };
 
@@ -1937,7 +1937,7 @@ class MenuThirdSettingMicInputMic1:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->micInputs()->mic1()->setInput((value.toInt()));
     }
 };
 
@@ -1945,7 +1945,7 @@ class MenuThirdSettingMicInputMic2:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->micInputs()->mic2()->setInput((value.toInt()));
     }
 };
 
@@ -1954,7 +1954,13 @@ class MenuThirdSettingRecordFileName:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->record()->setFileName(value.toString());
+    }
+    void doEvent() override{
+        settings->setKeyboardReg(REG_FILE_NAME);
+        settings->setKeyboardVisible(1);
+        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_RECORD_FILE]->third[SETTING_RECORD_FILE_NAME];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
     }
 };
 
@@ -1962,7 +1968,15 @@ class MenuThirdSettingSrcSelectionIn1:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        if(value >= SrcSelections::INPUT_MAX)
+            value = SrcSelections::INPUT_MAX - 1;
+        if(value <= 0)
+            value = 0;
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_IN1,value.toInt());
+    }
+    void doEvent() override{
+        profile->setting()->srcSelections()->in1()->setSelection(
+            settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_IN1]->current.toInt());
     }
 };
 
@@ -1970,7 +1984,15 @@ class MenuThirdSettingSrcSelectionIn2:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        if(value >= SrcSelections::INPUT_MAX)
+            value = SrcSelections::INPUT_MAX - 1;
+        if(value <= 0)
+            value = 0;
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_IN2,value.toInt());
+    }
+    void doEvent() override{
+        profile->setting()->srcSelections()->in2()->setSelection(
+            settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_IN2]->current.toInt());
     }
 };
 
@@ -1979,7 +2001,15 @@ class MenuThirdSettingSrcSelectionIn3:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        if(value >= SrcSelections::INPUT_MAX)
+            value = SrcSelections::INPUT_MAX - 1;
+        if(value <= 0)
+            value = 0;
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_IN3,value.toInt());
+    }
+    void doEvent() override{
+        profile->setting()->srcSelections()->in3()->setSelection(
+            settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_IN3]->current.toInt());
     }
 };
 
@@ -1987,7 +2017,15 @@ class MenuThirdSettingSrcSelectionIn4:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        if(value >= SrcSelections::INPUT_MAX)
+            value = SrcSelections::INPUT_MAX - 1;
+        if(value <= 0)
+            value = 0;
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_IN4,value.toInt());
+    }
+    void doEvent() override{
+        profile->setting()->srcSelections()->in4()->setSelection(
+            settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_IN4]->current.toInt());
     }
 };
 
@@ -1996,7 +2034,15 @@ class MenuThirdSettingSrcSelectionAux:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        if(value >= SrcSelections::AUX_MAX)
+            value = SrcSelections::AUX_MAX - 1;
+        if(value <= 0)
+            value = 0;
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_SOURCE,value.toInt());
+    }
+    void doEvent() override{
+        profile->setting()->srcSelections()->aux()->setSelection(
+            settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_SOURCE]->current.toInt());
     }
 };
 

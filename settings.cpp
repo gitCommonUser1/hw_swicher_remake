@@ -1225,7 +1225,7 @@ MenuSecond *Settings::new_Setting_Mv_Layout()
     monitor->ss_name = ("mv layout");
 
     third = new MenuThirdSettingMvLayout(tr("PGM/PVW SWAP"),"PGM/PVW SWAP",0,0,2,1,DATATYPE_ENUM);
-    third->list_text << tr("PGM|PVW") << tr("PVW|PGM") ;
+    third->list_text << tr("PVW|PGM") << tr("PGM|PVW")  ;
     third->max = third->list_text.size() - 1;
     list_third.append(third);
 
@@ -1282,6 +1282,7 @@ MenuSecond *Settings::new_Setting_Record_File()
 
     third = new MenuThirdSettingRecordFileName(tr("File Name"),"File Name","","","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     monitor->third = list_third;
     return monitor;
@@ -1299,26 +1300,31 @@ MenuSecond *Settings::new_Setting_Aux_Source()
     third->list_text << tr("Auto") << tr("RGB Full") << tr("RGB Limit") << tr("YCbCr422 Full") << tr("YCbCr422 Limit") << tr("YCbCr444 Full") << tr("YCbCr444 Limit");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
+    third->menuType = ENTER_CALL_OR_RESET;
 
     third = new MenuThirdSettingSrcSelectionIn2(tr("In 2"),"In 2",0,0,2,1,DATATYPE_ENUM);
     third->list_text << tr("Auto") << tr("RGB Full") << tr("RGB Limit") << tr("YCbCr422 Full") << tr("YCbCr422 Limit") << tr("YCbCr444 Full") << tr("YCbCr444 Limit");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
+    third->menuType = ENTER_CALL_OR_RESET;
 
     third = new MenuThirdSettingSrcSelectionIn3(tr("In 3"),"In 3",0,0,2,1,DATATYPE_ENUM);
     third->list_text << tr("Auto") << tr("RGB Full") << tr("RGB Limit") << tr("YCbCr422 Full") << tr("YCbCr422 Limit") << tr("YCbCr444 Full") << tr("YCbCr444 Limit");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
+    third->menuType = ENTER_CALL_OR_RESET;
 
     third = new MenuThirdSettingSrcSelectionIn4(tr("In 4"),"In 4",0,0,2,1,DATATYPE_ENUM);
     third->list_text << tr("Auto") << tr("RGB Full") << tr("RGB Limit") << tr("YCbCr422 Full") << tr("YCbCr422 Limit") << tr("YCbCr444 Full") << tr("YCbCr444 Limit");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
+    third->menuType = ENTER_CALL_OR_RESET;
 
     third = new MenuThirdSettingSrcSelectionAux(tr("Aux"),"Aux",0,0,2,1,DATATYPE_ENUM);
     third->list_text << tr("SD Card") << tr("USB Camera") << tr("NDI");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
+    third->menuType = ENTER_CALL_OR_RESET;
 
     monitor->third = list_third;
     return monitor;

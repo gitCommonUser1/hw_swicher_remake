@@ -41,5 +41,12 @@
 #include "srcname.h"
 #include "mvmeters.h"
 #include "mvmeter.h"
+#include "mvlayout.h"
+#include "marker.h"
+#include "micinputs.h"
+#include "micinput.h"
+#include "record.h"
+#include "srcselection.h"
+#include "srcselections.h"
 
 #endif // PROFILE_INCLUDE_H

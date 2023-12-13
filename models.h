@@ -101,12 +101,6 @@ public:
 
     //aux source
     void setAuxSource();
-    void setSrcSelection(int third);
-
-    void setMvLayout();
-    void setMarket();
-
-    void setMicInput(int third);
 
     int getOutFormatIndexForEnum(int index);
     int getOutFormat(int index);
@@ -318,14 +312,7 @@ signals:
     void playNext();
     void playPrevious();
 
-    void recordFile();
-    void srcSelection(int third);
     void auxSource();
-
-    void mvLayout();
-    void market();
-
-    void micInput(int third);
 
     void outFormat();
     void outSource();
@@ -353,6 +340,11 @@ signals:
     /**/
     void srcName(QString srcName,QString name);
     void mvMeter(QString src,bool enable);
+    void mvLayout(QString layout);
+    void marker(bool pvwMarker);
+    void micInput(QString src,QString input);
+    void recordFileName(QString fileName);
+    void srcSelection(QString src,QString selection);
     void buttonBrightness();
     /**/
 
@@ -547,6 +539,12 @@ public slots:
     /**/
     void setSrcName(QString srcName,QString name);
     void setMvMeter(QString src,bool enable);
+    void setMvLayout(QString layout);
+    void setMarker(bool pvwMarker);
+    void setPVWCtrl();//
+    void setMicInput(QString src,QString input);
+    void setRecordFileName(QString fileName);
+    void setSrcSelection(QString src,QString selection);
     /**/
 
 

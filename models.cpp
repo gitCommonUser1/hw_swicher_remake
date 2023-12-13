@@ -28,6 +28,7 @@
 #include <QTranslator>
 #include "ndi_license.h"
 #include "profile_include.h"
+#include "KeyImplement.h"
 
 extern Settings *settings;
 extern LeftMenuModel *leftMenuModel;
@@ -170,6 +171,11 @@ void Models::init_connect()
     //setting
     connect(this,&Models::srcName,this,&Models::setSrcName);
     connect(this,&Models::mvMeter,this,&Models::setMvMeter);
+    connect(this,&Models::mvLayout,this,&Models::setMvLayout);
+    connect(this,&Models::marker,this,&Models::setMarker);
+    connect(this,&Models::micInput,this,&Models::setMicInput);
+    connect(this,&Models::recordFileName,this,&Models::setRecordFileName);
+    connect(this,&Models::srcSelection,this,&Models::setSrcSelection);
 
     //button status
     connect(this,&Models::pgmIndex,this,&Models::setPgmIndex);
@@ -1231,7 +1237,7 @@ void Models::updateServerArray(int streamIndex)
 }
 
 void Models::setSrcName(QString srcName, QString name)
-{
+{   
     int index = SrcNames::srcNameStringToIndex(srcName);
     std::string s_text = name.toUtf8().toStdString();
     auto s_name = s_text.data();
@@ -1397,6 +1403,135 @@ void Models::setMvMeter(QString src, bool enable)
     aux?value += 16:value += 0;
     pgm?value += 32:value += 0;
     fpga_write(&g_fpga,AUDIO_MET_DISP,value);
+}
+
+void Models::setMvLayout(QString layout)
+{
+    int index = MvLayout::mvLayoutStringToIndex(layout);
+    if(profile->setting()->mvLayout()->layout() != index)
+    {
+        profile->setting()->mvLayout()->setLayout(index);
+        return ;
+    }
+    setPVWCtrl();
+}
+
+void Models::setMarker(bool pvwMarker)
+{
+    if(profile->setting()->marker()->pvwMarker() != pvwMarker)
+    {
+        profile->setting()->marker()->setPvwMarker(pvwMarker);
+        return ;
+    }
+
+    setPVWCtrl();
+}
+
+void Models::setPVWCtrl()
+{
+    int pvw_pos = profile->setting()->mvLayout()->layout();
+    bool market = profile->setting()->marker()->pvwMarker();
+
+    int value = 0;
+    pvw_pos == MvLayout::PGM_PVW?value += 2:value += 0;
+    market ?value += 1:value += 0;
+
+    fpga_write(&g_fpga,PVW_CTRL,value);
+}
+
+void Models::setMicInput(QString src, QString input)
+{
+    int index = MicInputs::srcNameToIndex(src);
+    int value = MicInputs::micInputStringToIndex(input);
+    if(index == MicInputs::MIC1)
+    {
+        if(profile->setting()->micInputs()->mic1()->input() != input)
+        {
+            profile->setting()->micInputs()->mic1()->setInput(value);
+            return ;
+        }
+        rv_switch_set_mic0(value);
+    }
+    else if(index == MicInputs::MIC2)
+    {
+        if(profile->setting()->micInputs()->mic2()->input() != input)
+        {
+            profile->setting()->micInputs()->mic2()->setInput(value);
+            return ;
+        }
+        rv_switch_set_mic1(value);
+    }
+}
+
+void Models::setRecordFileName(QString fileName)
+{
+    if(profile->setting()->record()->fileName() != fileName)
+    {
+        profile->setting()->record()->setFileName(fileName);
+        return ;
+    }
+
+}
+
+void Models::setSrcSelection(QString src, QString selection)
+{
+    qDebug() << src;
+    qDebug() << selection;
+    int index = SrcSelections::sourceStringToIndex(src);
+    int int_selection = SrcSelections::selectionStringToIndex(selection);
+    qDebug() << index;
+    qDebug() << int_selection;
+    switch (index) {
+    case SrcSelections::IN1:
+        if(profile->setting()->srcSelections()->in1()->selection() != int_selection)
+        {
+            profile->setting()->srcSelections()->in1()->setSelection(int_selection);
+            return ;
+        }
+        break;
+    case SrcSelections::IN2:
+        if(profile->setting()->srcSelections()->in2()->selection() != int_selection)
+        {
+            profile->setting()->srcSelections()->in2()->setSelection(int_selection);
+            return ;
+        }
+        break;
+    case SrcSelections::IN3:
+        if(profile->setting()->srcSelections()->in3()->selection() != int_selection)
+        {
+            profile->setting()->srcSelections()->in3()->setSelection(int_selection);
+            return ;
+        }
+        break;
+    case SrcSelections::IN4:
+        if(profile->setting()->srcSelections()->in4()->selection() != int_selection)
+        {
+            profile->setting()->srcSelections()->in4()->setSelection(int_selection);
+            return ;
+        }
+        break;
+    case SrcSelections::AUX:
+        if(profile->setting()->srcSelections()->aux()->selection() != int_selection)
+        {
+            profile->setting()->srcSelections()->aux()->setSelection(int_selection);
+            return ;
+        }
+        break;
+    }
+
+    if(index < SrcSelections::AUX)
+    {
+        qDebug() << "111";
+        set_hdmi_in_colorspace(index,(hdmi_in_colorspace_t)int_selection);
+    }
+    else if(index == SrcSelections::AUX)
+    {
+        if(int_selection == SrcSelections::NDI && get_ndi_license_state())
+        {
+            messageDialogControl->dialogShow(QObject::tr("No NDI license, please purchase license at www.osee-tech.com."),{QObject::tr("Cancel")},MessageDialogControl::MESSAGE_SD_FORMAT);
+            profile->setting()->srcSelections()->aux()->setSelection(SrcSelections::SD_CARD);
+        }
+    }
 }
 
 //void Models::setAudioFader(int value)
@@ -2222,49 +2357,19 @@ void Models::setAuxSource()
     }
 }
 
-void Models::setSrcSelection(int third)
-{
-    int value = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[third]->current.toInt();
-    if(third == SETTING_AUX_SOURCE_IN1)
-        settings->setReallySrcSelectionIn1(value);
-    else if(third == SETTING_AUX_SOURCE_IN2)
-        settings->setReallySrcSelectionIn2(value);
-    else if(third == SETTING_AUX_SOURCE_IN3)
-        settings->setReallySrcSelectionIn3(value);
-    else if(third == SETTING_AUX_SOURCE_IN4)
-        settings->setReallySrcSelectionIn4(value);
-    set_hdmi_in_colorspace(third,(hdmi_in_colorspace_t)value);
-}
-
-void Models::setMvLayout()
-{
-
-}
-
-void Models::setMarket()
-{
-    int pvw_pos = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_LAYOUT]->third[MV_LAYOUT_SWAP]->current.toInt();
-    int market = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MARKER]->third[MARKER_PVW]->current.toInt();
-
-    int value = 0;
-    pvw_pos == MV_LAYOUT_SWAP_PVW_PGM?value += 2:value += 0;
-    market == MENU_ON?value += 1:value += 0;
-
-    fpga_write(&g_fpga,PVW_CTRL,value);
-}
-
-void Models::setMicInput(int third)
-{
-    int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MIC_INPUT]->third[third]->current.toInt();
-    if(third == MENU_THIRD_MIC_INPUT_MIC_1_INPUT)
-    {
-        rv_switch_set_mic0(index);
-    }
-    else if(third == MENU_THIRD_MIC_INPUT_MIC_2_INPUT)
-    {
-        rv_switch_set_mic1(index);
-    }
-}
+//void Models::setSrcSelection(int third)
+//{
+//    int value = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[third]->current.toInt();
+//    if(third == SETTING_AUX_SOURCE_IN1)
+//        settings->setReallySrcSelectionIn1(value);
+//    else if(third == SETTING_AUX_SOURCE_IN2)
+//        settings->setReallySrcSelectionIn2(value);
+//    else if(third == SETTING_AUX_SOURCE_IN3)
+//        settings->setReallySrcSelectionIn3(value);
+//    else if(third == SETTING_AUX_SOURCE_IN4)
+//        settings->setReallySrcSelectionIn4(value);
+//    set_hdmi_in_colorspace(third,(hdmi_in_colorspace_t)value);
+//}
 
 int Models::getOutFormatIndexForEnum(int index)
 {

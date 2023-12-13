@@ -24,6 +24,10 @@ extern MessageDialogControl *messageDialogControl;
 extern Ndi *ndi;
 extern Profile *profile;
 
+
+//点击时记住最后一次值，如果没有确定修改返回则恢复
+static int lastValue = 0;
+
 class KeyAbstractClass{
 public:
     KeyAbstractClass(){
@@ -234,72 +238,10 @@ public:
         }
         if(settings->lastThirdUnfold() != -1)
         {
-            //如果aux source没有确定选中，恢复之前的选项
-            if(settings->lastFirstUnfold() == MENU_FIRST_SETTING && settings->lastSecondUnfold() == SETTING_AUX_SOURCE)
+            auto menuType = settings->listFirst()[settings->lastFirstUnfold()]->second[settings->lastSecondUnfold()]->third[settings->lastThirdUnfold()]->menuType;
+            if(menuType == ENTER_CALL_OR_RESET)
             {
-                int index = settings->lastThirdUnfold();
-                if(index == SETTING_AUX_SOURCE_SOURCE){
-                    if(settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_SOURCE]->current.toInt() != settings->reallyAuxSourceIndex())
-                        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_SOURCE,settings->reallyAuxSourceIndex());
-                }
-                if(index == SETTING_AUX_SOURCE_IN1){
-                    if(settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_IN1]->current.toInt() != settings->reallySrcSelectionIn1())
-                        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_IN1,settings->reallySrcSelectionIn1());
-                }
-                if(index == SETTING_AUX_SOURCE_IN2){
-                    if(settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_IN2]->current.toInt() != settings->reallySrcSelectionIn2())
-                        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_IN2,settings->reallySrcSelectionIn2());
-                }
-                if(index == SETTING_AUX_SOURCE_IN3){
-                    if(settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_IN3]->current.toInt() != settings->reallySrcSelectionIn3())
-                        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_IN3,settings->reallySrcSelectionIn3());
-                }
-                if(index == SETTING_AUX_SOURCE_IN4){
-                    if(settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_IN4]->current.toInt() != settings->reallySrcSelectionIn4())
-                        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_IN4,settings->reallySrcSelectionIn4());
-                }
-            }
-            //如果out source没有确定选中，恢复之前的选项
-            if(settings->lastFirstUnfold() == MENU_FIRST_SETTING && settings->lastSecondUnfold() == SETTING_OUT_SOURCE)
-            {
-                int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_SOURCE]->third[settings->lastThirdUnfold()]->current.toInt();
-                if(settings->lastThirdUnfold() == SETTING_OUT_SOURCE_HDMI1)
-                {
-                    if(index != settings->reallyOutSourceHDMI1())
-                        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_SOURCE,SETTING_OUT_SOURCE_HDMI1,settings->reallyOutSourceHDMI1());
-                }
-//                else if(settings->lastThirdUnfold() == SETTING_OUT_SOURCE_HDMI2)
-//                {
-//                    if(index != settings->reallyOutSourceHDMI2())
-//                        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_SOURCE,SETTING_OUT_SOURCE_HDMI2,settings->reallyOutSourceHDMI2());
-//                }
-                else if(settings->lastThirdUnfold() == SETTING_OUT_SOURCE_AUX)
-                {
-                    if(index != settings->reallyOutSourceUVC())
-                        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_SOURCE,SETTING_OUT_SOURCE_AUX,settings->reallyOutSourceUVC());
-                }
-            }
-            //如果out format没有确定选中，恢复之前的选项
-            if(settings->lastFirstUnfold() == MENU_FIRST_SETTING && settings->lastSecondUnfold() == SETTING_OUT_FORMAT && settings->lastThirdUnfold() == SETTING_OUT_FORMAT_FORMAT)
-            {
-                int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt();
-                    if(index != settings->reallyOutFormat())
-                        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_FORMAT,settings->reallyOutFormat());
-            }
-            //如果out format color space没有确定选中，恢复之前的选项
-            if(settings->lastFirstUnfold() == MENU_FIRST_SETTING && settings->lastSecondUnfold() == SETTING_OUT_FORMAT && settings->lastThirdUnfold() != SETTING_OUT_FORMAT_FORMAT)
-            {
-                int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[settings->lastThirdUnfold()]->current.toInt();
-                if(settings->lastThirdUnfold() == SETTING_OUT_FORMAT_OUTPUT1_COLOR_SPACE)
-                {
-                    if(index != settings->reallyOutput1ColorSpace())
-                        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_OUTPUT1_COLOR_SPACE,settings->reallyOutput1ColorSpace());
-                }
-                else if(settings->lastThirdUnfold() == SETTING_OUT_FORMAT_OUTPUT2_COLOR_SPACE)
-                {
-                    if(index != settings->reallyOutput2ColorSpace())
-                        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_OUTPUT2_COLOR_SPACE,settings->reallyOutput2ColorSpace());
-                }
+                settings->setMenuValue(settings->lastFirstUnfold(),settings->lastSecondUnfold(),settings->lastThirdUnfold(),lastValue);
             }
             models->cancelRightMenu();
             return ;
@@ -410,9 +352,11 @@ public:
                     break;
                 case ENTER_CALL_OR_RESET:
                     models->chooseRightMenu();
+                    lastValue = settings->listFirst()[first]->second[second]->third[settings->rightListViewCurrent()]->current.toInt();
                     break;
                 case ENTER_CALL:
                     models->chooseRightMenu();
+                    lastValue = settings->listFirst()[first]->second[second]->third[settings->rightListViewCurrent()]->current.toInt();
                     break;
                 case EVENT_CALL:
                     settings->listFirst()[first]->second[second]->third[settings->rightListViewCurrent()]->doEvent();

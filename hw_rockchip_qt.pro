@@ -54,10 +54,14 @@ SOURCES += \
     macroexecutethread.cpp \
     macromanager.cpp \
         main.cpp \
+    marker.cpp \
     messagedialogcontrol.cpp \
+    micinput.cpp \
+    micinputs.cpp \
     mixeffectblock.cpp \
     mixeffectblocks.cpp \
     mixparameters.cpp \
+    mvlayout.cpp \
     mvmeter.cpp \
     mvmeters.cpp \
     myprovider.cpp \
@@ -69,6 +73,7 @@ SOURCES += \
     pipparameters.cpp \
     preview.cpp \
     program.cpp \
+    record.cpp \
     regexp.cpp \
     resizeparameters.cpp \
     rightmenumodel.cpp \
@@ -100,6 +105,8 @@ SOURCES += \
     src/w25qxx.c \
     srcname.cpp \
     srcnames.cpp \
+    srcselection.cpp \
+    srcselections.cpp \
     still.cpp \
     stillgenerator.cpp \
     stills.cpp \
@@ -247,11 +254,15 @@ HEADERS += \
     macro.h \
     macroexecutethread.h \
     macromanager.h \
+    marker.h \
     messagedialogcontrol.h \
+    micinput.h \
+    micinputs.h \
     mixeffectblock.h \
     mixeffectblocks.h \
     mixparameters.h \
     mp4.h \
+    mvlayout.h \
     mvmeter.h \
     mvmeters.h \
     myprovider.h \
@@ -264,6 +275,7 @@ HEADERS += \
     preview.h \
     profile_include.h \
     program.h \
+    record.h \
     regexp.h \
     resizeparameters.h \
     rightmenumodel.h \
@@ -274,6 +286,8 @@ HEADERS += \
     models.h \
     srcname.h \
     srcnames.h \
+    srcselection.h \
+    srcselections.h \
     still.h \
     stillgenerator.h \
     stills.h \

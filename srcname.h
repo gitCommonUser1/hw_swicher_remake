@@ -2,6 +2,7 @@
 #define SRCNAME_H
 
 #include <QObject>
+#include "regexp.h"
 
 class SrcName : public QObject
 {
@@ -24,6 +25,9 @@ public:
 public slots:
     void setName(QString name)
     {
+        if(!RegExp::exactMatch(REG_SRC_NAME,name))
+            return ;
+
         if (m_name == name)
             return;
 
