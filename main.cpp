@@ -254,6 +254,7 @@ int main(int argc, char *argv[])
         system("rm " MACRO_PATH "*");
         system("cp " MACRO_DEFAULT_FILE_PATH " " MACRO_PATH);
         system("rm " FACTORY_RESET_FILE_PATH);
+        system("rm " DATA_PATH "/*.xml");
         system("sync");
     }
 

@@ -1526,9 +1526,11 @@ MenuSecond *Settings::new_Setting_Reset()
 
     third = new MenuThirdSettingFactoryReset(tr("Factory Reset"),"Factory Reset","","","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdSettingSDFormat(tr("SD Format"),"SD Format","","","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     reset->third = list_third;
     return reset;

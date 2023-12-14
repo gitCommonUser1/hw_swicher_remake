@@ -2265,6 +2265,9 @@ public:
     void doWork(QVariant value){
 
     }
+    void doEvent() override{
+        messageDialogControl->dialogShow(QObject::tr("This will restart the device."),{QObject::tr("Cancel"),QObject::tr("Confirm")},MessageDialogControl::MESSAGE_FACTORY_RESET);
+    }
 };
 
 class MenuThirdSettingSDFormat:public MenuThird{
@@ -2272,6 +2275,9 @@ public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 
+    }
+    void doEvent() override{
+        messageDialogControl->dialogShow(QObject::tr("Your SD card will be formatted."),{QObject::tr("Cancel"),QObject::tr("Confirm")},MessageDialogControl::MESSAGE_SD_FORMAT);
     }
 };
 
