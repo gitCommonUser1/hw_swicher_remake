@@ -319,8 +319,8 @@ public:
     StreamData streamData;
     std::map<QString,QList<STREAM_PROFILE>> recordData;
     QString getStreamUrlIndex(int index);
-    STREAM_PROFILE getStreamBitrateIndex(int index);
-    STREAM_PROFILE getRecordBitrate();
+    STREAM_PROFILE getStreamBitrateIndex(QString quality);
+    STREAM_PROFILE getRecordBitrate(QString quality);
     QString platformChangedText(int index,int changeNumber);
     QString serverChangedText(int index,int changeNumber);
 

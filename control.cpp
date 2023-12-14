@@ -386,8 +386,8 @@ void Control::init_connect()
                 }
                 else
                 {
-                    int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PROTOCOL]->current.toInt();
-                    if(index == NETWORK_PROTOCOL_DHCP)
+                    bool dhcp = profile->setting()->network()->protocol();
+                    if(dhcp)
                     {
                         settings->setMenuDHCPNetwork("","","","","");
                     }
@@ -397,8 +397,8 @@ void Control::init_connect()
     connect(&qthread_route,&QThreadRoute::emit_netaddr_change,this,[=](bool is_new, QString netif, QString ipaddr, int prefixlen){
         if (netif == ETHERNET_NETIF)
         {
-            int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PROTOCOL]->current.toInt();
-            if(index == NETWORK_PROTOCOL_DHCP)
+            bool dhcp = profile->setting()->network()->protocol();
+            if(dhcp)
             {
                 if (is_new)
                 {
@@ -426,8 +426,8 @@ void Control::init_connect()
     connect(&qthread_route,&QThreadRoute::emit_netroute_change,this,[=](bool is_add, QString netif, QString gateway){
         if (netif == ETHERNET_NETIF)
         {
-            int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PROTOCOL]->current.toInt();
-            if(index == NETWORK_PROTOCOL_DHCP)
+            bool dhcp = profile->setting()->network()->protocol();
+            if(dhcp)
             {
                 if (is_add)
                 {
@@ -443,8 +443,8 @@ void Control::init_connect()
     connect(&dhcp_event,&DhcpEvent::emit_dhcp_change,this,[=](bool is_add, QString netif){
         if (netif == ETHERNET_NETIF)
         {
-            int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PROTOCOL]->current.toInt();
-            if(index == NETWORK_PROTOCOL_DHCP)
+            bool dhcp = profile->setting()->network()->protocol();
+            if(dhcp)
             {
                 char c_dns1[16], c_dns2[16];
                 get_dns(netif.toStdString().data(), c_dns1, 16, c_dns2, 16);
@@ -1288,7 +1288,46 @@ void Control::connect_profile()
         settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_SOURCE,SETTING_OUT_SOURCE_AUX,source);
         models->macroInvoke(&Models::outSource,OutSources::srcIndexToString(OutSources::UVC),OutSources::sourceIndexToString(source));
     });
-
+    connect(profile->setting()->record(),&Record::qualityChanged,this,[=](int quality){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_QUALITY,QUALITY_RECORDING,quality);
+        models->macroInvoke(&Models::quality,Streams::srcIndexToString(Streams::RECORDING),Streams::qualityIndexToString(quality));
+    });
+    connect(profile->streams(),&Streams::qualityChanged,this,[=](int quality){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_QUALITY,QUALITY_STREAMING,quality);
+        models->macroInvoke(&Models::quality,Streams::srcIndexToString(Streams::STREAMING),Streams::qualityIndexToString(quality));
+    });
+    connect(profile->setting()->network(),&Network::protocolChanged,this,[=](bool protocol){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_NETWORK,NETWORK_PROTOCOL,protocol);
+        models->macroInvoke(&Models::protocol,protocol);
+    });
+    connect(profile->setting()->network()->iPAddress(),&IPAddress::valueChanged,this,[=](QString value){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_NETWORK,NETWORK_IP_ADDRESS,value);
+        models->macroInvoke(&Models::iPAddress,value);
+    });
+    connect(profile->setting()->network()->subnetMask(),&SubnetMask::valueChanged,this,[=](QString value){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_NETWORK,NETWORK_SUBNET_MASK,value);
+        models->macroInvoke(&Models::subnetMask,value);
+    });
+    connect(profile->setting()->network()->gateway(),&Gateway::valueChanged,this,[=](QString value){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_NETWORK,NETWORK_GATEWAY,value);
+        models->macroInvoke(&Models::gateway,value);
+    });
+    connect(profile->setting()->network()->primaryDNS(),&PrimaryDNS::valueChanged,this,[=](QString value){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_NETWORK,NETWORK_PRIMARY_DNS,value);
+        models->macroInvoke(&Models::primaryDNS,value);
+    });
+    connect(profile->setting()->network()->secondaryDNS(),&SecondaryDNS::valueChanged,this,[=](QString value){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_NETWORK,NETWORK_SECONDAY_DNS,value);
+        models->macroInvoke(&Models::seconddaryDNS,value);
+    });
+    connect(profile->setting()->panel(),&Panel::ButtonBrightnessChanged,this,[=](int ButtonBrightness){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_PANEL,MENU_THIRD_PANEL_BUTTON_BRIGHTNESS,ButtonBrightness);
+        models->macroInvoke(&Models::buttonBrightness,ButtonBrightness);
+    });
+    connect(profile->setting()->language(),&Language::languageChanged,this,[=](int language){
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_LANGUAGE,SETTING_LANGUAGE_LANGUAGE,language);
+        models->language(language);
+    });
 }
 
 void Control::slotKnobChanged(const int knob, int value)

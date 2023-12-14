@@ -1456,24 +1456,29 @@ MenuSecond *Settings::new_Setting_Network()
     version->ss_name = ("network");
 
     third = new MenuThirdSettingNetworkProtocol(tr("Protocol"),"Protocol",0,0,2,1,DATATYPE_ENUM);
-    third->list_text << tr("DHCP") << tr("Static IP") ;
+    third->list_text << tr("Static IP") << tr("DHCP");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
 
     third = new MenuThirdSettingNetworkIPAddress(tr("IP Address"),"IP Address","","","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdSettingNetworkSubnetMask(tr("Subnet Mask"),"Subnet Mask","","","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdSettingNetworkGateway(tr("Gateway"),"Gateway","","","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdSettingNetworkPrimaryDNS(tr("Primary DNS"),"Primary DNS","","","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     third = new MenuThirdSettingNetworkSecondaryDNS(tr("Secondary DNS"),"Secondary DNS","","","","",DATATYPE_TEXT);
     list_third.append(third);
+    third->menuType = EVENT_CALL;
 
     version->third = list_third;
     return version;
@@ -1548,16 +1553,16 @@ QString Settings::getStreamUrlIndex(int index)
     return url;
 }
 
-STREAM_PROFILE Settings::getStreamBitrateIndex(int index)
+STREAM_PROFILE Settings::getStreamBitrateIndex(QString quality)
 {
-    QString platform,quality,currentResolutionStr,currentFpsStr;
-    int currentResolution = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt();
-    if(currentResolution >= OUT_FORMAT_1080P24 && currentResolution <= OUT_FORMAT_1080P30)
+    QString platform,currentResolutionStr,currentFpsStr;
+    int currentResolution = profile->setting()->outFormat()->format()->outFormat();
+    if(currentResolution >= OutFormat::OUT_1080p24 && currentResolution <= OutFormat::OUT_1080p30)
     {
         currentResolutionStr = "1080p";
         currentFpsStr = "30";
     }
-    else if(currentResolution >= OUT_FORMAT_1080P50 && currentResolution <= OUT_FORMAT_1080P60)
+    else if(currentResolution >= OutFormat::OUT_1080p50 && currentResolution <= OutFormat::OUT_1080p60)
     {
         currentResolutionStr = "1080p";
         currentFpsStr = "60";
@@ -1567,8 +1572,7 @@ STREAM_PROFILE Settings::getStreamBitrateIndex(int index)
         currentResolutionStr = "1080p";
         currentFpsStr = "60";
     }
-    platform = listFirst()[MENU_FIRST_STREAM]->second[index]->third[MENU_THIRD_STREAM_PLATFORM]->getText();
-    quality = listFirst()[MENU_FIRST_SETTING]->second[SETTING_QUALITY]->third[QUALITY_STREAMING]->getText();
+    platform = profile->streams()->stream1()->platfrom();
     auto service = streamData[platform];
     auto list = service.name_config[quality];
     for(int i = 0;i < list.size();++i)
@@ -1580,16 +1584,16 @@ STREAM_PROFILE Settings::getStreamBitrateIndex(int index)
     }
 }
 
-STREAM_PROFILE Settings::getRecordBitrate()
+STREAM_PROFILE Settings::getRecordBitrate(QString quality)
 {
-    QString quality,currentResolutionStr,currentFpsStr;
-    int currentResolution = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt();
-    if(currentResolution >= OUT_FORMAT_1080P24 && currentResolution <= OUT_FORMAT_1080P30)
+    QString currentResolutionStr,currentFpsStr;
+    int currentResolution = profile->setting()->outFormat()->format()->outFormat();
+    if(currentResolution >= OutFormat::OUT_1080p24 && currentResolution <= OutFormat::OUT_1080p30)
     {
         currentResolutionStr = "1080p";
         currentFpsStr = "30";
     }
-    else if(currentResolution >= OUT_FORMAT_1080P50 && currentResolution <= OUT_FORMAT_1080P60)
+    else if(currentResolution >= OutFormat::OUT_1080p50 && currentResolution <= OutFormat::OUT_1080p60)
     {
         currentResolutionStr = "1080p";
         currentFpsStr = "60";

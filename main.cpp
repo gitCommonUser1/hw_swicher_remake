@@ -274,6 +274,10 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
 
+
+    profile = new Profile;
+
+
     messageDialogControl = new MessageDialogControl;
     engine.rootContext()->setContextProperty("messageDialogControl",messageDialogControl);
     qmlRegisterType<MessageDialogControl>("MessageDialogControl", 1, 0, "MessageDialogControl");
@@ -465,19 +469,12 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("ndi",ndi);
     engine.rootContext()->setContextProperty("ndiListModelItem",ndi->ndiListModelItem());
 
-
-    profile = new Profile;
-
     //控制
     Control control;
     engine.rootContext()->setContextProperty("control",&control);
 
     profile->emitSignals();
     init_settings_is_ok = true;
-
-
-    //调试用，正式版本删除
-    models->changeLanguage(0);
 
     //init color
     //这里必须调用一次，初始化后color应该是绿色，否则颜色不对

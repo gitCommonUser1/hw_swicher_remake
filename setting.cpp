@@ -8,6 +8,9 @@
 #include "srcselections.h"
 #include "outformat.h"
 #include "outsources.h"
+#include "panel.h"
+#include "language.h"
+#include "network.h"
 
 Setting::Setting(QObject *parent) : QObject(parent)
 {
@@ -37,4 +40,13 @@ Setting::Setting(QObject *parent) : QObject(parent)
 
     m_outSources = new OutSources(this);
     m_outSources->setObjectName("outSources");
+
+    m_panel = new Panel(this);
+    m_panel->setObjectName("panel");
+
+    m_language = new Language(this);
+    m_language->setObjectName("language");
+
+    m_network = new Network(this);
+    m_network->setObjectName("network");
 }

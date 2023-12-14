@@ -53,5 +53,13 @@
 #include "outputcolorspace.h"
 #include "outsources.h"
 #include "outsource.h"
+#include "panel.h"
+#include "language.h"
+#include "network.h"
+#include "ipaddress.h"
+#include "subnetmask.h"
+#include "gateway.h"
+#include "primarydns.h"
+#include "secondarydns.h"
 
 #endif // PROFILE_INCLUDE_H

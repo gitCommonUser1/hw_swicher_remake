@@ -179,6 +179,15 @@ void Models::init_connect()
     connect(this,&Models::outFormat,this,&Models::setOutFormat);
     connect(this,&Models::outputColorSpace,this,&Models::setOutputColorSpace);
     connect(this,&Models::outSource,this,&Models::setOutSource);
+    connect(this,&Models::quality,this,&Models::setQuality);
+    connect(this,&Models::buttonBrightness,this,&Models::setButtonBrightness);
+    connect(this,&Models::protocol,this,&Models::setProtocol);
+    connect(this,&Models::iPAddress,this,&Models::setIPAddress);
+    connect(this,&Models::subnetMask,this,&Models::setSubnetMask);
+    connect(this,&Models::gateway,this,&Models::setGateway);
+    connect(this,&Models::primaryDNS,this,&Models::setPrimaryDNS);
+    connect(this,&Models::seconddaryDNS,this,&Models::setSeconddaryDNS);
+    connect(this,&Models::language,this,&Models::setLanguage);
 
     //button status
     connect(this,&Models::pgmIndex,this,&Models::setPgmIndex);
@@ -189,342 +198,6 @@ void Models::init_connect()
     connect(this,&Models::keyOnAir,this,&Models::setKeyOnAir);
 
 
-}
-
-
-//改动菜单结构，语言切换这里需要修改
-void Models::changeLanguage(int language_index)
-{
-    int index = 0;
-
-    if(language_index = -1)
-        index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_LANGUAGE]->third[SETTING_LANGUAGE_LANGUAGE]->current.toInt();
-    else
-        index = language_index;
-
-    static QTranslator * translator = nullptr;
-    if(!translator){
-        translator = new QTranslator();
-    }
-    qApp->removeTranslator(translator);
-
-
-    QString language;
-    switch (index) {
-    case LANGUAGE_ENGLISH:
-        language = "./english.qm";
-        break;
-    case LANGUAGE_CHINESE:
-        language = "./chinese.qm";
-        break;
-    default:
-        language = "./english.qm";
-        break;
-    }
-
-    qDebug() << translator->load(language);
-    qDebug() << qApp->installTranslator(translator);
-
-    //first
-    {
-        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->name] = tr("Color Back");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->name] = tr("Super Source");
-        languages[settings->listFirst()[MENU_FIRST_KEY_TYPE]->name] = tr("Key Type");
-        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->name] = tr("Luma Key");
-        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->name] = tr("Chroma Key");
-        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->name] = tr("Key Pattern");
-        languages[settings->listFirst()[MENU_FIRST_PIP]->name] = tr("PIP");
-        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->name] = tr("Transition");
-        languages[settings->listFirst()[MENU_FIRST_DSK]->name] = tr("DSK");
-        languages[settings->listFirst()[MENU_FIRST_FTB]->name]= tr("FTB");
-        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->name] = tr("Audio Mixer");
-        languages[settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->name] = tr("Still Generator");
-        languages[settings->listFirst()[MENU_FIRST_MACRO]->name] = tr("Macro");
-        languages[settings->listFirst()[MENU_FIRST_STREAM]->name] = tr("Stream");
-        languages[settings->listFirst()[MENU_FIRST_PLAYBACK]->name] = tr("Playback");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->name] = tr("Setting");
-    }
-
-    //second
-    {
-        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR1]->name] = tr("color 1");
-        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR2]->name] = tr("color 2");
-
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_ENABLE]->name] = tr("enable");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_SOURCE]->name] = tr("source");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_CONTROL]->name] = tr("control");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK1]->name] = tr("mask 1");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK2]->name] = tr("mask 2");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER1]->name] = tr("border 1");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->name] = tr("border 2");
-
-        languages[settings->listFirst()[MENU_FIRST_KEY_TYPE]->second[KEY_TYPE_TYPE]->name] = tr("type");
-
-        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_SOURCE]->name] = tr("source");
-        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_MASK]->name] = tr("mask");
-        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_CONTROL]->name] = tr("control");
-        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_RESIZE]->name] = tr("resize");
-
-        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_SOURCE]->name] = tr("source");
-        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_MASK]->name] = tr("mask");
-        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_RESIZE]->name] = tr("resize");
-        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->name] = tr("control");
-
-        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_SOURCE]->name] = tr("source");
-        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->name] = tr("wipe");
-        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_MASK]->name] = tr("mask");
-        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_RESIZE]->name] = tr("resize");
-
-        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_SOURCE]->name] = tr("source");
-        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_SIZE_POSITION]->name] = tr("size/position");
-        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_MASK]->name] = tr("mask");
-        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_BOARD]->name] = tr("border");
-        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_COLOR]->name] = tr("color");
-
-        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_MIX]->name] = tr("mix");
-        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_DIP]->name] = tr("dip");
-        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->name] = tr("wipe");
-
-        languages[settings->listFirst()[MENU_FIRST_DSK]->second[DSK_SOURCE]->name] = tr("source");
-        languages[settings->listFirst()[MENU_FIRST_DSK]->second[DSK_MASK]->name] = tr("mask");
-        languages[settings->listFirst()[MENU_FIRST_DSK]->second[DSK_CONTROL]->name] = tr("control");
-        languages[settings->listFirst()[MENU_FIRST_DSK]->second[DSK_RATE]->name] = tr("rate");
-
-        languages[settings->listFirst()[MENU_FIRST_FTB]->second[MENU_SECOND_FTB_RATE]->name] = tr("rate");
-        languages[settings->listFirst()[MENU_FIRST_FTB]->second[MENU_SECOND_FTB_AUDIO]->name] = tr("audio");
-
-        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC1]->name] = tr("mic 1");
-        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC2]->name] = tr("mic 2");
-        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN1]->name] = tr("in 1");
-        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN2]->name] = tr("in 2");
-        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN3]->name] = tr("in 3");
-        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN4]->name] = tr("in 4");
-        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_AUX]->name] = tr("aux");
-        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_PGM]->name] = tr("pgm");
-        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MONITOR]->name] = tr("monitor");
-
-        languages[settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_SELECTION]->name] = tr("still selection");
-        languages[settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_UPLOAD]->name] = tr("still upload");
-
-        languages[settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->name] = tr("macro");
-
-        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->name] = tr("stream 1");
-        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->name] = tr("stream 2");
-        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->name] = tr("stream 3");
-
-        languages[settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->name] = tr("playback");
-
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_VERSION]->name] = tr("version");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->name] = tr("src name");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_METER]->name] = tr("mv meter");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_LAYOUT]->name] = tr("mv layout");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MARKER]->name] = tr("marker");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MIC_INPUT]->name] = tr("mic input");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_RECORD_FILE]->name] = tr("record file");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->name] = tr("src selection");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->name] = tr("out format");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_SOURCE]->name] = tr("out source");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_QUALITY]->name] = tr("quality");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->name] = tr("network");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_PANEL]->name] = tr("panel");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_LANGUAGE]->name] = tr("language");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_RESET]->name] = tr("reset");
-    }
-
-    //third
-    {
-        // key
-        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR1]->third[COLORBACK1_HUE]->name] = tr("Hue");
-        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR1]->third[COLORBACK1_SATURATION]->name] = tr("Saturation");
-        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR1]->third[COLORBACK1_BRIGHTNESS]->name] = tr("Brightness");
-
-        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR2]->third[COLORBACK2_HUE]->name] = tr("Hue");
-        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR2]->third[COLORBACK2_SATURATION]->name] = tr("Saturation");
-        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR2]->third[COLORBACK2_BRIGHTNESS]->name] = tr("Brightness");
-
-
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_ENABLE]->third[SUPER_ENABLE]->name] = tr("Enable");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_SOURCE]->third[SUPER_SOURCE_SOURCE_SOURCE1]->name] = tr("Source 1");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_SOURCE]->third[SUPER_SOURCE_SOURCE_SOURCE2]->name] = tr("Source 2");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_SOURCE]->third[SUPER_SOURCE_SOURCE_BACKGROUND]->name] = tr("Background");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_CONTROL]->third[SUPER_CONTROL_STYLE]->name] = tr("Style");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_CONTROL]->third[SUPER_CONTROL_Y_POSITION]->name] = tr("Y Position");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK1]->third[SUPER_MASK1_ENABLE]->name] = tr("Enable");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK1]->third[SUPER_MASK1_H_START]->name] = tr("H Start");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK1]->third[SUPER_MASK1_V_START]->name] = tr("V Start");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK1]->third[SUPER_MASK1_H_END]->name] = tr("H End");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK1]->third[SUPER_MASK1_V_END]->name] = tr("V End");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK2]->third[SUPER_MASK2_ENABLE]->name] = tr("Enable");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK2]->third[SUPER_MASK2_H_START]->name] = tr("H Start");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK2]->third[SUPER_MASK2_V_START]->name] = tr("V Start");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK2]->third[SUPER_MASK2_H_END]->name] = tr("H End");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK2]->third[SUPER_MASK2_V_END]->name] = tr("V End");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER1]->third[SUPER_BORDER1_WIDTH]->name] = tr("Border");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->third[SUPER_BORDER2_WIDTH]->name] = tr("Border");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->third[SUPER_BORDER1_HUE]->name] = tr("Hue");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->third[SUPER_BORDER1_SATURATION]->name] = tr("Saturation");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->third[SUPER_BORDER1_BRIGHTNESS]->name] = tr("Brightness");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->third[SUPER_BORDER2_HUE]->name] = tr("Hue");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->third[SUPER_BORDER2_SATURATION]->name] = tr("Saturation");
-        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->third[SUPER_BORDER2_BRIGHTNESS]->name] = tr("Brightness");
-
-        languages[settings->listFirst()[MENU_FIRST_KEY_TYPE]->second[KEY_TYPE_TYPE]->third[TYPE_TYPE]->name] = tr("Type");
-
-        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_SOURCE]->third[LUMA_KEY_SOURCE_FILL]->name] = tr("Fill");
-        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_SOURCE]->third[LUMA_KEY_SOURCE_KEY]->name] = tr("Key");
-        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_CONTROL]->third[LUMA_KEY_CONTROL_SHAPED_KEY]->name] = tr("Shaped Key");
-        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_CONTROL]->third[LUMA_KEY_CONTROL_CLIP]->name] = tr("Clip");
-        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_CONTROL]->third[LUMA_KEY_CONTROL_GAIN]->name] = tr("Gain");
-        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_CONTROL]->third[LUMA_KEY_CONTROL_INVERT]->name] = tr("Invert");
-        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_RESIZE]->third[LUMA_KEY_RESIZE_RESIZE]->name] = tr("Resize");
-        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_RESIZE]->third[LUMA_KEY_RESIZE_SIZE]->name] = tr("Size");
-        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_RESIZE]->third[LUMA_KEY_RESIZE_X_POSITION]->name] = tr("X Position");
-        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_RESIZE]->third[LUMA_KEY_RESIZE_Y_POSITION]->name] = tr("Y Position");
-
-        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_SMP_X_POSITION]->name] = tr("SMP X Position");
-        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_SMP_Y_POSITION]->name] = tr("SMP Y Position");
-        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_SMP_ENABLE]->name] = tr("Sample");
-        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_Foreground]->name] = tr("Foreground");
-        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_Background]->name] = tr("Background");
-        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_KeyEdge]->name] = tr("KeyEdge");
-
-        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_PATTERN]->name] = tr("Pattern");
-        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_SYMMERTRY]->name] = tr("Symmetry");
-        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_SOFTNESS]->name] = tr("Softness");
-
-        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_SOURCE]->third[PIP_SOURCE_FILL]->name] = tr("PIP");
-        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_SIZE_POSITION]->third[PIP_SIZE_SIZE]->name] = tr("PIP Size");
-        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_BOARD]->third[PIP_BORDER_WIDTH]->name] = tr("Width");
-
-        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_MIX]->third[FTB_RATE_RATE]->name] = tr("Rate");
-        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_DIP]->third[TRANSITION_DIP_SOURCE]->name] = tr("Source");
-        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_DIRECTION]->name] = tr("Direction");
-        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_FILL_SOURCE]->name] = tr("Fill Source");
-
-        languages[settings->listFirst()[MENU_FIRST_FTB]->second[MENU_SECOND_FTB_AUDIO]->third[FTB_AUDIO_AFV]->name] = tr("AFV");
-
-        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC1]->third[MIC1_FADER]->name] = tr("Fader");
-        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC1]->third[MIC1_BALANCE]->name] = tr("Balance");
-        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC1]->third[MIC1_INPUT]->name] = tr("Input");
-        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC1]->third[MIC1_DELAY]->name] = tr("Delay");
-        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MONITOR]->third[MONITOR_LEVEL]->name] = tr("Level");
-
-        languages[settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_SELECTION]->third[STILL_SELECTION_STILL1]->name] = tr("Still 1");
-        languages[settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_SELECTION]->third[STILL_SELECTION_STILL2]->name] = tr("Still 2");
-        languages[settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_UPLOAD]->third[STILL_UPLOAD_LOCATION]->name] = tr("Location");
-        languages[settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_UPLOAD]->third[STILL_UPLOAD_LOAD_PICTURE]->name] = tr("Load Picture");
-
-        languages[settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_SLEEP]->name] = tr("Sleep");
-        languages[settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_IMPORT]->name] = tr("Import");
-        languages[settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_EXPORT]->name] = tr("Export");
-
-        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_PLATFORM]->name] = tr("Platform");
-        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_SERVER]->name] = tr("Server");
-        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_KEY]->name] = tr("Key / RTMP URL");
-        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_UPLOAD_KEY]->name] = tr("Upload Key / RTMP URL");
-        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_OUTPUT]->name] = tr("Output");
-
-        languages[settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_MODE]->name] = tr("Playback Mode");
-
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_VERSION]->third[VERSION_VERSION]->name] = tr("Version");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_VERSION]->third[VERSION_BUILD_INFO]->name] = tr("Build Info");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_VERSION]->third[VERSION_DEVICE_ID]->name] = tr("Device Id");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_LAYOUT]->third[MV_LAYOUT_SWAP]->name] = tr("PGM/PVW SWAP");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MIC_INPUT]->third[MENU_THIRD_MIC_INPUT_MIC_1_INPUT]->name] = tr("Mic 1 Input");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MIC_INPUT]->third[MENU_THIRD_MIC_INPUT_MIC_2_INPUT]->name] = tr("Mic 2 Input");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_RECORD_FILE]->third[SETTING_RECORD_FILE_NAME]->name] = tr("File Name");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->name] = tr("Format");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_OUTPUT1_COLOR_SPACE]->name] = tr("Output 1 Color Space");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_OUTPUT2_COLOR_SPACE]->name] = tr("Output 2 Color Space");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_QUALITY]->third[QUALITY_RECORDING]->name] = tr("Recording");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_QUALITY]->third[QUALITY_STREAMING]->name] = tr("Streaming");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PROTOCOL]->name] = tr("Protocol");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_IP_ADDRESS]->name] = tr("IP Address");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_SUBNET_MASK]->name] = tr("Subnet Mask");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_GATEWAY]->name] = tr("Gateway");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PRIMARY_DNS]->name] = tr("Primary DNS");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_SECONDAY_DNS]->name] = tr("Secondary DNS");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_PANEL]->third[MENU_THIRD_PANEL_BUTTON_BRIGHTNESS]->name] = tr("Button Brightness");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_LANGUAGE]->third[SETTING_LANGUAGE_LANGUAGE]->name] = tr("Language");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_RESET]->third[SETTING_RESET_FACTORY]->name] = tr("Factory Reset");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_RESET]->third[SETTING_RESET_SD_FORMAT]->name] = tr("SD Format");
-
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_PGM]->name] = tr("PGM");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_PVW]->name] = tr("PVW");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_IN1]->name] = tr("In 1");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_IN2]->name] = tr("In 2");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_IN3]->name] = tr("In 3");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_IN4]->name] = tr("In 4");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_AUX]->name] = tr("Aux");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_STILL1]->name] = tr("Still 1");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_STILL2]->name] = tr("Still 2");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_SOURCE]->third[SETTING_OUT_SOURCE_HDMI1]->name] = tr("HDMI 1");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_SOURCE]->third[SETTING_OUT_SOURCE_HDMI2]->name] = tr("HDMI 2");
-        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_SOURCE]->third[SETTING_OUT_SOURCE_AUX]->name] = tr("Streaming / Recording / UVC");
-
-
-
-
-        //value
-        languages["Off"] = tr("Off");
-        languages["On"] = tr("On");
-        languages["Still 1 Key"] = tr("Still 1 Key");
-        languages["Still 2 Key"] = tr("Still 2 Key");
-        languages["Color Bar"] = tr("Color Bar");
-        languages["Color 1"] = tr("Color 1");
-        languages["Color 2"] = tr("Color 2");
-        languages["Black"] = tr("Black");
-        languages["Zoom in"] = tr("Zoom in");
-        languages["Crop-Zoom in"] = tr("Crop-Zoom in");
-        languages["Zoom in-Crop"] = tr("Zoom in-Crop");
-        languages["Crop"] = tr("Crop");
-        languages["0.25"] = tr("0.25");
-        languages["0.33"] = tr("0.33");
-        languages["0.50"] = tr("0.50");
-        languages["Disable"] = tr("Disable");
-        languages["Enable"] = tr("Enable");
-        languages["Normal"] = tr("Normal");
-        languages["Inverse"] = tr("Inverse");
-        languages["Mic 1"] = tr("Mic 1");
-        languages["Mic 2"] = tr("Mic 2");
-        languages["Play Once"] = tr("Play Once");
-        languages["Repeat"] = tr("Repeat");
-        languages["Sequential"] = tr("Sequential");
-        languages["PGM|PVW"] = tr("PGM|PVW");
-        languages["PVW|PGM"] = tr("PVW|PGM");
-        languages["Mic+power"] = tr("Mic+power");
-        languages["Mic"] = tr("Mic");
-        languages["Line"] = tr("Line");
-        languages["HDMI"] = tr("HDMI");
-        languages["SDI"] = tr("SDI");
-        languages["SD Card"] = tr("SD Card");
-        languages["USB Camera"] = tr("USB Camera");
-        languages["NDI"] = tr("NDI");
-        languages["1080p24"] = tr("1080p24");
-        languages["1080p25"] = tr("1080p25");
-        languages["1080p30"] = tr("1080p30");
-        languages["1080p50"] = tr("1080p50");
-        languages["1080p60"] = tr("1080p60");
-        languages["Auto"] = tr("Auto");
-        languages["RGB Full"] = tr("RGB Full");
-        languages["RGB Limit"] = tr("RGB Limit");
-        languages["YCbCr422 Full"] = tr("YCbCr422 Full");
-        languages["YCbCr422 Limit"] = tr("YCbCr422 Limit");
-        languages["YCbCr444 Full"] = tr("YCbCr444 Full");
-        languages["YCbCr444 Limit"] = tr("YCbCr444 Limit");
-        languages["Multiview"] = tr("Multiview");
-        languages["Low"] = tr("Low");
-        languages["Medium"] = tr("Medium");
-        languages["High"] = tr("High");
-        languages["DHCP"] = tr("DHCP");
-        languages["Static IP"] = tr("Static IP");
-        languages["English"] = tr("English");
-        languages[("简体中文")] = tr("简体中文");
-    }
-
-    leftMenuModel->init();
-
-    m_engine->retranslate();
 }
 
 #define KEYPRESSSLEEP 50000
@@ -1618,6 +1291,510 @@ void Models::setOutSource(QString src, QString source)
     fpga_write(&g_fpga,OUT_SEL,*(uint16_t*)&ss);
 }
 
+void Models::setQuality(QString src, QString quality)
+{
+    int srcIndex = Streams::srcStringToIndex(src);
+    int qualityIndex = Streams::qualityStringToIndex(quality);
+    STREAM_PROFILE profiles;
+    if(srcIndex == Streams::RECORDING)
+    {
+        if(profile->setting()->record()->quality() != qualityIndex)
+        {
+            profile->setting()->record()->setQuality(qualityIndex);
+            return  ;
+        }
+        profiles = settings->getRecordBitrate(quality);
+        rv_switch_set_record_bitrate(profiles.bitrate);
+        int second = sd_remaintime_calc();
+        media_sd->checkGbFree(second);
+    }
+    else if(srcIndex == Streams::STREAMING)
+    {
+        if(profile->streams()->quality() != qualityIndex)
+        {
+            profile->streams()->setQuality(qualityIndex);
+            return  ;
+        }
+
+        profiles = settings->getStreamBitrateIndex(quality);
+        rv_switch_set_push_bitrate(profiles.bitrate);
+    }
+    rv_switch_set_aac_bitrate(profiles.audio_bitrate);
+}
+
+void Models::setProtocol(bool dhcp)
+{
+    if(profile->setting()->network()->protocol() != dhcp)
+    {
+        profile->setting()->network()->setProtocol(dhcp);
+        return ;
+    }
+
+    set_ipaddr(ETHERNET_NETIF, "0.0.0.0");
+    if(dhcp)
+    {
+        set_static_interface(ETHERNET_NETIF,
+                             NULL,
+                             NULL,
+                             NULL,
+                             NULL,
+                             NULL);
+        settings->setMenuDHCPNetwork("","","","","");
+    }
+    else
+    {
+        QString ipAddress = profile->setting()->network()->iPAddress()->value();
+        std::string s_ipAddress = ipAddress.toStdString();
+
+        QString mask = profile->setting()->network()->subnetMask()->value();
+        std::string s_mask = mask.toStdString();
+
+        QString gateway = profile->setting()->network()->gateway()->value();
+        std::string s_gateway = gateway.toStdString();
+
+        QString dns1 = profile->setting()->network()->primaryDNS()->value();
+        std::string s_dns1 = dns1.toStdString();
+
+        QString dns2 = profile->setting()->network()->secondaryDNS()->value();
+        std::string s_dns2 = dns2.toStdString();
+        set_static_interface(ETHERNET_NETIF,
+                            ipAddress != "" ?s_ipAddress.data() : "0.0.0.0",
+                            s_mask.data(),
+                            s_gateway.data(),
+                            s_dns1.data(),
+                            s_dns2.data());
+        settings->setMenuDHCPNetwork(ipAddress,mask,gateway,dns1,dns2);
+        set_ipaddr(ETHERNET_NETIF, ipAddress != "" ?s_ipAddress.data() : "0.0.0.0");
+        set_netmask(ETHERNET_NETIF, s_mask.data());
+        set_gateway(ETHERNET_NETIF, s_gateway.data());
+    }
+    system("/etc/init.d/S41dhcpcd restart > /dev/null 2>&1 &");
+}
+
+void Models::setIPAddress(QString value)
+{
+    if(profile->setting()->network()->iPAddress()->value() != value)
+    {
+        profile->setting()->network()->iPAddress()->setValue(value);
+        return ;
+    }
+    setNetwork();
+}
+
+void Models::setSubnetMask(QString value)
+{
+    if(profile->setting()->network()->subnetMask()->value() != value)
+    {
+        profile->setting()->network()->subnetMask()->setValue(value);
+        return ;
+    }
+    setNetwork();
+}
+
+void Models::setGateway(QString value)
+{
+    if(profile->setting()->network()->gateway()->value() != value)
+    {
+        profile->setting()->network()->gateway()->setValue(value);
+        return ;
+    }
+    setNetwork();
+}
+
+void Models::setPrimaryDNS(QString value)
+{
+    if(profile->setting()->network()->primaryDNS()->value() != value)
+    {
+        profile->setting()->network()->primaryDNS()->setValue(value);
+        return ;
+    }
+    setNetwork();
+    system("/etc/init.d/S41dhcpcd restart > /dev/null 2>&1 &");
+}
+
+void Models::setSeconddaryDNS(QString value)
+{
+    if(profile->setting()->network()->secondaryDNS()->value() != value)
+    {
+        profile->setting()->network()->secondaryDNS()->setValue(value);
+        return ;
+    }
+    setNetwork();
+    system("/etc/init.d/S41dhcpcd restart > /dev/null 2>&1 &");
+}
+
+void Models::setNetwork()
+{
+    bool dhcp = profile->setting()->network()->protocol();
+    if(dhcp)
+        return ;
+
+    QString dns1 = profile->setting()->network()->primaryDNS()->value();
+    QString dns2 = profile->setting()->network()->secondaryDNS()->value();
+
+    QString ipAddress = profile->setting()->network()->iPAddress()->value();
+    std::string s_ipAddress = ipAddress.toStdString();
+
+    QString mask = profile->setting()->network()->subnetMask()->value();
+    std::string s_mask = mask.toStdString();
+
+    QString gateway = profile->setting()->network()->gateway()->value();
+    std::string s_gateway = gateway.toStdString();
+
+    qDebug() << "dns1:" << dns1;
+    qDebug() << "dns2:" << dns2;
+    qDebug() << "ipAddress:" << ipAddress;
+    qDebug() << "mask:" << mask;
+    qDebug() << "gateway:" << gateway;
+
+    std::string s_dns1 = dns1.toStdString();
+    std::string s_dns2 = dns2.toStdString();
+
+    set_static_interface(ETHERNET_NETIF,
+                         ipAddress != "" ? s_ipAddress.data() : "0.0.0.0",
+                         s_mask.data(),
+                         s_gateway.data(),
+                         s_dns1.data(),
+                         s_dns2.data());
+
+    set_ipaddr(ETHERNET_NETIF, ipAddress != "" ?s_ipAddress.data() : "0.0.0.0");
+    set_netmask(ETHERNET_NETIF, s_mask.data());
+    set_gateway(ETHERNET_NETIF, s_gateway.data());
+}
+
+void Models::setButtonBrightness(int value)
+{
+    if(profile->setting()->panel()->ButtonBrightness() != value)
+    {
+        profile->setting()->panel()->setButtonBrightness(value);
+        return ;
+    }
+    QSwitcher::set_leds_brightness(value);
+}
+
+void Models::setLanguage(int language)
+{
+    static QTranslator * translator = nullptr;
+    if(!translator){
+        translator = new QTranslator();
+    }
+    qApp->removeTranslator(translator);
+
+    QString languageFile;
+    switch (language) {
+    case Language::ENGLISH:
+        languageFile = "./english.qm";
+        break;
+    case Language::CHINESE:
+        languageFile = "./chinese.qm";
+        break;
+    }
+
+    qDebug() << translator->load(languageFile);
+    qDebug() << qApp->installTranslator(translator);
+
+    //first
+    {
+        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->name] = tr("Color Back");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->name] = tr("Super Source");
+        languages[settings->listFirst()[MENU_FIRST_KEY_TYPE]->name] = tr("Key Type");
+        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->name] = tr("Luma Key");
+        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->name] = tr("Chroma Key");
+        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->name] = tr("Key Pattern");
+        languages[settings->listFirst()[MENU_FIRST_PIP]->name] = tr("PIP");
+        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->name] = tr("Transition");
+        languages[settings->listFirst()[MENU_FIRST_DSK]->name] = tr("DSK");
+        languages[settings->listFirst()[MENU_FIRST_FTB]->name]= tr("FTB");
+        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->name] = tr("Audio Mixer");
+        languages[settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->name] = tr("Still Generator");
+        languages[settings->listFirst()[MENU_FIRST_MACRO]->name] = tr("Macro");
+        languages[settings->listFirst()[MENU_FIRST_STREAM]->name] = tr("Stream");
+        languages[settings->listFirst()[MENU_FIRST_PLAYBACK]->name] = tr("Playback");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->name] = tr("Setting");
+    }
+
+    //second
+    {
+        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR1]->name] = tr("color 1");
+        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR2]->name] = tr("color 2");
+
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_ENABLE]->name] = tr("enable");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_SOURCE]->name] = tr("source");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_CONTROL]->name] = tr("control");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK1]->name] = tr("mask 1");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK2]->name] = tr("mask 2");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER1]->name] = tr("border 1");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->name] = tr("border 2");
+
+        languages[settings->listFirst()[MENU_FIRST_KEY_TYPE]->second[KEY_TYPE_TYPE]->name] = tr("type");
+
+        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_SOURCE]->name] = tr("source");
+        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_MASK]->name] = tr("mask");
+        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_CONTROL]->name] = tr("control");
+        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_RESIZE]->name] = tr("resize");
+
+        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_SOURCE]->name] = tr("source");
+        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_MASK]->name] = tr("mask");
+        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_RESIZE]->name] = tr("resize");
+        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->name] = tr("control");
+
+        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_SOURCE]->name] = tr("source");
+        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->name] = tr("wipe");
+        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_MASK]->name] = tr("mask");
+        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_RESIZE]->name] = tr("resize");
+
+        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_SOURCE]->name] = tr("source");
+        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_SIZE_POSITION]->name] = tr("size/position");
+        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_MASK]->name] = tr("mask");
+        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_BOARD]->name] = tr("border");
+        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_COLOR]->name] = tr("color");
+
+        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_MIX]->name] = tr("mix");
+        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_DIP]->name] = tr("dip");
+        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->name] = tr("wipe");
+
+        languages[settings->listFirst()[MENU_FIRST_DSK]->second[DSK_SOURCE]->name] = tr("source");
+        languages[settings->listFirst()[MENU_FIRST_DSK]->second[DSK_MASK]->name] = tr("mask");
+        languages[settings->listFirst()[MENU_FIRST_DSK]->second[DSK_CONTROL]->name] = tr("control");
+        languages[settings->listFirst()[MENU_FIRST_DSK]->second[DSK_RATE]->name] = tr("rate");
+
+        languages[settings->listFirst()[MENU_FIRST_FTB]->second[MENU_SECOND_FTB_RATE]->name] = tr("rate");
+        languages[settings->listFirst()[MENU_FIRST_FTB]->second[MENU_SECOND_FTB_AUDIO]->name] = tr("audio");
+
+        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC1]->name] = tr("mic 1");
+        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC2]->name] = tr("mic 2");
+        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN1]->name] = tr("in 1");
+        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN2]->name] = tr("in 2");
+        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN3]->name] = tr("in 3");
+        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN4]->name] = tr("in 4");
+        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_AUX]->name] = tr("aux");
+        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_PGM]->name] = tr("pgm");
+        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MONITOR]->name] = tr("monitor");
+
+        languages[settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_SELECTION]->name] = tr("still selection");
+        languages[settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_UPLOAD]->name] = tr("still upload");
+
+        languages[settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->name] = tr("macro");
+
+        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->name] = tr("stream 1");
+        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->name] = tr("stream 2");
+        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->name] = tr("stream 3");
+
+        languages[settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->name] = tr("playback");
+
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_VERSION]->name] = tr("version");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->name] = tr("src name");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_METER]->name] = tr("mv meter");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_LAYOUT]->name] = tr("mv layout");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MARKER]->name] = tr("marker");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MIC_INPUT]->name] = tr("mic input");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_RECORD_FILE]->name] = tr("record file");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->name] = tr("src selection");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->name] = tr("out format");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_SOURCE]->name] = tr("out source");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_QUALITY]->name] = tr("quality");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->name] = tr("network");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_PANEL]->name] = tr("panel");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_LANGUAGE]->name] = tr("language");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_RESET]->name] = tr("reset");
+    }
+
+    //third
+    {
+        // key
+        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR1]->third[COLORBACK1_HUE]->name] = tr("Hue");
+        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR1]->third[COLORBACK1_SATURATION]->name] = tr("Saturation");
+        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR1]->third[COLORBACK1_BRIGHTNESS]->name] = tr("Brightness");
+
+        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR2]->third[COLORBACK2_HUE]->name] = tr("Hue");
+        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR2]->third[COLORBACK2_SATURATION]->name] = tr("Saturation");
+        languages[settings->listFirst()[MENU_FIRST_COLOR_BACK]->second[COLOR_BACK_COLOR2]->third[COLORBACK2_BRIGHTNESS]->name] = tr("Brightness");
+
+
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_ENABLE]->third[SUPER_ENABLE]->name] = tr("Enable");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_SOURCE]->third[SUPER_SOURCE_SOURCE_SOURCE1]->name] = tr("Source 1");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_SOURCE]->third[SUPER_SOURCE_SOURCE_SOURCE2]->name] = tr("Source 2");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_SOURCE]->third[SUPER_SOURCE_SOURCE_BACKGROUND]->name] = tr("Background");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_CONTROL]->third[SUPER_CONTROL_STYLE]->name] = tr("Style");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_CONTROL]->third[SUPER_CONTROL_Y_POSITION]->name] = tr("Y Position");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK1]->third[SUPER_MASK1_ENABLE]->name] = tr("Enable");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK1]->third[SUPER_MASK1_H_START]->name] = tr("H Start");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK1]->third[SUPER_MASK1_V_START]->name] = tr("V Start");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK1]->third[SUPER_MASK1_H_END]->name] = tr("H End");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK1]->third[SUPER_MASK1_V_END]->name] = tr("V End");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK2]->third[SUPER_MASK2_ENABLE]->name] = tr("Enable");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK2]->third[SUPER_MASK2_H_START]->name] = tr("H Start");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK2]->third[SUPER_MASK2_V_START]->name] = tr("V Start");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK2]->third[SUPER_MASK2_H_END]->name] = tr("H End");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_MASK2]->third[SUPER_MASK2_V_END]->name] = tr("V End");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER1]->third[SUPER_BORDER1_WIDTH]->name] = tr("Border");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->third[SUPER_BORDER2_WIDTH]->name] = tr("Border");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->third[SUPER_BORDER1_HUE]->name] = tr("Hue");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->third[SUPER_BORDER1_SATURATION]->name] = tr("Saturation");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->third[SUPER_BORDER1_BRIGHTNESS]->name] = tr("Brightness");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->third[SUPER_BORDER2_HUE]->name] = tr("Hue");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->third[SUPER_BORDER2_SATURATION]->name] = tr("Saturation");
+        languages[settings->listFirst()[MENU_FIRST_SUPER_SOURCE]->second[SUPER_SOURCE_BORDER2]->third[SUPER_BORDER2_BRIGHTNESS]->name] = tr("Brightness");
+
+        languages[settings->listFirst()[MENU_FIRST_KEY_TYPE]->second[KEY_TYPE_TYPE]->third[TYPE_TYPE]->name] = tr("Type");
+
+        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_SOURCE]->third[LUMA_KEY_SOURCE_FILL]->name] = tr("Fill");
+        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_SOURCE]->third[LUMA_KEY_SOURCE_KEY]->name] = tr("Key");
+        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_CONTROL]->third[LUMA_KEY_CONTROL_SHAPED_KEY]->name] = tr("Shaped Key");
+        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_CONTROL]->third[LUMA_KEY_CONTROL_CLIP]->name] = tr("Clip");
+        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_CONTROL]->third[LUMA_KEY_CONTROL_GAIN]->name] = tr("Gain");
+        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_CONTROL]->third[LUMA_KEY_CONTROL_INVERT]->name] = tr("Invert");
+        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_RESIZE]->third[LUMA_KEY_RESIZE_RESIZE]->name] = tr("Resize");
+        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_RESIZE]->third[LUMA_KEY_RESIZE_SIZE]->name] = tr("Size");
+        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_RESIZE]->third[LUMA_KEY_RESIZE_X_POSITION]->name] = tr("X Position");
+        languages[settings->listFirst()[MENU_FIRST_LUMA_KEY]->second[LUMA_KEY_RESIZE]->third[LUMA_KEY_RESIZE_Y_POSITION]->name] = tr("Y Position");
+
+        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_SMP_X_POSITION]->name] = tr("SMP X Position");
+        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_SMP_Y_POSITION]->name] = tr("SMP Y Position");
+        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_SMP_ENABLE]->name] = tr("Sample");
+        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_Foreground]->name] = tr("Foreground");
+        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_Background]->name] = tr("Background");
+        languages[settings->listFirst()[MENU_FIRST_CHROMA_KEY]->second[CHROMA_KEY_CONTROL]->third[CHROMA_KEY_CONTROL_KeyEdge]->name] = tr("KeyEdge");
+
+        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_PATTERN]->name] = tr("Pattern");
+        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_SYMMERTRY]->name] = tr("Symmetry");
+        languages[settings->listFirst()[MENU_FIRST_KEY_PATTERN]->second[PATTERN_WIPE]->third[KEY_PATTERN_WIPE_SOFTNESS]->name] = tr("Softness");
+
+        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_SOURCE]->third[PIP_SOURCE_FILL]->name] = tr("PIP");
+        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_SIZE_POSITION]->third[PIP_SIZE_SIZE]->name] = tr("PIP Size");
+        languages[settings->listFirst()[MENU_FIRST_PIP]->second[PIP_BOARD]->third[PIP_BORDER_WIDTH]->name] = tr("Width");
+
+        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_MIX]->third[FTB_RATE_RATE]->name] = tr("Rate");
+        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_DIP]->third[TRANSITION_DIP_SOURCE]->name] = tr("Source");
+        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_DIRECTION]->name] = tr("Direction");
+        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_FILL_SOURCE]->name] = tr("Fill Source");
+
+        languages[settings->listFirst()[MENU_FIRST_FTB]->second[MENU_SECOND_FTB_AUDIO]->third[FTB_AUDIO_AFV]->name] = tr("AFV");
+
+        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC1]->third[MIC1_FADER]->name] = tr("Fader");
+        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC1]->third[MIC1_BALANCE]->name] = tr("Balance");
+        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC1]->third[MIC1_INPUT]->name] = tr("Input");
+        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC1]->third[MIC1_DELAY]->name] = tr("Delay");
+        languages[settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MONITOR]->third[MONITOR_LEVEL]->name] = tr("Level");
+
+        languages[settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_SELECTION]->third[STILL_SELECTION_STILL1]->name] = tr("Still 1");
+        languages[settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_SELECTION]->third[STILL_SELECTION_STILL2]->name] = tr("Still 2");
+        languages[settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_UPLOAD]->third[STILL_UPLOAD_LOCATION]->name] = tr("Location");
+        languages[settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_UPLOAD]->third[STILL_UPLOAD_LOAD_PICTURE]->name] = tr("Load Picture");
+
+        languages[settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_SLEEP]->name] = tr("Sleep");
+        languages[settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_IMPORT]->name] = tr("Import");
+        languages[settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_EXPORT]->name] = tr("Export");
+
+        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_PLATFORM]->name] = tr("Platform");
+        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_SERVER]->name] = tr("Server");
+        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_KEY]->name] = tr("Key / RTMP URL");
+        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_UPLOAD_KEY]->name] = tr("Upload Key / RTMP URL");
+        languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_OUTPUT]->name] = tr("Output");
+
+        languages[settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_MODE]->name] = tr("Playback Mode");
+
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_VERSION]->third[VERSION_VERSION]->name] = tr("Version");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_VERSION]->third[VERSION_BUILD_INFO]->name] = tr("Build Info");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_VERSION]->third[VERSION_DEVICE_ID]->name] = tr("Device Id");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MV_LAYOUT]->third[MV_LAYOUT_SWAP]->name] = tr("PGM/PVW SWAP");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MIC_INPUT]->third[MENU_THIRD_MIC_INPUT_MIC_1_INPUT]->name] = tr("Mic 1 Input");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_MIC_INPUT]->third[MENU_THIRD_MIC_INPUT_MIC_2_INPUT]->name] = tr("Mic 2 Input");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_RECORD_FILE]->third[SETTING_RECORD_FILE_NAME]->name] = tr("File Name");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->name] = tr("Format");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_OUTPUT1_COLOR_SPACE]->name] = tr("Output 1 Color Space");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_OUTPUT2_COLOR_SPACE]->name] = tr("Output 2 Color Space");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_QUALITY]->third[QUALITY_RECORDING]->name] = tr("Recording");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_QUALITY]->third[QUALITY_STREAMING]->name] = tr("Streaming");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PROTOCOL]->name] = tr("Protocol");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_IP_ADDRESS]->name] = tr("IP Address");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_SUBNET_MASK]->name] = tr("Subnet Mask");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_GATEWAY]->name] = tr("Gateway");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PRIMARY_DNS]->name] = tr("Primary DNS");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_SECONDAY_DNS]->name] = tr("Secondary DNS");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_PANEL]->third[MENU_THIRD_PANEL_BUTTON_BRIGHTNESS]->name] = tr("Button Brightness");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_LANGUAGE]->third[SETTING_LANGUAGE_LANGUAGE]->name] = tr("Language");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_RESET]->third[SETTING_RESET_FACTORY]->name] = tr("Factory Reset");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_RESET]->third[SETTING_RESET_SD_FORMAT]->name] = tr("SD Format");
+
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_PGM]->name] = tr("PGM");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_PVW]->name] = tr("PVW");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_IN1]->name] = tr("In 1");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_IN2]->name] = tr("In 2");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_IN3]->name] = tr("In 3");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_IN4]->name] = tr("In 4");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_AUX]->name] = tr("Aux");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_STILL1]->name] = tr("Still 1");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_SRC_NAME]->third[SRC_NAME_STILL2]->name] = tr("Still 2");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_SOURCE]->third[SETTING_OUT_SOURCE_HDMI1]->name] = tr("HDMI 1");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_SOURCE]->third[SETTING_OUT_SOURCE_HDMI2]->name] = tr("HDMI 2");
+        languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_SOURCE]->third[SETTING_OUT_SOURCE_AUX]->name] = tr("Streaming / Recording / UVC");
+
+
+
+
+        //value
+        languages["Off"] = tr("Off");
+        languages["On"] = tr("On");
+        languages["Still 1 Key"] = tr("Still 1 Key");
+        languages["Still 2 Key"] = tr("Still 2 Key");
+        languages["Color Bar"] = tr("Color Bar");
+        languages["Color 1"] = tr("Color 1");
+        languages["Color 2"] = tr("Color 2");
+        languages["Black"] = tr("Black");
+        languages["Zoom in"] = tr("Zoom in");
+        languages["Crop-Zoom in"] = tr("Crop-Zoom in");
+        languages["Zoom in-Crop"] = tr("Zoom in-Crop");
+        languages["Crop"] = tr("Crop");
+        languages["0.25"] = tr("0.25");
+        languages["0.33"] = tr("0.33");
+        languages["0.50"] = tr("0.50");
+        languages["Disable"] = tr("Disable");
+        languages["Enable"] = tr("Enable");
+        languages["Normal"] = tr("Normal");
+        languages["Inverse"] = tr("Inverse");
+        languages["Mic 1"] = tr("Mic 1");
+        languages["Mic 2"] = tr("Mic 2");
+        languages["Play Once"] = tr("Play Once");
+        languages["Repeat"] = tr("Repeat");
+        languages["Sequential"] = tr("Sequential");
+        languages["PGM|PVW"] = tr("PGM|PVW");
+        languages["PVW|PGM"] = tr("PVW|PGM");
+        languages["Mic+power"] = tr("Mic+power");
+        languages["Mic"] = tr("Mic");
+        languages["Line"] = tr("Line");
+        languages["HDMI"] = tr("HDMI");
+        languages["SDI"] = tr("SDI");
+        languages["SD Card"] = tr("SD Card");
+        languages["USB Camera"] = tr("USB Camera");
+        languages["NDI"] = tr("NDI");
+        languages["1080p24"] = tr("1080p24");
+        languages["1080p25"] = tr("1080p25");
+        languages["1080p30"] = tr("1080p30");
+        languages["1080p50"] = tr("1080p50");
+        languages["1080p60"] = tr("1080p60");
+        languages["Auto"] = tr("Auto");
+        languages["RGB Full"] = tr("RGB Full");
+        languages["RGB Limit"] = tr("RGB Limit");
+        languages["YCbCr422 Full"] = tr("YCbCr422 Full");
+        languages["YCbCr422 Limit"] = tr("YCbCr422 Limit");
+        languages["YCbCr444 Full"] = tr("YCbCr444 Full");
+        languages["YCbCr444 Limit"] = tr("YCbCr444 Limit");
+        languages["Multiview"] = tr("Multiview");
+        languages["Low"] = tr("Low");
+        languages["Medium"] = tr("Medium");
+        languages["High"] = tr("High");
+        languages["DHCP"] = tr("DHCP");
+        languages["Static IP"] = tr("Static IP");
+        languages["English"] = tr("English");
+        languages[("简体中文")] = tr("简体中文");
+    }
+
+    leftMenuModel->init();
+
+    m_engine->retranslate();
+}
+
 //void Models::setAudioFader(int value)
 //{
 //    int index = settings->lastSecondUnfold();
@@ -1635,8 +1812,8 @@ void Models::setOutSource(QString src, QString source)
 
 void Models::initDHCPNetworkData()
 {
-    int protocol = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PROTOCOL]->current.toInt();
-    if(protocol == NETWORK_PROTOCOL_DHCP)
+    int protocol = profile->setting()->network()->protocol();
+    if(protocol)
     {
         char ipaddr[16],c_dns1[16],c_dns2[16];
         get_ipaddr(ETHERNET_NETIF, ipaddr, 16);
@@ -2295,13 +2472,9 @@ void Models::setLiveStatus(int status)
 
 void Models::openAllStream()
 {
-    STREAM_PROFILE bitrate1,bitrate2,bitrate3;
     QString rtmp1,rtmp2,rtmp3;
     std::string s_rtmp1,s_rtmp2,s_rtmp3;
     bool enable1,enable2,enable3;
-    bitrate1 = settings->getStreamBitrateIndex(STREAM_STREAM1);
-    bitrate2 = settings->getStreamBitrateIndex(STREAM_STREAM2);
-    bitrate3 = settings->getStreamBitrateIndex(STREAM_STREAM3);
     rtmp1 = settings->getStreamUrlIndex(STREAM_STREAM1);
     s_rtmp1 = rtmp1.toStdString();
     rtmp2 = settings->getStreamUrlIndex(STREAM_STREAM2);
@@ -2313,17 +2486,14 @@ void Models::openAllStream()
     enable3 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();// == OUTPUT_ENABLE;
     if(enable1)
     {
-        qDebug() << "rtmp1:" << rtmp1 << "  bitrate:" << bitrate1.bitrate << "  audio_bitrate:"<< bitrate1.audio_bitrate;
         rv_switch_push_start0((char*)(s_rtmp1.data()),(rk_switch_cb)(pushCallBack1),0);
     }
     if(enable2)
     {
-        qDebug() << "rtmp2:" << rtmp2 << "  bitrate:" << bitrate2.bitrate << "  audio_bitrate:"<< bitrate2.audio_bitrate;
         rv_switch_push_start1((char*)(s_rtmp2.data()),(rk_switch_cb)(pushCallBack2),0);
     }
     if(enable3)
     {
-        qDebug() << "rtmp3:" << rtmp3 << "  bitrate:" << bitrate3.bitrate << "  audio_bitrate:"<< bitrate3.audio_bitrate;
         rv_switch_push_start2((char*)(s_rtmp3.data()),(rk_switch_cb)(pushCallBack3),0);
     }
 }
@@ -2508,115 +2678,6 @@ void Models::setColorSpace(int third)
     set_hdmi_out_colorspace(third - SETTING_OUT_FORMAT_OUTPUT1_COLOR_SPACE,(hdmi_out_colorspace_t)index);
 }
 
-void Models::setQuality(int third)
-{
-    STREAM_PROFILE profile;
-    if(third == QUALITY_RECORDING)
-    {
-        profile = settings->getRecordBitrate();
-        rv_switch_set_record_bitrate(profile.bitrate);
-    }
-    else if(third == QUALITY_STREAMING)
-    {
-        profile = settings->getStreamBitrateIndex(0);
-        rv_switch_set_push_bitrate(profile.bitrate);
-    }
-
-    int second = sd_remaintime_calc();
-    media_sd->checkGbFree(second);
-
-    rv_switch_set_aac_bitrate(profile.audio_bitrate);
-}
-
-void Models::setProtocol()
-{
-    int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PROTOCOL]->current.toInt();
-    set_ipaddr(ETHERNET_NETIF, "0.0.0.0");
-    if(index == NETWORK_PROTOCOL_DHCP)
-    {
-        set_static_interface(ETHERNET_NETIF,
-                             NULL,
-                             NULL,
-                             NULL,
-                             NULL,
-                             NULL);
-        settings->setMenuDHCPNetwork("","","","","");
-    }
-    else if(index == NETWORK_PROTOCOL_STATIC_IP)
-    {
-        QString ipAddress = settings->getIniValue(MENU_FIRST_SETTING,SETTING_NETWORK,NETWORK_IP_ADDRESS).toString();
-        std::string s_ipAddress = ipAddress.toStdString();
-
-        QString mask = settings->getIniValue(MENU_FIRST_SETTING,SETTING_NETWORK,NETWORK_SUBNET_MASK).toString();
-        std::string s_mask = mask.toStdString();
-
-        QString gateway = settings->getIniValue(MENU_FIRST_SETTING,SETTING_NETWORK,NETWORK_GATEWAY).toString();
-        std::string s_gateway = gateway.toStdString();
-
-        QString dns1 = settings->getIniValue(MENU_FIRST_SETTING,SETTING_NETWORK,NETWORK_PRIMARY_DNS).toString();
-        std::string s_dns1 = dns1.toStdString();
-
-        QString dns2 = settings->getIniValue(MENU_FIRST_SETTING,SETTING_NETWORK,NETWORK_SECONDAY_DNS).toString();
-        std::string s_dns2 = dns2.toStdString();
-        set_static_interface(ETHERNET_NETIF,
-                            ipAddress != "" ?s_ipAddress.data() : "0.0.0.0",
-                            s_mask.data(),
-                            s_gateway.data(),
-                            s_dns1.data(),
-                            s_dns2.data());
-        settings->setMenuDHCPNetwork(ipAddress,mask,gateway,dns1,dns2);
-        set_ipaddr(ETHERNET_NETIF, ipAddress != "" ?s_ipAddress.data() : "0.0.0.0");
-        set_netmask(ETHERNET_NETIF, s_mask.data());
-        set_gateway(ETHERNET_NETIF, s_gateway.data());
-    }
-    system("/etc/init.d/S41dhcpcd restart > /dev/null 2>&1 &");
-}
-
-
-
-void Models::setNetwork(int third)
-{
-    int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PROTOCOL]->current.toInt();
-    if(index == NETWORK_PROTOCOL_DHCP)
-        return ;
-
-    qDebug() << "setNetwork:" << third;
-    QString dns1 = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PRIMARY_DNS]->current.toString();
-    QString dns2 = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_SECONDAY_DNS]->current.toString();
-
-    QString ipAddress = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_IP_ADDRESS]->current.toString();
-    std::string s_ipAddress = ipAddress.toStdString();
-
-    QString mask = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_SUBNET_MASK]->current.toString();
-    std::string s_mask = mask.toStdString();
-
-    QString gateway = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_GATEWAY]->current.toString();
-    std::string s_gateway = gateway.toStdString();
-
-    qDebug() << "dns1:" << dns1;
-    qDebug() << "dns2:" << dns2;
-    qDebug() << "ipAddress:" << ipAddress;
-    qDebug() << "mask:" << mask;
-    qDebug() << "gateway:" << gateway;
-
-    std::string s_dns1 = dns1.toStdString();
-    std::string s_dns2 = dns2.toStdString();
-
-    set_static_interface(ETHERNET_NETIF,
-                         ipAddress != "" ? s_ipAddress.data() : "0.0.0.0",
-                         s_mask.data(),
-                         s_gateway.data(),
-                         s_dns1.data(),
-                         s_dns2.data());
-
-    set_ipaddr(ETHERNET_NETIF, ipAddress != "" ?s_ipAddress.data() : "0.0.0.0");
-    set_netmask(ETHERNET_NETIF, s_mask.data());
-    set_gateway(ETHERNET_NETIF, s_gateway.data());
-
-    if(third == NETWORK_PRIMARY_DNS || third == NETWORK_SECONDAY_DNS)
-        system("/etc/init.d/S41dhcpcd restart > /dev/null 2>&1 &");
-}
-
 void Models::setMSleep(int value)
 {
     qDebug() << "setSleep:" <<  value;
@@ -2673,12 +2734,6 @@ void Models::setLoadStreamKey(int second)
     qDebug() << text;
     settings->setMenuValue(MENU_FIRST_STREAM,second,MENU_THIRD_STREAM_KEY,text);
     file.close();
-}
-
-void Models::setButtonBrightness()
-{
-    int value = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_PANEL]->third[MENU_THIRD_PANEL_BUTTON_BRIGHTNESS]->current.toInt();
-    QSwitcher::set_leds_brightness(value);
 }
 
 void Models::setPgmIndex(QString str)
@@ -2901,8 +2956,8 @@ int Models::sd_remaintime_calc()
 {
     media_sd->current_usage();
     auto really_free = _getfree_recordreally(media_sd->bfree,settings->recordSecond());
-    STREAM_PROFILE profile = settings->getRecordBitrate();
-    int rate = profile.bitrate / 8;
+    STREAM_PROFILE record = settings->getRecordBitrate(Streams::qualityIndexToString(profile->setting()->record()->quality()));
+    int rate = record.bitrate / 8;
     int second = really_free / rate;
     return second;
 }

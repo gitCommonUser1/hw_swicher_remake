@@ -45,10 +45,13 @@ SOURCES += \
     downstreamkeys.cpp \
     fadetoblack.cpp \
     format.cpp \
+    gateway.cpp \
     gostreamsystem.cpp \
+    ipaddress.cpp \
     key.cpp \
     keyboardevent.cpp \
     keys.cpp \
+    language.cpp \
     leftmenumodel.cpp \
     lumaparameters.cpp \
     macro.cpp \
@@ -68,21 +71,25 @@ SOURCES += \
     myprovider.cpp \
     ndi.cpp \
     ndilistmodelitem.cpp \
+    network.cpp \
     nexttransition.cpp \
     osee_math.cpp \
     outformat.cpp \
     outputcolorspace.cpp \
     outsource.cpp \
     outsources.cpp \
+    panel.cpp \
     patternparameters.cpp \
     pipparameters.cpp \
     preview.cpp \
+    primarydns.cpp \
     program.cpp \
     record.cpp \
     regexp.cpp \
     resizeparameters.cpp \
     rightmenumodel.cpp \
     sdimages.cpp \
+    secondarydns.cpp \
     setting.cpp \
     settings.cpp \
     control.cpp \
@@ -118,6 +125,7 @@ SOURCES += \
     stillselection.cpp \
     stream.cpp \
     streams.cpp \
+    subnetmask.cpp \
     supersource.cpp \
     supersourceborder.cpp \
     supersourcemask.cpp \
@@ -165,6 +173,7 @@ HEADERS += \
     downstreamkeys.h \
     fadetoblack.h \
     format.h \
+    gateway.h \
     gostreamsystem.h \
     include/crc32.h \
     include/data_list.h \
@@ -252,9 +261,11 @@ HEADERS += \
     include/uvc_out_power.h \
     include/uvc_ports.h \
     include/w25qxx.h \
+    ipaddress.h \
     key.h \
     keyboardevent.h \
     keys.h \
+    language.h \
     leftmenumodel.h \
     lumaparameters.h \
     macro.h \
@@ -274,15 +285,18 @@ HEADERS += \
     myprovider.h \
     ndi.h \
     ndilistmodelitem.h \
+    network.h \
     nexttransition.h \
     osee_math.h \
     outformat.h \
     outputcolorspace.h \
     outsource.h \
     outsources.h \
+    panel.h \
     patternparameters.h \
     pipparameters.h \
     preview.h \
+    primarydns.h \
     profile_include.h \
     program.h \
     record.h \
@@ -290,6 +304,7 @@ HEADERS += \
     resizeparameters.h \
     rightmenumodel.h \
     sdimages.h \
+    secondarydns.h \
     setting.h \
     settings.h \
     control.h \
@@ -304,6 +319,7 @@ HEADERS += \
     stillselection.h \
     stream.h \
     streams.h \
+    subnetmask.h \
     supersource.h \
     supersourceborder.h \
     supersourcemask.h \

@@ -2143,7 +2143,7 @@ class MenuThirdSettingQualityRecording:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->record()->setQuality(value.toInt());
     }
 };
 
@@ -2151,7 +2151,7 @@ class MenuThirdSettingQualityStreaming:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->streams()->setQuality(value.toInt());
     }
 };
 
@@ -2159,7 +2159,7 @@ class MenuThirdSettingNetworkProtocol:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->network()->setProtocol(value > 0);
     }
 };
 
@@ -2167,7 +2167,15 @@ class MenuThirdSettingNetworkIPAddress:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->network()->iPAddress()->setValue(value.toString());
+    }
+    void doEvent() override{
+        //dhcp
+        if(profile->setting()->network()->protocol())
+            return ;
+        settings->setKeyboardVisible(1,KeyboardEvent::KEYBOARD_IPADDR);
+        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_IP_ADDRESS];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
     }
 };
 
@@ -2175,7 +2183,15 @@ class MenuThirdSettingNetworkSubnetMask:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->network()->subnetMask()->setValue(value.toString());
+    }
+    void doEvent() override{
+        //dhcp
+        if(profile->setting()->network()->protocol())
+            return ;
+        settings->setKeyboardVisible(1,KeyboardEvent::KEYBOARD_IPADDR);
+        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_SUBNET_MASK];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
     }
 };
 
@@ -2183,7 +2199,15 @@ class MenuThirdSettingNetworkGateway:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->network()->gateway()->setValue(value.toString());
+    }
+    void doEvent() override{
+        //dhcp
+        if(profile->setting()->network()->protocol())
+            return ;
+        settings->setKeyboardVisible(1,KeyboardEvent::KEYBOARD_IPADDR);
+        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_GATEWAY];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
     }
 };
 
@@ -2191,7 +2215,15 @@ class MenuThirdSettingNetworkPrimaryDNS:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->network()->primaryDNS()->setValue(value.toString());
+    }
+    void doEvent() override{
+        //dhcp
+        if(profile->setting()->network()->protocol())
+            return ;
+        settings->setKeyboardVisible(1,KeyboardEvent::KEYBOARD_IPADDR);
+        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PRIMARY_DNS];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
     }
 };
 
@@ -2199,7 +2231,15 @@ class MenuThirdSettingNetworkSecondaryDNS:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->network()->secondaryDNS()->setValue(value.toString());
+    }
+    void doEvent() override{
+        //dhcp
+        if(profile->setting()->network()->protocol())
+            return ;
+        settings->setKeyboardVisible(1,KeyboardEvent::KEYBOARD_IPADDR);
+        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_SECONDAY_DNS];
+        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
     }
 };
 
@@ -2207,7 +2247,7 @@ class MenuThirdSettingPanelButtonBrightness:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        profile->setting()->panel()->setButtonBrightness(value.toInt());
     }
 };
 
@@ -2215,7 +2255,7 @@ class MenuThirdSettingLanguage:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-//        models->changeLanguage();
+        profile->setting()->language()->setLanguage(value.toInt());
     }
 };
 

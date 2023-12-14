@@ -54,7 +54,8 @@ Item{
             arr[1] = ip_segment1.name
             arr[2] = ip_segment2.name
             arr[3] = ip_segment3.name
-            settings.setMenuValue(settings.lastFirstUnfold,settings.lastSecondUnfold,settings.lastThirdUnfold,settings.listToIpAddress(arr))//input.text
+//            settings.setMenuValue(settings.lastFirstUnfold,settings.lastSecondUnfold,settings.rightListViewCurrent,settings.listToIpAddress(arr))//input.text
+            settings.keyboardOk(settings.lastFirstUnfold,settings.lastSecondUnfold,settings.rightListViewCurrent,settings.listToIpAddress(arr))
             settings.setKeyboardVisible(0)
             settings.setLastThirdUnfold(-1)
             break;

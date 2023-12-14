@@ -414,7 +414,7 @@ public:
 //                    int protocol = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[NETWORK_PROTOCOL]->current.toInt();
 //                    if(protocol == NETWORK_PROTOCOL_STATIC_IP)
 //                    {
-//                        settings->setKeyboardVisible(1,1);
+//                        settings->setKeyboardVisible(1,KeyboardEvent::KEYBOARD_IPADDR);
 //                        auto item = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_NETWORK]->third[third];
 //                        settings->setKeyboardInputText(models->languages[item->name],item->current.toString());
 //                    }

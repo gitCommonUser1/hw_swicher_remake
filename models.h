@@ -21,7 +21,6 @@ public:
     void setEngine(QQmlApplicationEngine *engine){
         m_engine = engine;
     }
-    void changeLanguage(int language = -1);
     std::map<QString,QString>languages;
 
     //key press and release
@@ -106,11 +105,6 @@ public:
     int getOutFormat(int index);
     void setColorSpace(int third);
 
-    void setQuality(int third);
-
-    void setProtocol();
-    void setNetwork(int third);
-
 
     //sleep
     void setMSleep(int value);
@@ -126,10 +120,6 @@ public:
 
     //playback
     void setPlaybackMode();
-
-
-    void setButtonBrightness();
-
 
 
     //sd
@@ -313,9 +303,6 @@ signals:
     void auxSource();
     void colorSpace(int third);
 
-    void quality(int third);
-
-    void protocol();
     void network(int third);
 
     //sleep
@@ -343,7 +330,16 @@ signals:
     void outFormat(QString outFormat);
     void outputColorSpace(QString src,QString colorSpace);
     void outSource(QString src,QString source);
-    void buttonBrightness();
+    void quality(QString src,QString quality);
+    void protocol(bool dhcp);
+    void iPAddress(QString value);
+    void subnetMask(QString value);
+    void gateway(QString value);
+    void primaryDNS(QString value);
+    void seconddaryDNS(QString value);
+    void network();
+    void buttonBrightness(int value);
+    void language(int language);
     /**/
 
 
@@ -546,6 +542,16 @@ public slots:
     void setOutFormat(QString outFormat);
     void setOutputColorSpace(QString src,QString colorSpace);
     void setOutSource(QString src,QString source);
+    void setQuality(QString src,QString quality);
+    void setProtocol(bool dhcp);
+    void setIPAddress(QString value);
+    void setSubnetMask(QString value);
+    void setGateway(QString value);
+    void setPrimaryDNS(QString value);
+    void setSeconddaryDNS(QString value);
+    void setNetwork();
+    void setButtonBrightness(int value);
+    void setLanguage(int language);
     /**/
 
 

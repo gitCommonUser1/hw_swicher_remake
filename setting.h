@@ -12,6 +12,9 @@ class Record;
 class SrcSelections;
 class OutFormat;
 class OutSources;
+class Panel;
+class Language;
+class Network;
 
 class Setting : public QObject
 {
@@ -25,6 +28,9 @@ class Setting : public QObject
     Q_PROPERTY(SrcSelections* srcSelections READ srcSelections)
     Q_PROPERTY(OutFormat* outFormat READ outFormat)
     Q_PROPERTY(OutSources* outSources READ outSources)
+    Q_PROPERTY(Panel* panel READ panel)
+    Q_PROPERTY(Language* language READ language)
+    Q_PROPERTY(Network* network READ network)
 
 public:
     explicit Setting(QObject *parent = nullptr);
@@ -74,6 +80,21 @@ public:
         return m_outSources;
     }
 
+    Panel* panel() const
+    {
+        return m_panel;
+    }
+
+    Language* language() const
+    {
+        return m_language;
+    }
+
+    Network* network() const
+    {
+        return m_network;
+    }
+
 private:
     SrcNames* m_srcNames;
 
@@ -92,6 +113,12 @@ private:
     OutFormat* m_outFormat;
 
     OutSources* m_outSources;
+
+    Panel* m_panel;
+
+    Language* m_language;
+
+    Network* m_network;
 
 signals:
 
