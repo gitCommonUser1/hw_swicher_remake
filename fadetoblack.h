@@ -9,6 +9,7 @@ class FadeToBlack : public QObject
     Q_OBJECT
     Q_PROPERTY(double rate READ rate WRITE setRate NOTIFY rateChanged)
     Q_PROPERTY(bool afv READ afv WRITE setAfv NOTIFY afvChanged)
+    Q_PROPERTY(bool enable READ enable WRITE setEnable NOTIFY enableChanged)
 public:
     explicit FadeToBlack(QObject *parent = nullptr);
 
@@ -20,6 +21,11 @@ public:
     bool afv() const
     {
         return m_afv;
+    }
+
+    bool enable() const
+    {
+        return m_enable;
     }
 
 public slots:
@@ -46,6 +52,15 @@ public slots:
         emit afvChanged(m_afv);
     }
 
+    void setEnable(bool enable)
+    {
+        if (m_enable == enable)
+            return;
+
+        m_enable = enable;
+        emit enableChanged(m_enable);
+    }
+
 private:
 
     double m_rate;
@@ -54,10 +69,13 @@ private:
 
     bool m_afv;
 
+    bool m_enable;
+
 signals:
 
 void rateChanged(double rate);
 void afvChanged(bool afv);
+void enableChanged(bool enable);
 };
 
 #endif // FADETOBLACK_H

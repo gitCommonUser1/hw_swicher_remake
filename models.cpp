@@ -71,6 +71,7 @@ void Models::init_connect()
 
     //key type
     connect(this,&Models::keyType,this,&Models::setKeyType);
+    connect(this,&Models::keyOnAir,this,&Models::setKeyOnAir);
 
     //keys
     connect(this,&Models::keyMaskEnable,this,&Models::setKeyMaskEnable);
@@ -128,6 +129,7 @@ void Models::init_connect()
     connect(this,&Models::transitionWipeFillSource,this,&Models::setTransitionWipeFillSource);
 
     //dsk
+    connect(this,&Models::dskOnAir,this,&Models::setDskOnAir);
     connect(this,&Models::dskSourceFill,this,&Models::setDskSourceFill);
     connect(this,&Models::dskSourceKey,this,&Models::setDskSourceKey);
     connect(this,&Models::dskMaskEnable,this,&Models::setDskMaskEnable);
@@ -142,6 +144,7 @@ void Models::init_connect()
     connect(this,&Models::dskRate,this,&Models::setDskRate);
 
     //ftb
+    connect(this,&Models::ftbEnable,this,&Models::setFtbEnable);
     connect(this,&Models::ftbRate,this,&Models::setFtbRate);
     connect(this,&Models::ftbAfv,this,&Models::setFtbAfv);
 
@@ -195,7 +198,6 @@ void Models::init_connect()
     connect(this,&Models::nextTransition,this,&Models::setNextTransition);
     connect(this,&Models::transitionStyle,this,&Models::setTransitionStyle);
     connect(this,&Models::previewTransition,this,&Models::setPreviewTransition);
-    connect(this,&Models::keyOnAir,this,&Models::setKeyOnAir);
 
 
 }
@@ -2744,7 +2746,8 @@ void Models::setPgmIndex(QString str)
         profile->mixEffectBlocks()->mixEffectBlock()->program()->setInput(index);
         return ;
     }
-    keyClick(KEY_LED_PGM_1 + index);
+    if(QSwitcher::get_led(KEY_LED_PGM_1 + index) == LED_STATUS_OFF)
+        keyClick(KEY_LED_PGM_1 + index);
 }
 
 void Models::setPvwIndex(QString str)
@@ -2755,7 +2758,8 @@ void Models::setPvwIndex(QString str)
         profile->mixEffectBlocks()->mixEffectBlock()->preview()->setInput(index);
         return ;
     }
-    keyClick(KEY_LED_PVW_1 + index);
+    if(QSwitcher::get_led(KEY_LED_PVW_1 + index) == LED_STATUS_OFF)
+        keyClick(KEY_LED_PVW_1 + index);
 }
 
 void Models::setNextTransition(QString source)
@@ -2767,7 +2771,9 @@ void Models::setNextTransition(QString source)
     }
 
     int index = NextTransition::selectionStringToValue(source);
-    if(index & 0x4){
+    qDebug() << source;
+    qDebug() << index;
+    if(index & 0b100){
         if(QSwitcher::get_led(KEY_LED_BKGD) == SWITCHER_LED_OFF){
             keyClick(KEY_LED_BKGD);
         }
@@ -2777,7 +2783,7 @@ void Models::setNextTransition(QString source)
             keyClick(KEY_LED_BKGD);
         }
     }
-    if(index & 0x2){
+    if(index & 0b010){
         //dsk open
         if(QSwitcher::get_led(KEY_LED_DSK) == SWITCHER_LED_OFF){
             keyClick(KEY_LED_DSK);
@@ -2788,7 +2794,7 @@ void Models::setNextTransition(QString source)
             keyClick(KEY_LED_DSK);
         }
     }
-    if(index & 0x1){
+    if(index & 0b001){
         //key open
         if(QSwitcher::get_led(KEY_LED_KEY) == SWITCHER_LED_OFF){
             keyClick(KEY_LED_KEY);
@@ -2829,13 +2835,6 @@ void Models::setTransitionStyle(QString style)
         }
     }
 
-}
-
-void Models::setFtb()
-{
-    qDebug() << "setFtb:";
-//    QSwitcher::set_softkey(KEY_LED_TRANS_FTB,1);
-    keyClick(KEY_LED_TRANS_FTB);
 }
 
 void Models::setCutTransition()
@@ -2936,19 +2935,6 @@ void Models::setKeyOnAir(bool status)
         keyClick(KEY_LED_KEY_ON_AIR);
     }else if(status && QSwitcher::get_led(KEY_LED_KEY_ON_AIR) == SWITCHER_LED_OFF){
         keyClick(KEY_LED_KEY_ON_AIR);
-    }
-}
-
-void Models::setDskOnAir(int status)
-{
-    if(status == SWITCHER_LED_OFF && QSwitcher::get_led(KEY_LED_DSK_ON_AIR) != SWITCHER_LED_OFF){
-//        QSwitcher::set_softkey(KEY_LED_DSK_ON_AIR,1);
-        keyClick(KEY_LED_DSK_ON_AIR);
-        qDebug() << "setDskOnAir!!!" ;
-    }else if(status != SWITCHER_LED_OFF && QSwitcher::get_led(KEY_LED_DSK_ON_AIR) == SWITCHER_LED_OFF){
-//        QSwitcher::set_softkey(KEY_LED_DSK_ON_AIR,1);
-        keyClick(KEY_LED_DSK_ON_AIR);
-        qDebug() << "setDskOnAir!!!" ;
     }
 }
 
@@ -4608,6 +4594,21 @@ void Models::setTransitionWipePosition()
     delete pos;
 }
 
+void Models::setDskOnAir(bool onAir)
+{
+    if(profile->downstreamKeys()->downstreamKey()->onAir() != onAir)
+    {
+        profile->downstreamKeys()->downstreamKey()->setOnAir(onAir);
+        return ;
+    }
+
+    if(!onAir && QSwitcher::get_led(KEY_LED_DSK_ON_AIR) != SWITCHER_LED_OFF){
+        keyClick(KEY_LED_DSK_ON_AIR);
+    }else if(onAir && QSwitcher::get_led(KEY_LED_DSK_ON_AIR) == SWITCHER_LED_OFF){
+        keyClick(KEY_LED_DSK_ON_AIR);
+    }
+}
+
 void Models::setDskSourceFill(int fill)
 {
     if(profile->downstreamKeys()->downstreamKey()->fillSource() != fill)
@@ -4790,6 +4791,24 @@ void Models::setDskCtrl()
         value += 2;
 
     fpga_write(&g_fpga,FPGA_DSK_CTRL,value);
+}
+
+void Models::setFtbEnable(bool enable)
+{
+    if(profile->mixEffectBlocks()->mixEffectBlock()->ftb()->enable() != enable)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->ftb()->setEnable(enable);
+        return ;
+    }
+
+    if(enable && QSwitcher::get_led(KEY_LED_TRANS_FTB) == SWITCHER_LED_OFF)
+    {
+        keyClick(KEY_LED_TRANS_FTB);
+    }
+    else if(!enable && QSwitcher::get_led(KEY_LED_TRANS_FTB) != SWITCHER_LED_OFF)
+    {
+        keyClick(KEY_LED_TRANS_FTB);
+    }
 }
 
 void Models::setFtbRate(double rate)

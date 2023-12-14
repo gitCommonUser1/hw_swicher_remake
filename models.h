@@ -166,6 +166,7 @@ signals:
     //key type
     /**/
     void keyType(QString type);
+    void keyOnAir(bool status);
     /**/
 
     //keys
@@ -237,6 +238,8 @@ signals:
 
     //dsk
     /**/
+    void dskEnable(bool enable);
+    void dskOnAir(bool onAir);
     void dskSourceFill(int fill);
     void dskSourceKey(int key);
     void dskMaskEnable(bool enable);
@@ -253,6 +256,7 @@ signals:
 
     //ftb
     /**/
+    void ftbEnable(bool enable);
     void ftbRate(double rate);
     void ftbAfv(bool afv);
     /**/
@@ -350,11 +354,8 @@ signals:
     void nextTransition(QString source);
     void transitionStyle(QString style);
     void previewTransition(bool preview);
-    void ftb();
     void cutTransition();
     void autoTransition();
-    void keyOnAir(bool status);
-    void dskOnAir(int status);
     void transitionPosition(int value);
     void transitionSource(int source);
 
@@ -394,6 +395,7 @@ public slots:
 
     //key type
     void setKeyType(QString type);
+    void setKeyOnAir(bool status);
 
     //keys
     void setKeyMaskEnable(QString key,int enable);
@@ -465,6 +467,7 @@ public slots:
 
     //dsk
     /**/
+    void setDskOnAir(bool onAir);
     void setDskSourceFill(int fill);
     void setDskSourceKey(int key);
     void setDskMaskEnable(bool enable);
@@ -482,6 +485,7 @@ public slots:
 
     //ftb
     /**/
+    void setFtbEnable(bool enable);
     void setFtbRate(double rate);
     void setFtbAfv(bool afv);
     /**/
@@ -560,14 +564,11 @@ public slots:
     void setPvwIndex(QString index);
     void setNextTransition(QString source);
     void setTransitionStyle(QString style);
-    void setFtb();
     void setCutTransition();
     void setAutoTransition();
     void setPreviewTransition(bool preview);
     void setTransitionPosition(int value);
     void setTransitionSource(int source);
-    void setKeyOnAir(bool status);
-    void setDskOnAir(int status);
 
 
 public:

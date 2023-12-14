@@ -417,10 +417,11 @@ public:
 class KeyPgm:public KeyAbstractClass{
 public:
     using KeyAbstractClass::KeyAbstractClass;
-    void doWork(int status = 1){
-        if(status != 1)
+    void doWork(int status = 2){
+        if(status != 2)
             return ;
 //        models->sendKeySignalHasOneParameter(&Models::pgmIndex,key_index - KEY_LED_PGM_1,false);
+        profile->mixEffectBlocks()->mixEffectBlock()->program()->setInput(key_index - KEY_LED_PGM_1);
     }
 };
 
@@ -431,6 +432,7 @@ public:
         if(status != 1)
             return ;
 //        models->sendKeySignalHasOneParameter(&Models::pvwIndex,key_index - KEY_LED_PVW_1,false);
+        profile->mixEffectBlocks()->mixEffectBlock()->preview()->setInput(key_index - KEY_LED_PVW_1);
     }
 };
 
@@ -458,9 +460,14 @@ class KeyFtb:public KeyAbstractClass{
 public:
     using KeyAbstractClass::KeyAbstractClass;
     void doWork(int status = 1){
-        if(status != 1)
-            return ;
-//        models->sendKeySignal(&Models::ftb,false);
+        if(status)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->ftb()->setEnable(true);
+        }
+        else
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->ftb()->setEnable(false);
+        }
     }
 };
 
@@ -468,10 +475,14 @@ class KeyPrev:public KeyAbstractClass{
 public:
     using KeyAbstractClass::KeyAbstractClass;
     void doWork(int status = 1){
-        if(status != 1)
-            return ;
-        int flag = QSwitcher::get_led(KEY_LED_TRANS_PREVIEW);
-//        models->sendKeySignalHasOneParameter(&Models::prev,flag,false);
+        if(status)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->setPreviewTransition(true);
+        }
+        else
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->setPreviewTransition(false);
+        }
     }
 };
 
@@ -481,7 +492,7 @@ public:
     void doWork(int status = 1){
         if(status != 1)
             return ;
-//        models->sendKeySignalHasOneParameter(&Models::transitionIndex,key_index - KEY_LED_TRANS_MIX,false);
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->setStyle(TransitionStyle::styleIndexToString(key_index - KEY_LED_TRANS_MIX));
     }
 };
 
@@ -489,44 +500,16 @@ class KeyKey:public KeyAbstractClass{
 public:
     using KeyAbstractClass::KeyAbstractClass;
     void doWork(int status = 1){
-        if(status != 1)
-            return ;
-        int key_flag,dsk_flag,bkgd_flag,value;
-        switch (key_index) {
-        case KEY_LED_KEY:
-            dsk_flag = QSwitcher::get_led(KEY_LED_DSK);
-            bkgd_flag = QSwitcher::get_led(KEY_LED_BKGD);
-            if(dsk_flag == SWITCHER_LED_OFF && bkgd_flag == SWITCHER_LED_OFF)
-                key_flag = SWITCHER_LED_ON;
-            else
-                key_flag = QSwitcher::get_led(KEY_LED_KEY);
-            break;
-        case KEY_LED_DSK:
-            key_flag = QSwitcher::get_led(KEY_LED_KEY);
-            bkgd_flag = QSwitcher::get_led(KEY_LED_BKGD);
-            if(key_flag == SWITCHER_LED_OFF && bkgd_flag == SWITCHER_LED_OFF)
-                dsk_flag = SWITCHER_LED_ON;
-            else
-                dsk_flag = QSwitcher::get_led(KEY_LED_DSK);
-            break;
-        case KEY_LED_BKGD:
-            key_flag = QSwitcher::get_led(KEY_LED_KEY);
-            dsk_flag = QSwitcher::get_led(KEY_LED_DSK);
-            if(key_flag == SWITCHER_LED_OFF && dsk_flag == SWITCHER_LED_OFF)
-                bkgd_flag = SWITCHER_LED_ON;
-            else
-                bkgd_flag = QSwitcher::get_led(KEY_LED_BKGD);
-            break;
-        }
-        value = 0;
-        if(key_flag)
-            value += 1;
-        if(dsk_flag)
-            value += 2;
-        if(bkgd_flag)
-            value += 4;
-        qDebug() << "value: " << value;
-//        models->sendKeySignalHasOneParameter(&Models::transitionSource,value,false);
+//        int key_flag,dsk_flag,bkgd_flag,value;
+        int value = 0;
+        if(QSwitcher::get_led(KEY_LED_BKGD) != SWITCHER_LED_OFF)
+            value += 0b100;
+        if(QSwitcher::get_led(KEY_LED_DSK) != SWITCHER_LED_OFF)
+            value += 0b010;
+        if(QSwitcher::get_led(KEY_LED_KEY) != SWITCHER_LED_OFF)
+            value += 0b001;
+        qDebug() << "value:" <<value;
+        profile->mixEffectBlocks()->mixEffectBlock()->nextTransition()->setSelection(NextTransition::selectionValueToString(value));
     }
 };
 
@@ -534,11 +517,14 @@ class KeyKeyOnAir:public KeyAbstractClass{
 public:
     using KeyAbstractClass::KeyAbstractClass;
     void doWork(int status = 1){
-        if(status != 1)
-            return ;
-
-        int flag = QSwitcher::get_led(KEY_LED_KEY_ON_AIR);
-//        models->sendKeySignalHasOneParameter(&Models::keyOnAir,flag,false);
+        if(status == 1)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->key()->setOnAir(true);
+        }
+        else
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->keys()->key()->setOnAir(false);
+        }
     }
 };
 
@@ -547,11 +533,14 @@ class KeyDskOnAir:public KeyAbstractClass{
 public:
     using KeyAbstractClass::KeyAbstractClass;
     void doWork(int status = 1){
-        if(status != 1)
-            return ;
-
-        int flag = QSwitcher::get_led(KEY_LED_DSK_ON_AIR);
-//        models->sendKeySignalHasOneParameter(&Models::dskOnAir,flag,false);
+        if(status == 1)
+        {
+            profile->downstreamKeys()->downstreamKey()->setOnAir(true);
+        }
+        else
+        {
+            profile->downstreamKeys()->downstreamKey()->setOnAir(false);
+        }
     }
 };
 

@@ -8,6 +8,7 @@ class DownstreamKey : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int  index READ index WRITE setIndex FINAL)
+    Q_PROPERTY(bool onAir READ onAir WRITE setOnAir NOTIFY onAirChanged)
     Q_PROPERTY(int fillSource READ fillSource WRITE setFillSource NOTIFY fillSourceChanged)
     Q_PROPERTY(int keySource READ keySource WRITE setKeySource NOTIFY keySourceChanged)
     Q_PROPERTY(bool maskEnable READ maskEnable WRITE setMaskEnable NOTIFY maskEnableChanged)
@@ -87,6 +88,11 @@ public:
     double rate() const
     {
         return m_rate;
+    }
+
+    bool onAir() const
+    {
+        return m_onAir;
     }
 
 public slots:
@@ -245,6 +251,15 @@ public slots:
         emit rateChanged(m_rate);
     }
 
+    void setOnAir(bool onAir)
+    {
+        if (m_onAir == onAir)
+            return;
+
+        m_onAir = onAir;
+        emit onAirChanged(m_onAir);
+    }
+
 private:
     int m_index;
 
@@ -290,6 +305,8 @@ private:
     double m_rate_min;
     double m_rate_max;
 
+    bool m_onAir;
+
 signals:
 
 void indexChanged(int index);
@@ -305,6 +322,7 @@ void gainChanged(int gain);
 void invertChanged(bool invert);
 void shapedKeyChanged(bool shapedKey);
 void rateChanged(double rate);
+void onAirChanged(bool onAir);
 };
 
 #endif // DOWNSTREAMKEY_H

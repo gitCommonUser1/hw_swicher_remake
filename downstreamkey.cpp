@@ -4,6 +4,7 @@
 DownstreamKey::DownstreamKey(QObject *parent) : QObject(parent)
 {
     setIndex(0);
+    setOnAir(false);
     m_fillSource_min = 0;
     m_fillSource_max = Keys::MAX;
     setFillSource(Keys::STILL2);

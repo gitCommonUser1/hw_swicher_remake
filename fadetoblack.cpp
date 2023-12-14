@@ -6,4 +6,5 @@ FadeToBlack::FadeToBlack(QObject *parent) : QObject(parent)
     m_rate_max = 8.0;
     setRate(1.00);
     setAfv(true);
+    setEnable(false);
 }

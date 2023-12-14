@@ -824,6 +824,9 @@ void Control::connect_profile()
         settings->setMenuValue(MENU_FIRST_PIP,PIP_COLOR,PIP_COLOR_BRIGHTNESS,borderColorBrightness);
     });
     //FadeToBlack
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->ftb(),&FadeToBlack::enableChanged,this,[=](bool enable){
+        models->macroInvoke(&Models::ftbEnable,enable);
+    });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->ftb(),&FadeToBlack::rateChanged,this,[=](double rate){
         models->macroInvoke(&Models::ftbRate,rate);
         settings->setMenuValue(MENU_FIRST_FTB,MENU_SECOND_FTB_RATE,FTB_RATE_RATE,rate);
@@ -833,6 +836,9 @@ void Control::connect_profile()
         settings->setMenuValue(MENU_FIRST_FTB,MENU_SECOND_FTB_AUDIO,FTB_AUDIO_AFV,afv);
     });
     //DownstreamKeys
+    connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::onAirChanged,this,[=](bool onAir){
+        models->macroInvoke(&Models::dskOnAir,onAir);
+    });
     connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::fillSourceChanged,this,[=](int fillSource){
         models->macroInvoke(&Models::dskSourceFill,fillSource);
         settings->setMenuValue(MENU_FIRST_DSK,DSK_SOURCE,DSK_SOURCE_FILL,fillSource);
@@ -1332,11 +1338,6 @@ void Control::connect_profile()
 
 void Control::slotKnobChanged(const int knob, int value)
 {
-    //    qDebug() << "knob:" << knob << "  value:" << value;
-//        if (value > 0)
-//            value = 1;
-//        else if (value < 0)
-//            value = -1;
         switch (knob) {
         case KNOB_MENU:
             if(settings->keyIsPressed())
@@ -1406,11 +1407,28 @@ void Control::slotKnobChanged(const int knob, int value)
 void Control::slotPushChanged(const int push, const int value)
 {
     qDebug() << "push:" << push << "  value:" << value;
-//    models->sendKeySignalHasOneParameter(&Models::transitionPosition,value,false);
     models->macroInvoke((&Models::transitionPosition),value);
 }
 void Control::slotKeyChanged(const int key, const int value)
 {
+    if(key >= KEY_LED_PGM_1 && key <= KEY_LED_PGM_STLL2 )
+        return ;
+    if(key >= KEY_LED_PVW_1 && key <= KEY_LED_PVW_STLL2 )
+        return ;
+    if(key >= KEY_LED_TRANS_MIX && key <= KEY_LED_TRANS_WIPE)
+        return ;
+    if(key == KEY_LED_TRANS_PREVIEW)
+        return ;
+    if(key == KEY_LED_TRANS_FTB)
+        return ;
+    if(key == KEY_LED_KEY_ON_AIR)
+        return ;
+    if(key == KEY_LED_DSK_ON_AIR)
+        return ;
+    if(key >= KEY_LED_KEY && key <= KEY_LED_BKGD)
+        return ;
+
+
     //key keyOnAir dsk dskOnAir bkgd prev等键转交灯状态信号处理        mem key另外处理
     if(key != KEY_LED_TRANS_PREVIEW
         && key != KEY_LED_KEY_ON_AIR
@@ -1556,18 +1574,17 @@ void Control::slotKeyChanged(const int key, const int value)
 
 void Control::slotKeyStatusChanged(const int key, const int status)
 {
+    settings->listKey()[key]->doWork(status);
     //key keyOnAir dsk dskOnAir bkgd prev等键转交灯状态信号处理
-    if(key == KEY_LED_TRANS_PREVIEW
-        || key == KEY_LED_KEY_ON_AIR
-        || key == KEY_LED_DSK_ON_AIR
-        || key == KEY_LED_KEY
-        || key == KEY_LED_DSK
-        || key == KEY_LED_BKGD){
-        //
-        settings->listKey()[key]->doWork(1);
-    }else if(key >= KEY_LED_PGM_1 && key <= KEY_LED_PGM_STLL2 && status == LED_STATUS_RED){
-        settings->setpgmCurrentIndex(key - KEY_LED_PGM_1);
-    }
+//    if(key == KEY_LED_TRANS_PREVIEW
+//        || key == KEY_LED_KEY_ON_AIR
+//        || key == KEY_LED_DSK_ON_AIR
+//        || key == KEY_LED_KEY
+//        || key == KEY_LED_DSK
+//        || key == KEY_LED_BKGD){
+//        //
+//        settings->listKey()[key]->doWork(1);
+//    }
 
     //set play when pgm is aux and cut when the video is over
     if(key == KEY_LED_PGM_AUX  && status == LED_STATUS_RED){
