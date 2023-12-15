@@ -93,7 +93,6 @@ public:
     void setPlay(int status);
     void recordStart();
     void recordStop();
-    void setRecord(int status);
     void setPlayNext();
     void setPlayPrevious();
     void autoPlayNext();

@@ -51,10 +51,8 @@ public:
     void doWork(int status = 1){
         if(status != 1)
             return ;
-
         if(settings->listDialogVisible() || settings->keyboardVisible() || messageDialogControl->messageDialogVisible())
             return ;
-
         if(settings->lastFirstUnfold() == MENU_FIRST_AUDIO_MIXER && settings->lastSecondUnfold() == key_index - KEY_LED_AUDIO_MIC1)
             models->setMenuVisible(0);
         else
@@ -66,7 +64,39 @@ class keyAudioEnter:public KeyAbstractClass{
 public:
     using KeyAbstractClass::KeyAbstractClass;
     void doWork(int status = 1){
-        return;
+        if(status != 1)
+            return;
+        int second = settings->lastSecondUnfold();
+        if(settings->lastFirstUnfold() == MENU_FIRST_AUDIO_MIXER)
+        {
+            switch (second) {
+            case AUDIO_MIXER_MIC1:
+                profile->audioMixer()->audioInput()->mic1()->setFader(0);
+                break;
+            case AUDIO_MIXER_MIC2:
+                profile->audioMixer()->audioInput()->mic2()->setFader(0);
+                break;
+            case AUDIO_MIXER_IN1:
+                profile->audioMixer()->audioInput()->in1()->setFader(0);
+                break;
+            case AUDIO_MIXER_IN2:
+                profile->audioMixer()->audioInput()->in2()->setFader(0);
+                break;
+            case AUDIO_MIXER_IN3:
+                profile->audioMixer()->audioInput()->in3()->setFader(0);
+                break;
+            case AUDIO_MIXER_IN4:
+                profile->audioMixer()->audioInput()->in4()->setFader(0);
+                break;
+            case AUDIO_MIXER_AUX:
+                profile->audioMixer()->audioInput()->aux()->setFader(0);
+                break;
+            case AUDIO_MIXER_PGM:
+                profile->audioMixer()->audioOutput()->pgm()->setFader(0);
+                break;
+            }
+        }
+
     }
 };
 
@@ -119,7 +149,6 @@ public:
     void doWork(int status = 1){
         if(status != 1)
             return ;
-//        models->sendKeySignalHasOneParameter(&Models::record,1);
         models->recordStart();
     }
 };
@@ -130,7 +159,6 @@ public:
     void doWork(int status = 1){
         if(status != 1)
             return ;
-//        models->sendKeySignalHasOneParameter(&Models::record,0);
         models->recordStop();
     }
 };
@@ -276,8 +304,6 @@ public:
                 if(settings->reallyAuxSourceIndex() == AUX_SOURCE_SD_CARD){
                     // sd card
                     if(settings->playList().size() == 0 || settings->playListDialogCurrent() >= settings->playList().size())
-                        return ;
-                    if(settings->recordFileName() == SD_VIDEO_PATH + settings->playList()[settings->playListDialogCurrent()])
                         return ;
                     settings->setListDialogVisible(0);
                     settings->setPlayListCurrent(settings->playListDialogCurrent());

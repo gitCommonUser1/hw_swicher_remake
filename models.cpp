@@ -2294,9 +2294,6 @@ int Models::playStart()
         return -1;
 
     QString play = SD_VIDEO_PATH + settings->playList()[settings->playListCurrent()];
-
-    if(play == settings->recordFileName())
-        return -1;
     //
     play = play.toLocal8Bit();
 
@@ -2343,8 +2340,6 @@ void Models::setPlay(int status)
 
 void Models::recordStart()
 {
-    return ;
-
     if(!media_sd->is_online())
         return ;
     int second = models->sd_remaintime_calc();
@@ -2354,23 +2349,14 @@ void Models::recordStart()
     if(settings->recordLedStatus() == E_STATUE_SUCCESS)
         return ;
 
-    if(settings->recordFileName() != "")
-        return ;
-
-    QString fileName = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_RECORD_FILE]->third[SETTING_RECORD_FILE_NAME]->current.toString();
+    QString fileName = profile->setting()->record()->fileName();
     fileName = SD_VIDEO_PATH + fileName + "_" + QString::number(QDateTime::currentMSecsSinceEpoch()) + ".mp4";
-    settings->setRecordFileName(fileName);
     std::string s_fileName = fileName.toStdString();
     rv_switch_record_start0((char*)(s_fileName.data()),(rk_switch_cb)(recordStartCallback),0);
 }
 
 void Models::recordStop()
 {
-    return ;
-
-    if(settings->recordFileName() == "")
-        return ;
-
     if(settings->recordLedStatus() == E_STATUS_FAILED)
         return ;
 
@@ -2381,7 +2367,6 @@ void Models::recordStop()
             while(1){
                 if(settings->recordSecond() >= 2 || !media_sd->is_online()){
                     recordMinFlag = false;
-                    settings->setRecordFileName("");
                     rv_switch_record_stop0((rk_switch_cb)(recordStopCallback),0);
                     break;
                 }
@@ -2392,21 +2377,7 @@ void Models::recordStop()
     }
     if(recordMinFlag)
         return ;
-
-    settings->setRecordFileName("");
     rv_switch_record_stop0((rk_switch_cb)(recordStopCallback),0);
-}
-
-void Models::setRecord(int flag)
-{
-    if(flag)
-    {
-        recordStart();
-    }
-    else
-    {
-        recordStop();
-    }
 }
 
 void Models::setPlayNext()
@@ -2414,9 +2385,6 @@ void Models::setPlayNext()
     qDebug() << "setPlayNext()";
 
     if(settings->playListCurrent() >= settings->playList().size() - 1)
-        return ;
-
-    if(SD_VIDEO_PATH + settings->playList()[settings->playListCurrent() + 1] == settings->recordFileName())
         return ;
 
     settings->setPlayListCurrent(settings->playListCurrent() + 1);
@@ -2434,9 +2402,6 @@ void Models::setPlayPrevious()
     qDebug() << "setPlayPrevious()";
 
     if(settings->playListCurrent() == 0)
-        return ;
-
-    if(SD_VIDEO_PATH + settings->playList()[settings->playListCurrent() - 1] == settings->recordFileName())
         return ;
 
     settings->setPlayListCurrent(settings->playListCurrent() - 1);
@@ -2458,9 +2423,6 @@ void Models::autoPlayNext()
         return ;
 
     if(settings->playListCurrent() >= settings->playList().size() - 1)
-        return ;
-
-    if(SD_VIDEO_PATH + settings->playList()[settings->playListCurrent() + 1] == settings->recordFileName())
         return ;
 
     settings->setPlayListCurrent(settings->playListCurrent() + 1);

@@ -72,13 +72,13 @@ void Control::init_connect()
         media_sd->checkGbFree(second);
         if(second < 1)
         {
-            models->setRecord(0);
+            models->recordStop();
             return ;
         }
 #define RECORD_MAX_SECOND 3600 * 5
         if(settings->recordSecond() >= RECORD_MAX_SECOND)
         {
-            models->setRecord(0);
+            models->recordStop();
             return ;
         }
     });
@@ -106,6 +106,7 @@ void Control::init_connect()
             recordTimer->start(1000);
         }else if(status == E_STATUS_FAILED){
             QSwitcher::set_led(KEY_LED_RECORDER_REC,SWITCHER_LED_OFF);
+            recordTimer->stop();
             settings->setRecordSecond(0);
             if(settings->playList().size() == 1 && settings->playLedStatus() == E_STATUS_MP4_CLOSE){
                     models->playPause(1);
@@ -113,12 +114,6 @@ void Control::init_connect()
             }
         }else if(status == E_STATUS_PROCESS){
 //            QSwitcher::set_led(KEY_LED_RECORDER_REC,SWITCHER_LED_OFF,LEDS_BLINK_2Hz);
-        }
-    });
-
-    connect(settings,&Settings::recordFileNameChanged,this,[=](QString name){
-        if(name == ""){
-            recordTimer->stop();
         }
     });
 
@@ -1429,151 +1424,222 @@ void Control::slotKeyChanged(const int key, const int value)
         return ;
 
 
-    //key keyOnAir dsk dskOnAir bkgd prev等键转交灯状态信号处理        mem key另外处理
-    if(key != KEY_LED_TRANS_PREVIEW
-        && key != KEY_LED_KEY_ON_AIR
-        && key != KEY_LED_DSK_ON_AIR
-        && key != KEY_LED_KEY
-        && key != KEY_LED_DSK
-        && key != KEY_LED_BKGD
-        && key != KEY_LED_PLAYER_PLAY
-        && key != KEY_AUDIO_ENTER
-        && key != KEY_LED_MEMU
-        && !(key >= KEY_LED_MEM1 && key <= KEY_LED_MEM8)){
-        //
-        settings->listKey()[key]->doWork(value);
+    //key long pressed and short pressed
+    static int key_pressed_index = 0;
+    static int t_pressed = 0;
+    static bool longPressed = false;
+    static QTimer *timer = nullptr;
+    if(timer == nullptr){
+        timer = new QTimer;
+        connect(timer,&QTimer::timeout,this,[=](){
+            t_pressed++;
+            if(t_pressed >= 2){
+                qDebug() << "_______" << key_pressed_index << "  pressed:long" ;
+                timer->stop();
+                t_pressed = 0;
+                longPressed = true;
+            }
+        });
+    }
+    if(value == 1){
+        //pressed
+        key_pressed_index = key;
+        timer->start(1000);
+    }else if(value == 0){
+        //released
+        if(timer->isActive()){
+            qDebug() << "_______" << key_pressed_index << "  pressed:short" ;
+            timer->stop();
+            t_pressed = 0;
+            longPressed = false;
+        }
+    }
 
-    }else if(key >= KEY_LED_MEM1 && key <= KEY_LED_MEM8){
-        //mem key  long pressed  and  short pressed
-        static int key_pressed_index = 0;
-        static int t_pressed = 0;
-        static QTimer *timer = nullptr;
-        if(timer == nullptr){
-            timer = new QTimer;
-            connect(timer,&QTimer::timeout,this,[=](){
-                t_pressed++;
-                if(t_pressed >= 2){
-                    qDebug() << "_______" << key_pressed_index << "  pressed:long" ;
-                    timer->stop();
-                    t_pressed = 0;
-                    settings->listKey()[key_pressed_index]->doWork(1);
-                }
-            });
-        }
-        if(value == 1){
-            //pressed
-            key_pressed_index = key;
-            timer->start(1000);
-        }else if(value == 0){
-            //released
-            if(timer->isActive()){
-                qDebug() << "_______" << key_pressed_index << "  pressed:short" ;
-                timer->stop();
-                t_pressed = 0;
-                settings->listKey()[key]->doWork(0);
-            }
-        }
-    }else if(key == KEY_LED_PLAYER_PLAY){
-        static QTimer *timer = nullptr;
-        static int t_pressed = 0;
-        if(timer == nullptr){
-            timer = new QTimer;
-            connect(timer,&QTimer::timeout,this,[=](){
-                t_pressed++;
-                if(t_pressed >= 2){
-                    qDebug() << "_________ play  pressed:long" ;
-                    timer->stop();
-                    t_pressed = 0;
-                    if(!messageDialogControl->messageDialogVisible() && !settings->keyboardVisible()){
-                        int auxSource = settings->reallyAuxSourceIndex() ;
-                        if(auxSource == AUX_SOURCE_SD_CARD || auxSource == AUX_SOURCE_NDI){
-                            settings->setListDialogVisible(1);
-                        }
-                    }
 
-                }
-            });
-        }
-        if(value == 1){
-            //pressed
-            timer->start(1000);
-        }else if(value == 0){
-            //released
-            if(timer->isActive()){
-                qDebug() << "_________ play  pressed:short" ;
-                timer->stop();
-                t_pressed = 0;
-                settings->listKey()[key]->doWork();
+    if(longPressed)
+    {
+        //长按
+        if(key == KEY_LED_PLAYER_PLAY)
+        {
+            //打开播放列表
+            if(!messageDialogControl->messageDialogVisible() && !settings->keyboardVisible())
+            {
+                if(profile->setting()->srcSelections()->aux()->selection() != SrcSelections::USB)
+                    settings->setListDialogVisible(1);
             }
-        }
-    }else if(key == KEY_AUDIO_ENTER){
-        static QTimer *timer = nullptr;
-        static int t_pressed = 0;
-        if(timer == nullptr){
-            timer = new QTimer;
-            connect(timer,&QTimer::timeout,this,[=](){
-                t_pressed++;
-                if(t_pressed >= 3){
-                    qDebug() << "_________ audio enter  pressed:long" ;
-                    timer->stop();
-                    t_pressed = 0;
-                    models->resetFactory();
-                }
-            });
-        }
-        if(value == 1){
-            //pressed
-            timer->start(1000);
-        }else if(value == 0){
-            //released
-            if(timer->isActive()){
-                qDebug() << "_________ audio enter  pressed:short" ;
-                profile->write(profile);
-                timer->stop();
-                t_pressed = 0;
-            }
-        }
-    }else if(key == KEY_LED_MEMU){
-        settings->listKey()[key]->doWork(value);
-        if(!QFile::exists(UPDATE_MESSAGE_FILE) && !messageDialogControl->messageDialogVisible()){
-            messageDialogControl->dialogShow("",{},MessageDialogControl::MESSAGE_UPDATE);
             return ;
         }
-        static QTimer *timer = nullptr;
-        static int t_pressed = 0;
-        if(timer == nullptr){
-            timer = new QTimer;
-            connect(timer,&QTimer::timeout,this,[=](){
-                t_pressed++;
-                if(t_pressed >= 2){
-                    qDebug() << "_________ audio enter  pressed:long" ;
-                    timer->stop();
-                    t_pressed = 0;
-                    if(messageDialogControl->messageDialogVisible() && messageDialogControl->type() == MessageDialogControl::MESSAGE_UPDATE){
-                        messageDialogControl->cancel();
-                        system("mount -o remount /dev/mmcblk0p7 /oem/");
-                        settings->setIniValue(UPDATE_MESSAGE_FILE,"update",1);
-                        system("mount -ro remount /dev/mmcblk0p7 /oem/");
-                    }
-                }
-            });
+        else if(key == KEY_AUDIO_ENTER)
+        {
+            models->resetFactory();
+            return ;
         }
-        if(value == 1){
-            //pressed
-            timer->start(1000);
-        }else if(value == 0){
-            //released
-            if(timer->isActive()){
-                qDebug() << "_________ audio enter  pressed:short" ;
-                timer->stop();
-                t_pressed = 0;
+        else if(key == KEY_LED_MEMU)
+        {
+            if(messageDialogControl->messageDialogVisible() && messageDialogControl->type() == MessageDialogControl::MESSAGE_UPDATE)
+            {
+                messageDialogControl->cancel();
+                system("mount -o remount /dev/mmcblk0p7 /oem/");
+                settings->setIniValue(UPDATE_MESSAGE_FILE,"update",1);
+                system("mount -ro remount /dev/mmcblk0p7 /oem/");
+                return ;
             }
         }
     }
+    else
+    {
+        //短按
+    }
+    settings->listKey()[key]->doWork(value);
+
+//    //key keyOnAir dsk dskOnAir bkgd prev等键转交灯状态信号处理        mem key另外处理
+//    if(key != KEY_LED_TRANS_PREVIEW
+//        && key != KEY_LED_KEY_ON_AIR
+//        && key != KEY_LED_DSK_ON_AIR
+//        && key != KEY_LED_KEY
+//        && key != KEY_LED_DSK
+//        && key != KEY_LED_BKGD
+//        && key != KEY_LED_PLAYER_PLAY
+//        && key != KEY_AUDIO_ENTER
+//        && key != KEY_LED_MEMU
+//        && !(key >= KEY_LED_MEM1 && key <= KEY_LED_MEM8)){
+//        //
+//        settings->listKey()[key]->doWork(value);
+
+//    }else if(key >= KEY_LED_MEM1 && key <= KEY_LED_MEM8){
+//        //mem key  long pressed  and  short pressed
+//        static int key_pressed_index = 0;
+//        static int t_pressed = 0;
+//        static QTimer *timer = nullptr;
+//        if(timer == nullptr){
+//            timer = new QTimer;
+//            connect(timer,&QTimer::timeout,this,[=](){
+//                t_pressed++;
+//                if(t_pressed >= 2){
+//                    qDebug() << "_______" << key_pressed_index << "  pressed:long" ;
+//                    timer->stop();
+//                    t_pressed = 0;
+//                    settings->listKey()[key_pressed_index]->doWork(1);
+//                }
+//            });
+//        }
+//        if(value == 1){
+//            //pressed
+//            key_pressed_index = key;
+//            timer->start(1000);
+//        }else if(value == 0){
+//            //released
+//            if(timer->isActive()){
+//                qDebug() << "_______" << key_pressed_index << "  pressed:short" ;
+//                timer->stop();
+//                t_pressed = 0;
+//                settings->listKey()[key]->doWork(0);
+//            }
+//        }
+//    }else if(key == KEY_LED_PLAYER_PLAY){
+//        static QTimer *timer = nullptr;
+//        static int t_pressed = 0;
+//        if(timer == nullptr){
+//            timer = new QTimer;
+//            connect(timer,&QTimer::timeout,this,[=](){
+//                t_pressed++;
+//                if(t_pressed >= 2){
+//                    qDebug() << "_________ play  pressed:long" ;
+//                    timer->stop();
+//                    t_pressed = 0;
+//                    if(!messageDialogControl->messageDialogVisible() && !settings->keyboardVisible()){
+//                        int auxSource = settings->reallyAuxSourceIndex() ;
+//                        if(auxSource == AUX_SOURCE_SD_CARD || auxSource == AUX_SOURCE_NDI){
+//                            settings->setListDialogVisible(1);
+//                        }
+//                    }
+
+//                }
+//            });
+//        }
+//        if(value == 1){
+//            //pressed
+//            timer->start(1000);
+//        }else if(value == 0){
+//            //released
+//            if(timer->isActive()){
+//                qDebug() << "_________ play  pressed:short" ;
+//                timer->stop();
+//                t_pressed = 0;
+//                settings->listKey()[key]->doWork();
+//            }
+//        }
+//    }else if(key == KEY_AUDIO_ENTER){
+//        static QTimer *timer = nullptr;
+//        static int t_pressed = 0;
+//        if(timer == nullptr){
+//            timer = new QTimer;
+//            connect(timer,&QTimer::timeout,this,[=](){
+//                t_pressed++;
+//                if(t_pressed >= 3){
+//                    qDebug() << "_________ audio enter  pressed:long" ;
+//                    timer->stop();
+//                    t_pressed = 0;
+//                    models->resetFactory();
+//                }
+//            });
+//        }
+//        if(value == 1){
+//            //pressed
+//            timer->start(1000);
+//        }else if(value == 0){
+//            //released
+//            if(timer->isActive()){
+//                qDebug() << "_________ audio enter  pressed:short" ;
+//                profile->write(profile);
+//                timer->stop();
+//                t_pressed = 0;
+//            }
+//        }
+//    }else if(key == KEY_LED_MEMU){
+//        settings->listKey()[key]->doWork(value);
+//        if(!QFile::exists(UPDATE_MESSAGE_FILE) && !messageDialogControl->messageDialogVisible()){
+//            messageDialogControl->dialogShow("",{},MessageDialogControl::MESSAGE_UPDATE);
+//            return ;
+//        }
+//        static QTimer *timer = nullptr;
+//        static int t_pressed = 0;
+//        if(timer == nullptr){
+//            timer = new QTimer;
+//            connect(timer,&QTimer::timeout,this,[=](){
+//                t_pressed++;
+//                if(t_pressed >= 2){
+//                    qDebug() << "_________ audio enter  pressed:long" ;
+//                    timer->stop();
+//                    t_pressed = 0;
+//                    if(messageDialogControl->messageDialogVisible() && messageDialogControl->type() == MessageDialogControl::MESSAGE_UPDATE){
+//                        messageDialogControl->cancel();
+//                        system("mount -o remount /dev/mmcblk0p7 /oem/");
+//                        settings->setIniValue(UPDATE_MESSAGE_FILE,"update",1);
+//                        system("mount -ro remount /dev/mmcblk0p7 /oem/");
+//                    }
+//                }
+//            });
+//        }
+//        if(value == 1){
+//            //pressed
+//            timer->start(1000);
+//        }else if(value == 0){
+//            //released
+//            if(timer->isActive()){
+//                qDebug() << "_________ audio enter  pressed:short" ;
+//                timer->stop();
+//                t_pressed = 0;
+//            }
+//        }
+//    }
 }
 
 void Control::slotKeyStatusChanged(const int key, const int status)
 {
+    if(key >= KEY_LED_RECORDER_REC && key <= KEY_LED_PLAYER_PAUSE)
+        return ;
+
     settings->listKey()[key]->doWork(status);
     //key keyOnAir dsk dskOnAir bkgd prev等键转交灯状态信号处理
 //    if(key == KEY_LED_TRANS_PREVIEW

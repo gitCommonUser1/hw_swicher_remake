@@ -372,7 +372,7 @@ int main(int argc, char *argv[])
         if(!flag){
             //player control
             models->playStop();
-            models->setRecord(false);
+            models->recordStop();
 
             //sd dir check
             sdImages->m_imageList.clear();

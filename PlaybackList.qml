@@ -134,9 +134,6 @@ Dialog {
                           y:6
                           source:{
                               if(index == playbackListview.currentIndex){
-                                  if(settings.recordFileName == imagePath + settings.playList[index])
-                                      currentFileButRecordingIcon
-                                  else
                                       currentFileIcon
                               }else{
                                   fileIcon
@@ -148,9 +145,6 @@ Dialog {
                           text: settings.toLocal8bitString(name)
                           color:{
                               if(index == playbackListview.currentIndex){
-                                  if(settings.recordFileName == imagePath + settings.playList[index])
-                                      "red"
-                                  else
                                     currentFileColor
                               }else{
                                   fileColor

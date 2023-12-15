@@ -242,9 +242,6 @@ public:
     //
     Q_PROPERTY(int loadStillProgress READ loadStillProgress WRITE setLoadStillProgress NOTIFY loadStillProgressChanged)
 
-    //record file name
-    Q_PROPERTY(QString recordFileName READ recordFileName WRITE setRecordFileName NOTIFY recordFileNameChanged)
-
     //key event
     Q_PROPERTY(int keyIsPressed READ keyIsPressed WRITE setKeyIsPressed NOTIFY keyIsPressedChanged)
 
@@ -510,8 +507,6 @@ int m_recordSecond;
 
 int m_loadStillProgress;
 
-QString m_recordFileName;
-
 QList<int> m_color1Data;
 
 QList<int> m_color2Data;
@@ -711,11 +706,6 @@ public:
     int loadStillProgress() const
     {
         return m_loadStillProgress;
-    }
-
-    QString recordFileName() const
-    {
-        return m_recordFileName;
     }
 
     QList<int> color1Data() const
@@ -944,8 +934,6 @@ signals:
     void liveTimeStrChanged(QString liveTimeStr);
 
     void loadStillProgressChanged(int loadStillProgress);
-
-    void recordFileNameChanged(QString recordFileName);
 
     void color1DataChanged(QList<int> color1Data);
 
@@ -1229,14 +1217,7 @@ void setLoadStillProgress(int loadStillProgress)
     m_loadStillProgress = loadStillProgress;
     emit loadStillProgressChanged(m_loadStillProgress);
 }
-void setRecordFileName(QString recordFileName)
-{
-    if (m_recordFileName == recordFileName)
-        return;
 
-    m_recordFileName = recordFileName;
-    emit recordFileNameChanged(m_recordFileName);
-}
 void setColor1Data(QList<int> color1Data)
 {
     if (m_color1Data == color1Data)
