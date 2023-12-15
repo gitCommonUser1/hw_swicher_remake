@@ -90,12 +90,10 @@ public:
     int playStart();
     void playPause(int index);
     void playStop();
-    void setPlay(int status);
     void recordStart();
     void recordStop();
     void setPlayNext();
     void setPlayPrevious();
-    void autoPlayNext();
 
     //aux source
     void setAuxSource();
@@ -118,8 +116,6 @@ public:
     void streamUploadKeyIndexChanged(int second,int value);
 
     //playback
-    void setPlaybackMode();
-
 
     //sd
     int sd_remaintime_calc();
@@ -315,9 +311,11 @@ signals:
 
 
     //playback
+    void playbackList(QString list);
+    void playbackSequential(bool sequential);
+    void playbackProgressBar(bool progressBar);
 
     /**/
-    void playbackMode(int mode);
 
 
 
@@ -529,6 +527,9 @@ public slots:
 
     //playback
     /**/
+    void setPlaybackList(QString list);
+    void setPlaybackSequential(bool sequential);
+    void setPlaybackProgressBar(bool progressBar);
     /**/
 
 

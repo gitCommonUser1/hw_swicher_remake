@@ -287,9 +287,6 @@ public:
     Q_PROPERTY(int playListCurrent READ playListCurrent WRITE setPlayListCurrent NOTIFY playListCurrentChanged)
     Q_PROPERTY(QList<QString> playList READ playList WRITE setPlayList NOTIFY playListChanged)
 
-    Q_PROPERTY(int playAutoNextFlag READ playAutoNextFlag WRITE setPlayAutoNextFlag NOTIFY playAutoNextFlagChanged)
-
-
     //record time  live time
     Q_PROPERTY(int recordSecond READ recordSecond WRITE setRecordSecond NOTIFY recordSecondChanged)
     Q_PROPERTY(QString recordTimeStr READ recordTimeStr WRITE setRecordTimeStr NOTIFY recordTimeStrChanged)
@@ -548,8 +545,6 @@ QList<int> m_color5Data;
 int m_playListDialogVisible;
 
 int m_playListDialogCurrent;
-
-int m_playAutoNextFlag;
 
 int m_reallyOutFormat;
 
@@ -813,11 +808,6 @@ public:
         return m_playListDialogCurrent;
     }
 
-    int playAutoNextFlag() const
-    {
-        return m_playAutoNextFlag;
-    }
-
     int reallyOutFormat() const
     {
         return m_reallyOutFormat;
@@ -977,8 +967,6 @@ signals:
     void playListDialogVisibleChanged(int playListDialogVisible);
 
     void playListDialogCurrentChanged(int playListDialogCurrent);
-
-    void playAutoNextFlagChanged(int playAutoNextFlag);
 
     void reallyOutFormatChanged(int reallyOutFormat);
 
@@ -1422,14 +1410,7 @@ void setPlayListDialogCurrent(int playListDialogCurrent)
     m_playListDialogCurrent = playListDialogCurrent;
     emit playListDialogCurrentChanged(m_playListDialogCurrent);
 }
-void setPlayAutoNextFlag(int playAutoNextFlag)
-{
-    if (m_playAutoNextFlag == playAutoNextFlag)
-        return;
 
-    m_playAutoNextFlag = playAutoNextFlag;
-    emit playAutoNextFlagChanged(m_playAutoNextFlag);
-}
 void setReallyOutFormat(int reallyOutFormat)
 {
     if (m_reallyOutFormat == reallyOutFormat)

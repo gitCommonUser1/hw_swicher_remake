@@ -13,6 +13,7 @@
 #include "stillgenerator.h"
 #include "still.h"
 #include "streams.h"
+#include "playback.h"
 #include "setting.h"
 
 #define PRODUCT_NAME "GoStream Deck"
@@ -47,6 +48,8 @@ Profile::Profile(QObject *parent) : QObject(parent)
     m_stillGenerator->setObjectName("stillGenerator");
     m_streams = new Streams(this);
     m_streams->setObjectName("streams");
+    m_playback = new Playback(this);
+    m_playback->setObjectName("playback");
     m_setting = new Setting(this);
     m_setting->setObjectName("setting");
 

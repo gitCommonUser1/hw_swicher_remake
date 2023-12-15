@@ -191,24 +191,20 @@ void Control::init_connect()
     });
 
     connect(settings,&Settings::playLedStatusChanged,this,[=](int status){
-        qDebug() << "<<<<<<<<<playLedStatusChanged:" << status;
-        qDebug() << "<<<<<<<<<<<QSwitcher::get_led(KEY_LED_PGM_AUX):" << QSwitcher::get_led(KEY_LED_PGM_AUX);
-        int playback_mode = settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_MODE]->current.toInt();
-        int auxSource = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_SOURCE]->current.toInt();
-        if(status == E_STATUS_MP4_CLOSE && SWITCHER_LED_R == QSwitcher::get_led(KEY_LED_PGM_AUX)){
-            if(!media_sd->is_online() || auxSource != AUX_SOURCE_SD_CARD || playback_mode != SEQUENTIAL || (playback_mode == SEQUENTIAL && settings->isPlayListLast()))
-                models->setCutTransition();
-        }
+//        int playback_mode = settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_MODE]->current.toInt();
+//        int auxSource = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_SOURCE]->current.toInt();
+//        if(status == E_STATUS_MP4_CLOSE && SWITCHER_LED_R == QSwitcher::get_led(KEY_LED_PGM_AUX)){
+//            if(!media_sd->is_online() || auxSource != AUX_SOURCE_SD_CARD || playback_mode != SEQUENTIAL || (playback_mode == SEQUENTIAL && settings->isPlayListLast()))
+//                models->setCutTransition();
+//        }
 
-        // auto next if playback mode is Sequential
-        if(status == E_STATUS_MP4_CLOSE && playback_mode == SEQUENTIAL ){//&& rv_swithc_mp4_get_end_state() != 0
-//            models->setPlayNext();
-            if(settings->playAutoNextFlag())
-                models->playStart();
-            else
-                models->autoPlayNext();
-            settings->setPlayAutoNextFlag(0);
-        }
+//        // auto next if playback mode is Sequential
+//        if(status == E_STATUS_MP4_CLOSE && playback_mode == SEQUENTIAL ){//&& rv_swithc_mp4_get_end_state() != 0
+////            models->setPlayNext();
+//            if(settings->playAutoNextFlag())
+//                models->playStart();
+//            settings->setPlayAutoNextFlag(0);
+//        }
     });
 
     QTimer *timer1 = new QTimer;
@@ -1178,6 +1174,20 @@ void Control::connect_profile()
     //不调崩溃
     third = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_PLATFORM];
     profile->streams()->stream3()->setPlatfrom(third->list_text[third->current.toInt()]);
+
+    connect(profile->playback(),&Playback::playbackListChanged,this,[=](int playbackList){
+        models->macroInvoke(&Models::playbackList,Playback::playbackListIndexToString(playbackList));
+        settings->setMenuValue(MENU_FIRST_PLAYBACK,PLAYBACK_PLAYBACK,MENU_THIRD_PLAYBACK_LIST,playbackList);
+    });
+    connect(profile->playback(),&Playback::sequentialChanged,this,[=](bool sequential){
+        models->macroInvoke(&Models::playbackSequential,sequential);
+        settings->setMenuValue(MENU_FIRST_PLAYBACK,PLAYBACK_PLAYBACK,MENU_THIRD_PLAYBACK_SEQUENTIAL,sequential);
+    });
+    connect(profile->playback(),&Playback::progressBarChanged,this,[=](bool progressBar){
+        models->macroInvoke(&Models::playbackProgressBar,progressBar);
+        settings->setMenuValue(MENU_FIRST_PLAYBACK,PLAYBACK_PLAYBACK,MENU_THIRD_PLAYBACK_PROGRESS_BAR,progressBar);
+    });
+
 //    Setting
     connect(profile->setting()->srcNames()->pgm(),&SrcName::nameChanged,this,[=](QString name){
         settings->setMenuValue(MENU_FIRST_SETTING,SETTING_SRC_NAME,SRC_NAME_PGM,name);
@@ -1427,7 +1437,6 @@ void Control::slotKeyChanged(const int key, const int value)
     //key long pressed and short pressed
     static int key_pressed_index = 0;
     static int t_pressed = 0;
-    static bool longPressed = false;
     static QTimer *timer = nullptr;
     if(timer == nullptr){
         timer = new QTimer;
@@ -1437,7 +1446,33 @@ void Control::slotKeyChanged(const int key, const int value)
                 qDebug() << "_______" << key_pressed_index << "  pressed:long" ;
                 timer->stop();
                 t_pressed = 0;
-                longPressed = true;
+
+                if(key_pressed_index == KEY_LED_PLAYER_PLAY)
+                {
+                    //打开播放列表
+                    if(!messageDialogControl->messageDialogVisible() && !settings->keyboardVisible())
+                    {
+                        if(profile->setting()->srcSelections()->aux()->selection() != SrcSelections::USB)
+                            settings->setListDialogVisible(1);
+                    }
+                    return ;
+                }
+                else if(key_pressed_index == KEY_AUDIO_ENTER)
+                {
+                    models->resetFactory();
+                    return ;
+                }
+                else if(key_pressed_index == KEY_LED_MEMU)
+                {
+                    if(messageDialogControl->messageDialogVisible() && messageDialogControl->type() == MessageDialogControl::MESSAGE_UPDATE)
+                    {
+                        messageDialogControl->cancel();
+                        system("mount -o remount /dev/mmcblk0p7 /oem/");
+                        settings->setIniValue(UPDATE_MESSAGE_FILE,"update",1);
+                        system("mount -ro remount /dev/mmcblk0p7 /oem/");
+                        return ;
+                    }
+                }
             }
         });
     }
@@ -1451,46 +1486,9 @@ void Control::slotKeyChanged(const int key, const int value)
             qDebug() << "_______" << key_pressed_index << "  pressed:short" ;
             timer->stop();
             t_pressed = 0;
-            longPressed = false;
+            settings->listKey()[key]->doWork(1);
         }
     }
-
-
-    if(longPressed)
-    {
-        //长按
-        if(key == KEY_LED_PLAYER_PLAY)
-        {
-            //打开播放列表
-            if(!messageDialogControl->messageDialogVisible() && !settings->keyboardVisible())
-            {
-                if(profile->setting()->srcSelections()->aux()->selection() != SrcSelections::USB)
-                    settings->setListDialogVisible(1);
-            }
-            return ;
-        }
-        else if(key == KEY_AUDIO_ENTER)
-        {
-            models->resetFactory();
-            return ;
-        }
-        else if(key == KEY_LED_MEMU)
-        {
-            if(messageDialogControl->messageDialogVisible() && messageDialogControl->type() == MessageDialogControl::MESSAGE_UPDATE)
-            {
-                messageDialogControl->cancel();
-                system("mount -o remount /dev/mmcblk0p7 /oem/");
-                settings->setIniValue(UPDATE_MESSAGE_FILE,"update",1);
-                system("mount -ro remount /dev/mmcblk0p7 /oem/");
-                return ;
-            }
-        }
-    }
-    else
-    {
-        //短按
-    }
-    settings->listKey()[key]->doWork(value);
 
 //    //key keyOnAir dsk dskOnAir bkgd prev等键转交灯状态信号处理        mem key另外处理
 //    if(key != KEY_LED_TRANS_PREVIEW
@@ -1653,8 +1651,8 @@ void Control::slotKeyStatusChanged(const int key, const int status)
 //    }
 
     //set play when pgm is aux and cut when the video is over
-    if(key == KEY_LED_PGM_AUX  && status == LED_STATUS_RED){
-        // pgm is aux
-        models->setPlay(0);
-    }
+//    if(key == KEY_LED_PGM_AUX  && status == LED_STATUS_RED){
+//        // pgm is aux
+//        models->setPlay(0);
+//    }
 }

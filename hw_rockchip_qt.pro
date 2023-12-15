@@ -81,6 +81,7 @@ SOURCES += \
     panel.cpp \
     patternparameters.cpp \
     pipparameters.cpp \
+    playback.cpp \
     preview.cpp \
     primarydns.cpp \
     program.cpp \
@@ -295,6 +296,7 @@ HEADERS += \
     panel.h \
     patternparameters.h \
     pipparameters.h \
+    playback.h \
     preview.h \
     primarydns.h \
     profile_include.h \

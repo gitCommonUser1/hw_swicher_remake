@@ -170,6 +170,7 @@ public:
         if(status != 1)
             return ;
 //        models->sendKeySignalHasOneParameter(&Models::play,0);
+        models->playPause(0);
     }
 };
 
@@ -180,6 +181,7 @@ public:
         if(status != 1)
             return ;
 //        models->sendKeySignalHasOneParameter(&Models::play,1);
+        models->playPause(1);
     }
 };
 
@@ -303,20 +305,7 @@ public:
             }else if(settings->listDialogVisible()){
                 if(settings->reallyAuxSourceIndex() == AUX_SOURCE_SD_CARD){
                     // sd card
-                    if(settings->playList().size() == 0 || settings->playListDialogCurrent() >= settings->playList().size())
-                        return ;
-                    settings->setListDialogVisible(0);
-                    settings->setPlayListCurrent(settings->playListDialogCurrent());
-                    QTimer::singleShot(50,nullptr,[=](){
-                        int playback_mode = settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_MODE]->current.toInt();
-                        if(playback_mode == SEQUENTIAL && settings->playLedStatus() != E_STATUS_MP4_CLOSE){
-                                settings->setPlayAutoNextFlag(1);
-                                models->playStop();
-                        }else{
-                            models->playStart();
-                        }
-                        models->playPause(0);
-                    });
+
                 }else if(settings->reallyAuxSourceIndex() == AUX_SOURCE_NDI){
                     // ndi
                     if(ndi->ndiList().size() > settings->ndiListDialogCurrent())

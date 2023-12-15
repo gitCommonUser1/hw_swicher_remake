@@ -61,5 +61,6 @@
 #include "gateway.h"
 #include "primarydns.h"
 #include "secondarydns.h"
+#include "playback.h"
 
 #endif // PROFILE_INCLUDE_H

@@ -170,6 +170,9 @@ void Models::init_connect()
     connect(this,&Models::streamOutput,this,&Models::setStreamOutput);
 
     //playback
+    connect(this,&Models::playbackList,this,&Models::setPlaybackList);
+    connect(this,&Models::playbackSequential,this,&Models::setPlaybackSequential);
+    connect(this,&Models::playbackProgressBar,this,&Models::setPlaybackProgressBar);
 
     //setting
     connect(this,&Models::srcName,this,&Models::setSrcName);
@@ -912,6 +915,35 @@ void Models::updateServerArray(int streamIndex)
     }
     (third)->max = (third)->list_text.size() - 1;
     //    stream->setServer(server);
+}
+
+void Models::setPlaybackList(QString list)
+{
+    int index = Playback::playbackListStringToIndex(list);
+    if(profile->playback()->playbackList() != index)
+    {
+        profile->playback()->setPlaybackList(index);
+        return ;
+    }
+}
+
+void Models::setPlaybackSequential(bool sequential)
+{
+    if(profile->playback()->sequential() != sequential)
+    {
+        profile->playback()->setSequential(sequential);
+        return ;
+    }
+    rv_switch_mp4_replay(sequential);
+}
+
+void Models::setPlaybackProgressBar(bool progressBar)
+{
+    if(profile->playback()->progressBar() != progressBar)
+    {
+        profile->playback()->setProgressBar(progressBar);
+        return ;
+    }
 }
 
 void Models::setSrcName(QString srcName, QString name)
@@ -1694,7 +1726,9 @@ void Models::setLanguage(int language)
         languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_UPLOAD_KEY]->name] = tr("Upload Key / RTMP URL");
         languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_OUTPUT]->name] = tr("Output");
 
-        languages[settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_MODE]->name] = tr("Playback Mode");
+        languages[settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_LIST]->name] = tr("Playback List");
+        languages[settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_SEQUENTIAL]->name] = tr("Sequential");
+        languages[settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_PROGRESS_BAR]->name] = tr("Progress Bar");
 
         languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_VERSION]->third[VERSION_VERSION]->name] = tr("Version");
         languages[settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_VERSION]->third[VERSION_BUILD_INFO]->name] = tr("Build Info");
@@ -1759,6 +1793,8 @@ void Models::setLanguage(int language)
         languages["Mic 2"] = tr("Mic 2");
         languages["Play Once"] = tr("Play Once");
         languages["Repeat"] = tr("Repeat");
+        languages["Single Group"] = tr("Single Group");
+        languages["All Group"] = tr("All Group");
         languages["Sequential"] = tr("Sequential");
         languages["PGM|PVW"] = tr("PGM|PVW");
         languages["PVW|PGM"] = tr("PVW|PGM");
@@ -2285,11 +2321,10 @@ void Models::loadStill4()
 
 int Models::playStart()
 {
-    if(settings->reallyAuxSourceIndex() != AUX_SOURCE_SD_CARD)
+    if(profile->setting()->srcSelections()->aux()->selection() != SrcSelections::SD_CARD)
         return -1;
     if(!media_sd->is_online())
         return -1;
-
     if((settings->playListCurrent() >= settings->playList().size() && settings->playList().size() != 0) || settings->playList().size() == 0)
         return -1;
 
@@ -2311,31 +2346,6 @@ void Models::playStop()
 {
     qDebug() << "<<<<<<<<<<<playStop";
     rv_switch_mp4_close((rk_switch_cb)(playCallback),0);
-}
-
-void Models::setPlay(int status)
-{
-    if(settings->reallyAuxSourceIndex() != AUX_SOURCE_SD_CARD)
-        return ;
-    if(!media_sd->is_online())
-        return ;
-
-    if(status)
-    {
-        if(settings->playLedStatus() == E_STATUS_MP4_CLOSE)
-            return ;
-        playPause(1);
-    }
-    else
-    {
-        if(settings->playLedStatus() == E_STATUS_MP4_CLOSE){
-            if(!playStart()){
-                playPause(0);
-            }
-        }else if(settings->playLedStatus() == E_STATUS_MP4_PAUSE){
-            playPause(0);
-        }
-    }
 }
 
 void Models::recordStart()
@@ -2382,51 +2392,36 @@ void Models::recordStop()
 
 void Models::setPlayNext()
 {
-    qDebug() << "setPlayNext()";
+//    qDebug() << "setPlayNext()";
 
-    if(settings->playListCurrent() >= settings->playList().size() - 1)
-        return ;
+//    if(settings->playListCurrent() >= settings->playList().size() - 1)
+//        return ;
 
-    settings->setPlayListCurrent(settings->playListCurrent() + 1);
-    int playback_mode = settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_MODE]->current.toInt();
-    if(playback_mode == SEQUENTIAL && settings->playLedStatus() != E_STATUS_MP4_CLOSE){
-        settings->setPlayAutoNextFlag(1);
-        playStop();
-    }
-    else
-        playStart();
+//    settings->setPlayListCurrent(settings->playListCurrent() + 1);
+//    int playback_mode = settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_MODE]->current.toInt();
+//    if(playback_mode == SEQUENTIAL && settings->playLedStatus() != E_STATUS_MP4_CLOSE){
+//        settings->setPlayAutoNextFlag(1);
+//        playStop();
+//    }
+//    else
+//        playStart();
 }
 
 void Models::setPlayPrevious()
 {
-    qDebug() << "setPlayPrevious()";
+//    qDebug() << "setPlayPrevious()";
 
-    if(settings->playListCurrent() == 0)
-        return ;
+//    if(settings->playListCurrent() == 0)
+//        return ;
 
-    settings->setPlayListCurrent(settings->playListCurrent() - 1);
-    int playback_mode = settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_MODE]->current.toInt();
-    if(playback_mode == SEQUENTIAL && settings->playLedStatus() != E_STATUS_MP4_CLOSE){
-        settings->setPlayAutoNextFlag(1);
-        playStop();
-    }
-    else
-        playStart();
-}
-
-//弃用
-void Models::autoPlayNext()
-{
-    if(settings->reallyAuxSourceIndex() != AUX_SOURCE_SD_CARD)
-        return ;
-    if(!media_sd->is_online())
-        return ;
-
-    if(settings->playListCurrent() >= settings->playList().size() - 1)
-        return ;
-
-    settings->setPlayListCurrent(settings->playListCurrent() + 1);
-    playStart();
+//    settings->setPlayListCurrent(settings->playListCurrent() - 1);
+//    int playback_mode = settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_MODE]->current.toInt();
+//    if(playback_mode == SEQUENTIAL && settings->playLedStatus() != E_STATUS_MP4_CLOSE){
+//        settings->setPlayAutoNextFlag(1);
+//        playStop();
+//    }
+//    else
+//        playStart();
 }
 
 void Models::setLiveStatus(int status)
@@ -2525,18 +2520,6 @@ void Models::streamUploadKeyIndexChanged(int second, int value)
     if(value >= size)
         value = size - 1;
     settings->setMenuValue(MENU_FIRST_STREAM,second,MENU_THIRD_STREAM_UPLOAD_KEY,value);
-}
-
-void Models::setPlaybackMode()
-{
-    int mode = settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_MODE]->current.toInt();
-    if(mode == PLAY_ONCE){
-        rv_switch_mp4_replay(0);
-    }else if(mode == REPEAT){
-        rv_switch_mp4_replay(1);
-    }else if(mode == SEQUENTIAL){
-        rv_switch_mp4_replay(0);
-    }
 }
 
 void Models::setAuxSource()

@@ -1709,11 +1709,30 @@ public:
 };
 
 
-class MenuThirdPlaybackMode:public MenuThird{
+class MenuThirdPlaybackList:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
 //        models->macroInvoke((&Models::playbackMode),value.toInt());
+        profile->playback()->setPlaybackList(value.toInt());
+    }
+};
+
+class MenuThirdPlaybackSequential:public MenuThird{
+public:
+    using MenuThird::MenuThird;
+    void doWork(QVariant value){
+//        models->macroInvoke((&Models::playbackMode),value.toInt());
+        profile->playback()->setSequential(value > 0);
+    }
+};
+
+class MenuThirdPlaybackProgressBar:public MenuThird{
+public:
+    using MenuThird::MenuThird;
+    void doWork(QVariant value){
+//        models->macroInvoke((&Models::playbackMode),value.toInt());
+        profile->playback()->setProgressBar(value > 0);
     }
 };
 

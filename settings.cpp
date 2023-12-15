@@ -193,8 +193,6 @@ void Settings::init_menuStatus()
     setRecordLedStatus(E_STATUS_FAILED);
     setPlayListCurrent(0);
 
-    setPlayAutoNextFlag(0);
-
     setKeyboardReg(-1);
 
     setListDialogVisible(0);
@@ -1117,8 +1115,18 @@ MenuSecond *Settings::new_Playback_Set()
     monitor->name = tr("playback");
     monitor->ss_name = ("playback");
 
-    third = new MenuThirdPlaybackMode(tr("Playback Mode"),"Playback Mode",0,0,2,1,DATATYPE_ENUM);
-    third->list_text << tr("Play Once") << tr("Repeat") << tr("Sequential");
+    third = new MenuThirdPlaybackList(tr("Playback List"),"Playback List",0,0,2,1,DATATYPE_ENUM);
+    third->list_text << tr("Single Group") << tr("All Group");
+    third->max = third->list_text.size() - 1;
+    list_third.append(third);
+
+    third = new MenuThirdPlaybackSequential(tr("Sequential"),"Sequential",0,0,2,1,DATATYPE_ENUM);
+    third->list_text << tr("Off") << tr("On");
+    third->max = third->list_text.size() - 1;
+    list_third.append(third);
+
+    third = new MenuThirdPlaybackProgressBar(tr("Progress Bar"),"Progress Bar",0,1,2,1,DATATYPE_ENUM);
+    third->list_text << tr("Off") << tr("On");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
 
