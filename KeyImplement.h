@@ -303,10 +303,10 @@ public:
                 settings->setKeyIsPressed(1);
                 models->sendKey(settings->keyboardCurrentIndex());
             }else if(settings->listDialogVisible()){
-                if(settings->reallyAuxSourceIndex() == AUX_SOURCE_SD_CARD){
+                if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::SD_CARD){
                     // sd card
 
-                }else if(settings->reallyAuxSourceIndex() == AUX_SOURCE_NDI){
+                }else if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::NDI){
                     // ndi
                     if(ndi->ndiList().size() > settings->ndiListDialogCurrent())
                         ndi->connectNdi(ndi->ndiList()[settings->ndiListDialogCurrent()]);

@@ -1185,12 +1185,8 @@ void Models::setRecordFileName(QString fileName)
 
 void Models::setSrcSelection(QString src, QString selection)
 {
-    qDebug() << src;
-    qDebug() << selection;
     int index = SrcSelections::sourceStringToIndex(src);
     int int_selection = SrcSelections::selectionStringToIndex(selection);
-    qDebug() << index;
-    qDebug() << int_selection;
     switch (index) {
     case SrcSelections::IN1:
         if(profile->setting()->srcSelections()->in1()->selection() != int_selection)
@@ -1239,6 +1235,30 @@ void Models::setSrcSelection(QString src, QString selection)
         {
             messageDialogControl->dialogShow(QObject::tr("No NDI license, please purchase license at www.osee-tech.com."),{QObject::tr("Cancel")},MessageDialogControl::MESSAGE_SD_FORMAT);
             profile->setting()->srcSelections()->aux()->setSelection(SrcSelections::SD_CARD);
+        }
+        else
+        {
+            switch (int_selection) {
+            case SrcSelections::SD_CARD:
+                rv_switch_usb_camera_stop0(0,0);
+                osee_ndi_deinit();
+                if(settings->playList().size() != 0 && settings->playLedStatus() == E_STATUS_MP4_CLOSE){
+                    playPause(1);
+                    playStart();
+                }
+                break;
+            case SrcSelections::USB:
+                playStop();
+                osee_ndi_deinit();
+                rv_switch_usb_camera_start0(0,0);
+                break;
+            case SrcSelections::NDI:
+                playStop();
+                rv_switch_usb_camera_stop0(0,0);
+                if(ndi->lastConnectItem().url() != "")
+                    ndi->connectNdi(ndi->lastConnectItem());
+                break;
+            }
         }
     }
 }
@@ -2522,42 +2542,6 @@ void Models::streamUploadKeyIndexChanged(int second, int value)
     settings->setMenuValue(MENU_FIRST_STREAM,second,MENU_THIRD_STREAM_UPLOAD_KEY,value);
 }
 
-void Models::setAuxSource()
-{
-    int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_SOURCE]->current.toInt();
-
-    if(index == AUX_SOURCE_NDI){
-        if(get_ndi_license_state()){
-            messageDialogControl->dialogShow(QObject::tr("No NDI license, please purchase license at www.osee-tech.com."),{QObject::tr("Cancel")},MessageDialogControl::MESSAGE_SD_FORMAT);
-            settings->setMenuValue(MENU_FIRST_SETTING,SETTING_AUX_SOURCE,SETTING_AUX_SOURCE_SOURCE,settings->reallyAuxSourceIndex());
-            return ;
-        }
-    }
-    //set really aux source
-    settings->setReallyAuxSourceIndex(index);
-    switch (index) {
-    case AUX_SOURCE_SD_CARD:
-        rv_switch_usb_camera_stop0(0,0);
-        osee_ndi_deinit();
-        if(settings->playList().size() != 0 && settings->playLedStatus() == E_STATUS_MP4_CLOSE){
-            playPause(1);
-            playStart();
-        }
-        break;
-    case AUX_SOURCE_USB_CAMERA:
-        playStop();
-        osee_ndi_deinit();
-        rv_switch_usb_camera_start0(0,0);
-        break;
-    case AUX_SOURCE_NDI:
-        playStop();
-        rv_switch_usb_camera_stop0(0,0);
-        if(ndi->lastConnectItem().url() != "")
-            ndi->connectNdi(ndi->lastConnectItem());
-        break;
-    }
-}
-
 int Models::getOutFormatIndexForEnum(int index)
 {
     int value = 0;
@@ -2612,17 +2596,6 @@ int Models::getOutFormat(int index)
         value = 60;
 
     return value;
-}
-
-void Models::setColorSpace(int third)
-{
-    int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[third]->current.toInt();
-    if(third == SETTING_OUT_FORMAT_OUTPUT1_COLOR_SPACE)
-        settings->setReallyOutput1ColorSpace(index);
-    else if(third == SETTING_OUT_FORMAT_OUTPUT2_COLOR_SPACE)
-        settings->setReallyOutput2ColorSpace(index);
-
-    set_hdmi_out_colorspace(third - SETTING_OUT_FORMAT_OUTPUT1_COLOR_SPACE,(hdmi_out_colorspace_t)index);
 }
 
 void Models::setMSleep(int value)

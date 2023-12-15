@@ -88,9 +88,7 @@ void MessageDialogControl::cancel()
 {
     switch (m_type) {
     case MESSAGE_OUT_FORMAT:
-        int index = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt();
-            if(index != settings->reallyOutFormat())
-                settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_FORMAT,settings->reallyOutFormat());
+        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_FORMAT,profile->setting()->outFormat()->format()->outFormat());
         break;
     }
 

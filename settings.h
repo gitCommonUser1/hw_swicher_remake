@@ -196,7 +196,6 @@ public:
     MenuSecond* new_Setting_Language();
     MenuSecond* new_Setting_Reset();
 
-    Q_PROPERTY(int pgmCurrentIndex READ pgmCurrentIndex WRITE setpgmCurrentIndex NOTIFY pgmCurrentIndexChanged)
     //
     Q_PROPERTY(int pgmTally READ pgmTally WRITE setPgmTally NOTIFY pgmTallyChanged)
 
@@ -204,24 +203,6 @@ public:
     Q_PROPERTY(int audioOnFlag READ audioOnFlag WRITE setAudioOnFlag NOTIFY audioOnFlagChanged)
     Q_PROPERTY(int audioAfvFlag READ audioAfvFlag WRITE setAudioAfvFlag NOTIFY audioAfvFlagChanged)
     Q_PROPERTY(QList<QString> audioNumbers READ audioNumbers WRITE setAudioNumbers NOTIFY audioNumbersChanged)
-
-    //really aux source
-    Q_PROPERTY(int reallyAuxSourceIndex READ reallyAuxSourceIndex WRITE setReallyAuxSourceIndex NOTIFY reallyAuxSourceIndexChanged)
-    Q_PROPERTY(int reallySrcSelectionIn1 READ reallySrcSelectionIn1 WRITE setReallySrcSelectionIn1 NOTIFY reallySrcSelectionIn1Changed)
-    Q_PROPERTY(int reallySrcSelectionIn2 READ reallySrcSelectionIn2 WRITE setReallySrcSelectionIn2 NOTIFY reallySrcSelectionIn2Changed)
-    Q_PROPERTY(int reallySrcSelectionIn3 READ reallySrcSelectionIn3 WRITE setReallySrcSelectionIn3 NOTIFY reallySrcSelectionIn3Changed)
-    Q_PROPERTY(int reallySrcSelectionIn4 READ reallySrcSelectionIn4 WRITE setReallySrcSelectionIn4 NOTIFY reallySrcSelectionIn4Changed)
-
-    //really out format
-    Q_PROPERTY(int reallyOutFormat READ reallyOutFormat WRITE setReallyOutFormat NOTIFY reallyOutFormatChanged)
-
-    //really out source hdmi1
-    Q_PROPERTY(int reallyOutSourceHDMI1 READ reallyOutSourceHDMI1 WRITE setReallyOutSourceHDMI1 NOTIFY reallyOutSourceHDMI1Changed)
-    Q_PROPERTY(int reallyOutSourceHDMI2 READ reallyOutSourceHDMI2 WRITE setReallyOutSourceHDMI2 NOTIFY reallyOutSourceHDMI2Changed)
-    Q_PROPERTY(int reallyOutSourceUVC READ reallyOutSourceUVC WRITE setReallyOutSourceUVC NOTIFY reallyOutSourceUVCChanged)
-
-    Q_PROPERTY(int reallyOutput1ColorSpace READ reallyOutput1ColorSpace WRITE setReallyOutput1ColorSpace NOTIFY reallyOutput1ColorSpaceChanged)
-    Q_PROPERTY(int reallyOutput2ColorSpace READ reallyOutput2ColorSpace WRITE setReallyOutput2ColorSpace NOTIFY reallyOutput2ColorSpaceChanged)
 
     //color
     //color 1
@@ -508,8 +489,6 @@ QList<int> m_color1Data;
 
 QList<int> m_color2Data;
 
-int m_reallyAuxSourceIndex;
-
 int m_audioOnFlag;
 
 int m_audioAfvFlag;
@@ -520,12 +499,6 @@ QList<int> m_color3Data;
 
 QList<int> m_color4Data;
 
-int m_reallyOutSourceHDMI1;
-
-int m_reallyOutSourceHDMI2;
-
-int m_reallyOutSourceUVC;
-
 int m_keyboardReg;
 
 int m_liveStreamStatus1;
@@ -533,8 +506,6 @@ int m_liveStreamStatus1;
 int m_liveStreamStatus2;
 
 int m_liveStreamStatus3;
-
-int m_pgmCurrentIndex;
 
 int m_liveStatus;
 
@@ -546,25 +517,11 @@ int m_playListDialogVisible;
 
 int m_playListDialogCurrent;
 
-int m_reallyOutFormat;
-
 QList<int> m_color6Data;
 
 QList<int> m_chromakeySMPColorYcbcr;
 
 int m_pgmTally;
-
-int m_reallyOutput1ColorSpace;
-
-int m_reallyOutput2ColorSpace;
-
-int m_reallySrcSelectionIn1;
-
-int m_reallySrcSelectionIn2;
-
-int m_reallySrcSelectionIn3;
-
-int m_reallySrcSelectionIn4;
 
 int m_listDialogVisible;
 
@@ -713,11 +670,6 @@ public:
         return m_color2Data;
     }
 
-    int reallyAuxSourceIndex() const
-    {
-        return m_reallyAuxSourceIndex;
-    }
-
     int audioOnFlag() const
     {
         return m_audioOnFlag;
@@ -743,21 +695,6 @@ public:
         return m_color4Data;
     }
 
-    int reallyOutSourceHDMI1() const
-    {
-        return m_reallyOutSourceHDMI1;
-    }
-
-    int reallyOutSourceHDMI2() const
-    {
-        return m_reallyOutSourceHDMI2;
-    }
-
-    int reallyOutSourceUVC() const
-    {
-        return m_reallyOutSourceUVC;
-    }
-
     int keyboardReg() const
     {
         return m_keyboardReg;
@@ -776,11 +713,6 @@ public:
     int liveStreamStatus3() const
     {
         return m_liveStreamStatus3;
-    }
-
-    int pgmCurrentIndex() const
-    {
-        return m_pgmCurrentIndex;
     }
 
     int liveStatus() const
@@ -808,11 +740,6 @@ public:
         return m_playListDialogCurrent;
     }
 
-    int reallyOutFormat() const
-    {
-        return m_reallyOutFormat;
-    }
-
     QList<int> color6Data() const
     {
         return m_color6Data;
@@ -826,36 +753,6 @@ public:
     int pgmTally() const
     {
         return m_pgmTally;
-    }
-
-    int reallyOutput1ColorSpace() const
-    {
-        return m_reallyOutput1ColorSpace;
-    }
-
-    int reallyOutput2ColorSpace() const
-    {
-        return m_reallyOutput2ColorSpace;
-    }
-
-    int reallySrcSelectionIn1() const
-    {
-        return m_reallySrcSelectionIn1;
-    }
-
-    int reallySrcSelectionIn2() const
-    {
-        return m_reallySrcSelectionIn2;
-    }
-
-    int reallySrcSelectionIn3() const
-    {
-        return m_reallySrcSelectionIn3;
-    }
-
-    int reallySrcSelectionIn4() const
-    {
-        return m_reallySrcSelectionIn4;
     }
 
     int listDialogVisible() const
@@ -929,8 +826,6 @@ signals:
 
     void color2DataChanged(QList<int> color2Data);
 
-    void reallyAuxSourceIndexChanged(int reallyAuxSourceIndex);
-
     void audioOnFlagChanged(int audioOnFlag);
 
     void audioAfvFlagChanged(int audioAfvFlag);
@@ -941,12 +836,6 @@ signals:
 
     void color4DataChanged(QList<int> color4Data);
 
-    void reallyOutSourceHDMI1Changed(int reallyOutSourceHDMI1);
-
-    void reallyOutSourceHDMI2Changed(int reallyOutSourceHDMI2);
-
-    void reallyOutSourceUVCChanged(int reallyOutSourceUVC);
-
     void keyboardRegChanged(int keyboardReg);
 
     void liveStreamStatus1Changed(int liveStreamStatus1);
@@ -954,8 +843,6 @@ signals:
     void liveStreamStatus2Changed(int liveStreamStatus2);
 
     void liveStreamStatus3Changed(int liveStreamStatus3);
-
-    void pgmCurrentIndexChanged(int pgmCurrentIndex);
 
     void liveStatusChanged(int liveStatus);
 
@@ -968,25 +855,11 @@ signals:
 
     void playListDialogCurrentChanged(int playListDialogCurrent);
 
-    void reallyOutFormatChanged(int reallyOutFormat);
-
     void color6DataChanged(QList<int> color6Data);
 
     void chromakeySMPColorYcbcrChanged(QList<int> chromakeySMPColorYcbcr);
 
     void pgmTallyChanged(int pgmTally);
-
-    void reallyOutput1ColorSpaceChanged(int reallyOutput1ColorSpace);
-
-    void reallyOutput2ColorSpaceChanged(int reallyOutput2ColorSpace);
-
-    void reallySrcSelectionIn1Changed(int reallySrcSelectionIn1);
-
-    void reallySrcSelectionIn2Changed(int reallySrcSelectionIn2);
-
-    void reallySrcSelectionIn3Changed(int reallySrcSelectionIn3);
-
-    void reallySrcSelectionIn4Changed(int reallySrcSelectionIn4);
 
     void listDialogVisibleChanged(int listDialogVisible);
 
@@ -1222,14 +1095,7 @@ void setColor2Data(QList<int> color2Data)
     m_color2Data = color2Data;
     emit color2DataChanged(m_color2Data);
 }
-void setReallyAuxSourceIndex(int reallyAuxSourceIndex)
-{
-    if (m_reallyAuxSourceIndex == reallyAuxSourceIndex)
-        return;
 
-    m_reallyAuxSourceIndex = reallyAuxSourceIndex;
-    emit reallyAuxSourceIndexChanged(m_reallyAuxSourceIndex);
-}
 void setAudioOnFlag(int audioOnFlag)
 {
     if (m_audioOnFlag == audioOnFlag)
@@ -1285,30 +1151,7 @@ void setColor4Data(QList<int> color4Data)
     m_color4Data = color4Data;
     emit color4DataChanged(m_color4Data);
 }
-void setReallyOutSourceHDMI1(int reallyOutSourceHDMI1)
-{
-    if (m_reallyOutSourceHDMI1 == reallyOutSourceHDMI1)
-        return;
 
-    m_reallyOutSourceHDMI1 = reallyOutSourceHDMI1;
-    emit reallyOutSourceHDMI1Changed(m_reallyOutSourceHDMI1);
-}
-void setReallyOutSourceHDMI2(int reallyOutSourceHDMI2)
-{
-    if (m_reallyOutSourceHDMI2 == reallyOutSourceHDMI2)
-        return;
-
-    m_reallyOutSourceHDMI2 = reallyOutSourceHDMI2;
-    emit reallyOutSourceHDMI2Changed(m_reallyOutSourceHDMI2);
-}
-void setReallyOutSourceUVC(int reallyOutSourceUVC)
-{
-    if (m_reallyOutSourceUVC == reallyOutSourceUVC)
-        return;
-
-    m_reallyOutSourceUVC = reallyOutSourceUVC;
-    emit reallyOutSourceUVCChanged(m_reallyOutSourceUVC);
-}
 void setKeyboardReg(int keyboardReg)
 {
     if (m_keyboardReg == keyboardReg)
@@ -1341,16 +1184,7 @@ void setLiveStreamStatus3(int liveStreamStatus3)
     m_liveStreamStatus3 = liveStreamStatus3;
     emit liveStreamStatus3Changed(m_liveStreamStatus3);
 }
-void setpgmCurrentIndex(int pgmCurrentIndex)
-{
-    if (m_pgmCurrentIndex == pgmCurrentIndex)
-        return;
 
-    printf("________________________m_pgmCurrentIndex:%d\n " ,m_pgmCurrentIndex);
-
-    m_pgmCurrentIndex = pgmCurrentIndex;
-    emit pgmCurrentIndexChanged(m_pgmCurrentIndex);
-}
 void setLiveStatus(int liveStatus)
 {
     if (m_liveStatus == liveStatus)
@@ -1411,14 +1245,6 @@ void setPlayListDialogCurrent(int playListDialogCurrent)
     emit playListDialogCurrentChanged(m_playListDialogCurrent);
 }
 
-void setReallyOutFormat(int reallyOutFormat)
-{
-    if (m_reallyOutFormat == reallyOutFormat)
-        return;
-
-    m_reallyOutFormat = reallyOutFormat;
-    emit reallyOutFormatChanged(m_reallyOutFormat);
-}
 void setColor6Data(QList<int> color6Data)
 {
     if (m_color6Data == color6Data)
@@ -1449,54 +1275,7 @@ void setPgmTally(int pgmTally)
     m_pgmTally = pgmTally;
     emit pgmTallyChanged(m_pgmTally);
 }
-void setReallyOutput1ColorSpace(int reallyOutput1ColorSpace)
-{
-    if (m_reallyOutput1ColorSpace == reallyOutput1ColorSpace)
-        return;
 
-    m_reallyOutput1ColorSpace = reallyOutput1ColorSpace;
-    emit reallyOutput1ColorSpaceChanged(m_reallyOutput1ColorSpace);
-}
-void setReallyOutput2ColorSpace(int reallyOutput2ColorSpace)
-{
-    if (m_reallyOutput2ColorSpace == reallyOutput2ColorSpace)
-        return;
-
-    m_reallyOutput2ColorSpace = reallyOutput2ColorSpace;
-    emit reallyOutput2ColorSpaceChanged(m_reallyOutput2ColorSpace);
-}
-void setReallySrcSelectionIn1(int reallySrcSelectionIn1)
-{
-    if (m_reallySrcSelectionIn1 == reallySrcSelectionIn1)
-        return;
-
-    m_reallySrcSelectionIn1 = reallySrcSelectionIn1;
-    emit reallySrcSelectionIn1Changed(m_reallySrcSelectionIn1);
-}
-void setReallySrcSelectionIn2(int reallySrcSelectionIn2)
-{
-    if (m_reallySrcSelectionIn2 == reallySrcSelectionIn2)
-        return;
-
-    m_reallySrcSelectionIn2 = reallySrcSelectionIn2;
-    emit reallySrcSelectionIn2Changed(m_reallySrcSelectionIn2);
-}
-void setReallySrcSelectionIn3(int reallySrcSelectionIn3)
-{
-    if (m_reallySrcSelectionIn3 == reallySrcSelectionIn3)
-        return;
-
-    m_reallySrcSelectionIn3 = reallySrcSelectionIn3;
-    emit reallySrcSelectionIn3Changed(m_reallySrcSelectionIn3);
-}
-void setReallySrcSelectionIn4(int reallySrcSelectionIn4)
-{
-    if (m_reallySrcSelectionIn4 == reallySrcSelectionIn4)
-        return;
-
-    m_reallySrcSelectionIn4 = reallySrcSelectionIn4;
-    emit reallySrcSelectionIn4Changed(m_reallySrcSelectionIn4);
-}
 void setListDialogVisible(int listDialogVisible)
 {
     if (m_listDialogVisible == listDialogVisible)

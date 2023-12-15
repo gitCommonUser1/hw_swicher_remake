@@ -271,9 +271,9 @@ void Control::init_connect()
             models->setUMDVisivle(0);
             models->setMvMeterVisivle(0);
 
-            if(settings->reallyAuxSourceIndex() == AUX_SOURCE_SD_CARD){
+            if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::SD_CARD){
                 settings->setPlayListDialogVisible(1);
-            }else if(settings->reallyAuxSourceIndex() == AUX_SOURCE_NDI){
+            }else if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::NDI){
                 settings->setNdiListDialogVisible(1);
             }
         }else{
@@ -1371,11 +1371,11 @@ void Control::slotKnobChanged(const int knob, int value)
             }else if(settings->listDialogVisible()){
                 int size = 0;
                 int current = 0;
-                if(settings->reallyAuxSourceIndex() == AUX_SOURCE_SD_CARD){
+                if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::SD_CARD){
                     size = settings->playList().size();
                     current = settings->playListDialogCurrent();
                 }
-                else if(settings->reallyAuxSourceIndex() == AUX_SOURCE_NDI){
+                else if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::NDI){
                     size = ndi->ndiList().size();
                     current = settings->ndiListDialogCurrent();
                 }
@@ -1391,9 +1391,9 @@ void Control::slotKnobChanged(const int knob, int value)
                     if(finalValue < 0)
                         finalValue = 0;
                 }
-                if(settings->reallyAuxSourceIndex() == AUX_SOURCE_SD_CARD){
+                if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::SD_CARD){
                     settings->setPlayListDialogCurrent(finalValue);
-                }else if(settings->reallyAuxSourceIndex() == AUX_SOURCE_NDI){
+                }else if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::NDI){
                     settings->setNdiListDialogCurrent(finalValue);
                 }
             }else{

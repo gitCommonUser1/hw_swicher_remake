@@ -180,13 +180,6 @@ void Settings::init_menuStatus()
     setLiveStatus(0);
     setLiveLedStatus(E_STATUS_CLOSE);
 
-    setReallyOutFormat(listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt());
-    setReallySrcSelectionIn1(listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_IN1]->current.toInt());
-    setReallySrcSelectionIn2(listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_IN2]->current.toInt());
-    setReallySrcSelectionIn3(listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_IN3]->current.toInt());
-    setReallySrcSelectionIn4(listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_IN4]->current.toInt());
-
-
 //    setPlayLedStatus(E_STATUS_MP4_CLOSE);
     //不发送信号，但是初始化，避免顺序播放逻辑导致开机自动播放
     m_playLedStatus = E_STATUS_MP4_CLOSE;

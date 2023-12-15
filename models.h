@@ -95,13 +95,8 @@ public:
     void setPlayNext();
     void setPlayPrevious();
 
-    //aux source
-    void setAuxSource();
-
     int getOutFormatIndexForEnum(int index);
     int getOutFormat(int index);
-    void setColorSpace(int third);
-
 
     //sleep
     void setMSleep(int value);
@@ -299,15 +294,11 @@ signals:
     void playNext();
     void playPrevious();
 
-    void auxSource();
-    void colorSpace(int third);
-
     void network(int third);
 
     //sleep
     void mSleep(int value);
     void userWait();
-
 
 
     //playback
