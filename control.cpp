@@ -1406,8 +1406,8 @@ void Control::slotKnobChanged(const int knob, int value)
 
 void Control::slotPushChanged(const int push, const int value)
 {
-    qDebug() << "push:" << push << "  value:" << value;
-    models->macroInvoke((&Models::transitionPosition),value);
+//    qDebug() << "push:" << push << "  value:" << value;
+//    models->macroInvoke((&Models::transitionPosition),value);
 }
 void Control::slotKeyChanged(const int key, const int value)
 {

@@ -2774,7 +2774,9 @@ void Models::setNextTransition(QString source)
     qDebug() << source;
     qDebug() << index;
     if(index & 0b100){
+        qDebug() << "111";
         if(QSwitcher::get_led(KEY_LED_BKGD) == SWITCHER_LED_OFF){
+            qDebug() << "222";
             keyClick(KEY_LED_BKGD);
         }
     }else{

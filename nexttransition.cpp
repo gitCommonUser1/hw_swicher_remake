@@ -65,40 +65,47 @@ int NextTransition::selectionStringToValue(QString selection)
                 if(i == 0)
                 {
                     //100
+                    qDebug() << "0b100";
                     return 0b100;
                 }
                 else if(i == 1)
                 {
                     //010
+                    qDebug() << "0b010";
                     return 0b010;
                 }
                 else if(i == 2)
                 {
                     //001
+                    qDebug() << "0b001";
                     return 0b001;
                 }
             }
         }
+        return 0b100;
     }
     else if(list.size() == 2)
     {
         // 110 || 101 || 011 list[1] == selectionList[1]
-        if((list[0].compare(selectionList[0],Qt::CaseInsensitive) == 0 && list[1].compare(selectionList[1],Qt::CaseInsensitive))
-                || (list[1].compare(selectionList[0],Qt::CaseInsensitive) && list[0].compare(selectionList[1],Qt::CaseInsensitive)))
+        if((list[0].compare(selectionList[0],Qt::CaseInsensitive) == 0 && list[1].compare(selectionList[1],Qt::CaseInsensitive) == 0)
+                || (list[1].compare(selectionList[0],Qt::CaseInsensitive) == 0 && list[0].compare(selectionList[1],Qt::CaseInsensitive) == 0))
         {
             //110
+            qDebug() << "0b110";
             return 0b110;
         }
-        else if((list[0].compare(selectionList[0],Qt::CaseInsensitive) && list[1].compare(selectionList[2],Qt::CaseInsensitive))
-                || (list[1].compare(selectionList[0],Qt::CaseInsensitive) && list[0].compare(selectionList[2],Qt::CaseInsensitive)))
+        else if((list[0].compare(selectionList[0],Qt::CaseInsensitive) == 0 && list[1].compare(selectionList[2],Qt::CaseInsensitive) == 0)
+                || (list[1].compare(selectionList[0],Qt::CaseInsensitive) == 0 && list[0].compare(selectionList[2],Qt::CaseInsensitive) == 0))
         {
             //101
+            qDebug() << "0b101";
             return 0b101;
         }
-        else if((list[0].compare(selectionList[1],Qt::CaseInsensitive) && list[1].compare(selectionList[2],Qt::CaseInsensitive))
-                || (list[1].compare(selectionList[1],Qt::CaseInsensitive) && list[0].compare(selectionList[2],Qt::CaseInsensitive)))
+        else if((list[0].compare(selectionList[1],Qt::CaseInsensitive) == 0 && list[1].compare(selectionList[2],Qt::CaseInsensitive) == 0)
+                || (list[1].compare(selectionList[1],Qt::CaseInsensitive) == 0 && list[0].compare(selectionList[2],Qt::CaseInsensitive) == 0))
         {
             //011
+            qDebug() << "0b011";
             return 0b011;
         }
 
@@ -110,15 +117,17 @@ int NextTransition::selectionStringToValue(QString selection)
         int dsk = list.indexOf(selectionList[1],Qt::CaseInsensitive);
         int bkgd = list.indexOf(selectionList[2],Qt::CaseInsensitive);
 
-        if((key != -1 && dsk != -1 && bkgd != -1) &&
-            (key != dsk && key != bkgd && dsk != bkgd))
+        if((key != -1 && dsk != -1 && bkgd != -1) /*&&*/
+            /*(key != dsk && key != bkgd && dsk != bkgd)*/)
         {
+            qDebug() << "0b111";
             return 0b111;
         }
     }
     else
     {
         //BKGD
-        return 0b001;
+        qDebug() << "0b100";
+        return 0b100;
     }
 }
