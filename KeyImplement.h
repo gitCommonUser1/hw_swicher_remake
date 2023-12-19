@@ -391,27 +391,6 @@ public:
             }
             else
             {
-                //退出三级菜单
-//                if(first == MENU_FIRST_MACRO &&
-//                   second == MACRO_MACRO &&
-//                   third == MENU_THIRD_MACRO_SLEEP)
-//                {
-//                    //macro send sleep
-//                    int ms = settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_SLEEP]->current.toInt();
-////                    models->sendKeySignalHasOneParameter(&Models::mSleep,ms,false);
-//                }
-//                if(first == MENU_FIRST_MACRO &&
-//                   second == MACRO_MACRO &&
-//                   third == MENU_THIRD_MACRO_IMPORT)
-//                {
-//                    models->macroImport();
-//                }
-//                if(first == MENU_FIRST_MACRO &&
-//                   second == MACRO_MACRO &&
-//                   third == MENU_THIRD_MACRO_EXPORT)
-//                {
-//                    models->macroExport();
-//                }
                 switch (menuType) {
                 case CHANGED_CALL:
                     break;

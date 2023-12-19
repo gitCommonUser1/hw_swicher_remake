@@ -54,9 +54,6 @@ SOURCES += \
     language.cpp \
     leftmenumodel.cpp \
     lumaparameters.cpp \
-    macro.cpp \
-    macroexecutethread.cpp \
-    macromanager.cpp \
         main.cpp \
     marker.cpp \
     messagedialogcontrol.cpp \
@@ -270,9 +267,6 @@ HEADERS += \
     language.h \
     leftmenumodel.h \
     lumaparameters.h \
-    macro.h \
-    macroexecutethread.h \
-    macromanager.h \
     marker.h \
     messagedialogcontrol.h \
     micinput.h \

@@ -99,14 +99,11 @@ public:
     //
     void writeXml(QObject *object);
     void writeXml(QObject *object,QXmlStreamWriter & stream);
-
     //
     int readXml(QObject *object);
-    void readXml(QObject *object,QXmlStreamWriter &stream);
 
-    void writeXml(QList<XmlElementManager*>xmlList);
-    void readXml(QList<XmlElementManager*>xmlList);
 
+    //macro
     void writeXml(XmlElementManager* xml);
     int readXml(XmlElementManager* xml);
 

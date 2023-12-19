@@ -210,21 +210,6 @@ int XmlProcessor::readXml(QObject *object)
     return 0;
 }
 
-void XmlProcessor::readXml(QObject *object, QXmlStreamWriter &stream)
-{
-
-}
-
-void XmlProcessor::writeXml(QList<XmlElementManager *> xmlList)
-{
-
-}
-
-void XmlProcessor::readXml(QList<XmlElementManager *> xmlList)
-{
-
-}
-
 //目前仅支持macro的接口
 void XmlProcessor::writeXml(XmlElementManager *xml)
 {

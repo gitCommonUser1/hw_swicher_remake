@@ -251,12 +251,15 @@ int main(int argc, char *argv[])
     QFile reset_file(FACTORY_RESET_FILE_PATH);
     if(reset_file.exists())
     {
-        system("rm " DATA_PATH "/*.ini");
+//        system("rm " DATA_PATH "/*.ini");
         system("rm " STILLPATH "*");
-        system("rm " MACRO_PATH "*");
-        system("cp " MACRO_DEFAULT_FILE_PATH " " MACRO_PATH);
+//        system("rm " MACRO_PATH "*");
+//        system("cp " MACRO_DEFAULT_FILE_PATH " " MACRO_PATH);
         system("rm " FACTORY_RESET_FILE_PATH);
         system("rm " DATA_PATH "/*.xml");
+        //这里copy一个默认的profile.xml过来
+        //
+        //
         system("sync");
     }
 
