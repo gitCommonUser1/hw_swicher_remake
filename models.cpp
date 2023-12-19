@@ -670,6 +670,56 @@ void Models::setAudioAfv()
     fpga_write(&g_fpga,FPGA_AUDIO_AFV,flag);
 }
 
+void Models::addAudioFaderByAudioKnob(QString source, int value)
+{
+    double fader,val,step;
+    int index = AudioSource::sourceNameStringToIndex(source);
+    switch (index) {
+    case AudioSource::MIC1:
+        fader = profile->audioMixer()->audioInput()->mic1()->fader();
+        step = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC1]->third[MIC1_FADER]->step.toDouble();
+        break;
+    case AudioSource::MIC2:
+        fader = profile->audioMixer()->audioInput()->mic2()->fader();
+        step = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MIC2]->third[MIC2_FADER]->step.toDouble();
+        break;
+    case AudioSource::IN1:
+        fader = profile->audioMixer()->audioInput()->in1()->fader();
+        step = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN1]->third[IN1_FADER]->step.toDouble();
+        break;
+    case AudioSource::IN2:
+        fader = profile->audioMixer()->audioInput()->in2()->fader();
+        step = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN2]->third[IN2_FADER]->step.toDouble();
+        break;
+    case AudioSource::IN3:
+        fader = profile->audioMixer()->audioInput()->in3()->fader();
+        step = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN3]->third[IN3_FADER]->step.toDouble();
+        break;
+    case AudioSource::IN4:
+        fader = profile->audioMixer()->audioInput()->in4()->fader();
+        step = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_IN4]->third[IN4_FADER]->step.toDouble();
+        break;
+    case AudioSource::AUX:
+        fader = profile->audioMixer()->audioInput()->aux()->fader();
+        step = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_AUX]->third[AUX_FADER]->step.toDouble();
+        break;
+    case AudioSource::PGM:
+        fader = profile->audioMixer()->audioOutput()->pgm()->fader();
+        step = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_PGM]->third[PGM_FADER]->step.toDouble();
+        break;
+    }
+    val = fader + value * step;
+    setAudioFader(source,val);
+}
+
+void Models::addMonitorLevelByAudioKnob(int value)
+{
+    int step = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MONITOR]->third[MONITOR_LEVEL]->step.toDouble();
+    int level = profile->audioMixer()->audioOutput()->monitor()->level();
+    int val = level + value * step;
+    setMonitorLevel(val);
+}
+
 void Models::setStillSelection(int still, int selection)
 {
     if(still == StillGenerator::STILL1)

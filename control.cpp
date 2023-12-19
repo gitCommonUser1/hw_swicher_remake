@@ -1458,10 +1458,38 @@ void Control::slotKnobChanged(const int knob, int value)
             }
             break;
         case KNOB_AUDIO:
-//            if(settings->lastFirstUnfold() == MENU_FIRST_AUDIO_MIXER && settings->lastSecondUnfold() != -1)
-//                models->setAudioFader(value);
-//            else
-//                models->setMonitorLevel(value);
+            if(settings->lastFirstUnfold() == MENU_FIRST_AUDIO_MIXER && settings->lastSecondUnfold() != -1){
+                QString source ;
+                switch (settings->lastSecondUnfold()) {
+                case AUDIO_MIXER_MIC1:
+                    source = AudioSource::sourceNameIndexToString(AudioSource::MIC1);
+                    break;
+                case AUDIO_MIXER_MIC2:
+                    source = AudioSource::sourceNameIndexToString(AudioSource::MIC2);
+                    break;
+                case AUDIO_MIXER_IN1:
+                    source = AudioSource::sourceNameIndexToString(AudioSource::IN1);
+                    break;
+                case AUDIO_MIXER_IN2:
+                    source = AudioSource::sourceNameIndexToString(AudioSource::IN2);
+                    break;
+                case AUDIO_MIXER_IN3:
+                    source = AudioSource::sourceNameIndexToString(AudioSource::IN3);
+                    break;
+                case AUDIO_MIXER_IN4:
+                    source = AudioSource::sourceNameIndexToString(AudioSource::IN4);
+                    break;
+                case AUDIO_MIXER_AUX:
+                    source = AudioSource::sourceNameIndexToString(AudioSource::AUX);
+                    break;
+                case AUDIO_MIXER_PGM:
+                    source = AudioSource::sourceNameIndexToString(AudioSource::PGM);
+                    break;
+                }
+                models->addAudioFaderByAudioKnob(source,value);
+            }
+            else
+                models->addMonitorLevelByAudioKnob(value);
             break;
         }
 }

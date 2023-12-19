@@ -492,6 +492,8 @@ public slots:
     void setAudioVolumn(int index);//
     void setAudioOn();//
     void setAudioAfv();//
+    void addAudioFaderByAudioKnob(QString source,int value);
+    void addMonitorLevelByAudioKnob(int value);
     /**/
 
 
