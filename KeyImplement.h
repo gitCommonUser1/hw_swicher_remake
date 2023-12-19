@@ -467,9 +467,19 @@ class KeyAuto:public KeyAbstractClass{
 public:
     using KeyAbstractClass::KeyAbstractClass;
     void doWork(int status = 1){
-        if(status != 1)
-            return ;
-//        models->sendKeySignal(&Models::autoTransition,false);
+        if(SWITCHER_LED_R == QSwitcher::get_led(KEY_LED_TRANS_AUTO)){
+            //red
+            if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->style() == TransitionStyle::styleIndexToString(TransitionStyle::DIP) &&
+               profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters()->input() == TransitionStyle::AUX){
+                models->playPause(0);
+            }
+        }else if(SWITCHER_LED_W == QSwitcher::get_led(KEY_LED_TRANS_AUTO)){
+            //white
+//            if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->style() == TransitionStyle::styleIndexToString(TransitionStyle::DIP) &&
+//               profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters()->input() == TransitionStyle::AUX){
+//                models->playPause(1);
+//            }
+        }
     }
 };
 

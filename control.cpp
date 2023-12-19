@@ -193,7 +193,10 @@ void Control::init_connect()
 
     connect(settings,&Settings::playLedStatusChanged,this,[=](int status){
         if(status == E_STATUS_MP4_CLOSE){
-            if(SWITCHER_LED_R == QSwitcher::get_led(KEY_LED_PGM_AUX)){
+            if(SWITCHER_LED_R == QSwitcher::get_led(KEY_LED_TRANS_AUTO)){
+                models->setCutTransition();
+            }
+            else if(SWITCHER_LED_R == QSwitcher::get_led(KEY_LED_PGM_AUX)){
                 models->setCutTransition();
             }
             if(profile->playback()->playbackList() == Playback::ALL_GROUP){
@@ -498,14 +501,15 @@ void Control::connect_profile()
     //mixEffectBlocks
     //pgm
     connect(profile->mixEffectBlocks()->mixEffectBlock()->program(),&Program::inputChanged,this,[=](int input){
-        models->macroInvoke(&Models::pgmIndex,MixEffectBlock::inputIndexToString(input));
+//        models->macroInvoke(&Models::pgmIndex,MixEffectBlock::inputIndexToString(input));
         if(input == MixEffectBlock::AUX){
             models->playPause(0);
         }
     });
     //pvw
     connect(profile->mixEffectBlocks()->mixEffectBlock()->preview(),&Preview::inputChanged,this,[=](int input){
-        models->macroInvoke(&Models::pvwIndex,MixEffectBlock::inputIndexToString(input));
+//        models->macroInvoke(&Models::pvwIndex,MixEffectBlock::inputIndexToString(input));
+
     });
     //nextTransition
     connect(profile->mixEffectBlocks()->mixEffectBlock()->nextTransition(),&NextTransition::selectionChanged,this,[=](QString selection){
@@ -532,6 +536,14 @@ void Control::connect_profile()
     connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters(),&DipParameters::inputChanged,this,[=](int input){
         models->macroInvoke(&Models::transitionDipSource,input);
         settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_DIP,TRANSITION_DIP_SOURCE,input);
+    });
+    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters(),&DipParameters::stingerChanged,this,[=](bool stinger){
+        models->macroInvoke(&Models::transitionDipStinger,stinger);
+        settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_DIP,TRANSITION_DIP_STINGER,stinger);
+        if(stinger)
+        {
+            profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters()->setInput(TransitionStyle::AUX);
+        }
     });
     //WipeParameters
     connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters(),&WipeParameters::rateChanged,this,[=](double rate){
@@ -1461,10 +1473,22 @@ void Control::slotPushChanged(const int push, const int value)
 }
 void Control::slotKeyChanged(const int key, const int value)
 {
-    if(key >= KEY_LED_PGM_1 && key <= KEY_LED_PGM_STLL2 )
+    if(key >= KEY_LED_PGM_1 && key <= KEY_LED_PGM_STLL2 && value == 1){
+        models->macroRecord(&Models::pgmIndex,MixEffectBlock::inputIndexToString(key - KEY_LED_PGM_1));
         return ;
-    if(key >= KEY_LED_PVW_1 && key <= KEY_LED_PVW_STLL2 )
+    }
+    if(key >= KEY_LED_PVW_1 && key <= KEY_LED_PVW_STLL2 && value == 1){
+        models->macroRecord(&Models::pvwIndex,MixEffectBlock::inputIndexToString(key - KEY_LED_PVW_1));
         return ;
+    }
+    if(key == KEY_LED_TRANS_CUT && value == 1){
+        models->macroRecord(&Models::cutTransition);
+        return ;
+    }
+    if(key == KEY_LED_TRANS_AUTO && value == 1){
+        models->macroRecord(&Models::autoTransition);
+        return ;
+    }
     if(key >= KEY_LED_TRANS_MIX && key <= KEY_LED_TRANS_WIPE)
         return ;
     if(key == KEY_LED_TRANS_PREVIEW)
@@ -1477,7 +1501,6 @@ void Control::slotKeyChanged(const int key, const int value)
         return ;
     if(key >= KEY_LED_KEY && key <= KEY_LED_BKGD)
         return ;
-
 
     //key long pressed and short pressed
     static int key_pressed_index = 0;
@@ -1680,6 +1703,10 @@ void Control::slotKeyChanged(const int key, const int value)
 
 void Control::slotKeyStatusChanged(const int key, const int status)
 {
+
+    qDebug() << "key:" << key;
+    qDebug() << "status:" << status;
+
     if(key >= KEY_LED_RECORDER_REC && key <= KEY_LED_PLAYER_PAUSE)
         return ;
 

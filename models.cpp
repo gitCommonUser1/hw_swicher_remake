@@ -121,6 +121,8 @@ void Models::init_connect()
 
     //transition
     connect(this,&Models::transitionRate,this,&Models::setTransitionRate);
+    connect(this,&Models::transitionDipSource,this,&Models::setTransitionDipSource);
+    connect(this,&Models::transitionDipStinger,this,&Models::setTransitionDipStinger);
     connect(this,&Models::transitionWipePattern,this,&Models::setTransitionWipePattern);
     connect(this,&Models::transitionWipeXPosition,this,&Models::setTransitionWipeXPosition);
     connect(this,&Models::transitionWipeYPosition,this,&Models::setTransitionWipeYPosition);
@@ -1723,6 +1725,7 @@ void Models::setLanguage(int language)
 
         languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_MIX]->third[FTB_RATE_RATE]->name] = tr("Rate");
         languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_DIP]->third[TRANSITION_DIP_SOURCE]->name] = tr("Source");
+        languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_DIP]->third[TRANSITION_DIP_STINGER]->name] = tr("Stinger");
         languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_DIRECTION]->name] = tr("Direction");
         languages[settings->listFirst()[MENU_FIRST_TRANSITION]->second[TRANSITION_WIPE]->third[TRANSITION_WIPE_FILL_SOURCE]->name] = tr("Fill Source");
 
@@ -2666,11 +2669,11 @@ void Models::setLoadStreamKey(int second)
 void Models::setPgmIndex(QString str)
 {
     int index = MixEffectBlock::inputStringToIndex(str);
-    if(profile->mixEffectBlocks()->mixEffectBlock()->program()->input() != index)
-    {
-        profile->mixEffectBlocks()->mixEffectBlock()->program()->setInput(index);
-        return ;
-    }
+//    if(profile->mixEffectBlocks()->mixEffectBlock()->program()->input() != index)
+//    {
+//        profile->mixEffectBlocks()->mixEffectBlock()->program()->setInput(index);
+//        return ;
+//    }
     if(QSwitcher::get_led(KEY_LED_PGM_1 + index) == LED_STATUS_OFF)
         keyClick(KEY_LED_PGM_1 + index);
 }
@@ -2678,11 +2681,11 @@ void Models::setPgmIndex(QString str)
 void Models::setPvwIndex(QString str)
 {
     int index = MixEffectBlock::inputStringToIndex(str);
-    if(profile->mixEffectBlocks()->mixEffectBlock()->preview()->input() != index)
-    {
-        profile->mixEffectBlocks()->mixEffectBlock()->preview()->setInput(index);
-        return ;
-    }
+//    if(profile->mixEffectBlocks()->mixEffectBlock()->preview()->input() != index)
+//    {
+//        profile->mixEffectBlocks()->mixEffectBlock()->preview()->setInput(index);
+//        return ;
+//    }
     if(QSwitcher::get_led(KEY_LED_PVW_1 + index) == LED_STATUS_OFF)
         keyClick(KEY_LED_PVW_1 + index);
 }
@@ -4311,6 +4314,15 @@ void Models::setTransitionDipSource(int source)
         return ;
     }
     fpga_write(&g_fpga,DIP_SRC_SEL,source);
+}
+
+void Models::setTransitionDipStinger(int stinger)
+{
+    if(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters()->stinger() != stinger)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters()->setStinger(stinger);
+        return ;
+    }
 }
 
 void Models::setTransitionWipePattern(int pattern)

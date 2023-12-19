@@ -2535,6 +2535,11 @@ MenuSecond *Settings::new_Transition_Dip()
     third = new MenuThirdTransitionDipRate(tr("Rate"),"Rate",0.5,1.0,8.0,0.5,DATATYPE_FLOAT);
     list_third.append(third);
 
+    third = new MenuThirdTransitionDipStinger(tr("Stinger"),"Stinger",0,0,1,1,DATATYPE_ENUM);
+    third->list_text << tr("Off") << tr("On");
+    third->max = third->list_text.size() - 1;
+    list_third.append(third);
+
     type->third = list_third;
     return type;
 }

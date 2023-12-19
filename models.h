@@ -216,6 +216,7 @@ signals:
     /**/
     /**/
     void transitionDipSource(int source);
+    void transitionDipStinger(bool stinger);
     void transitionWipePattern(int pattern);
     void transitionWipeXPosition(double xPosition);
     void transitionWipeYPosition(double yPosition);
@@ -442,6 +443,7 @@ public slots:
 
     /**/
     void setTransitionDipSource(int source);
+    void setTransitionDipStinger(int stinger);
     void setTransitionWipePattern(int pattern);
     void setTransitionWipeXPosition(double xPosition);
     void setTransitionWipeYPosition(double yPosition);
@@ -573,9 +575,18 @@ public:
     template<typename myFunction,typename... ARGS>
     void macroInvoke(myFunction function,ARGS... tail)
     {
+        //调用
         (this->*function)(tail...);
         //
-        QMetaMethod method = QMetaMethod::fromSignal(function);
+//        QMetaMethod method = QMetaMethod::fromSignal(function);
+    }
+    template<typename myFunction,typename... ARGS>
+    void macroRecord(myFunction function,ARGS... tail)
+    {
+        //不调用
+//        (this->*function)(tail...);
+        //
+//        QMetaMethod method = QMetaMethod::fromSignal(function);
     }
 };
 

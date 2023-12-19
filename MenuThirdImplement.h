@@ -912,6 +912,16 @@ public:
     }
 };
 
+class MenuThirdTransitionDipStinger:public MenuThird{
+public:
+    using MenuThird::MenuThird;
+    void doWork(QVariant value){
+//        models->macroInvoke((&Models::transitionRate),TRANSITION_DIP,value.toInt());
+//        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters()->setRate(value.toDouble());
+        profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters()->setStinger(value > 0);
+    }
+};
+
 class MenuThirdTransitionWipePattern:public MenuThird{
 public:
     using MenuThird::MenuThird;
