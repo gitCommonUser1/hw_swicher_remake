@@ -25,6 +25,7 @@
 #include "ndi_license.h"
 #include "gostreamsystem.h"
 #include "profile_include.h"
+#include "playbackgroupmanager.h"
 
 extern Settings *settings;
 extern LeftMenuModel *leftMenuModel;
@@ -36,6 +37,7 @@ extern Media_sd *media_sd;
 extern MessageDialogControl *messageDialogControl;
 extern Ndi *ndi;
 extern Profile *profile;
+extern PlaybackGroupManager* playbackGroupManager;
 
 //键盘按下时间 ms
 #define KEY_PRESS_INTERVAL 2000
@@ -108,12 +110,11 @@ void Control::init_connect()
             QSwitcher::set_led(KEY_LED_RECORDER_REC,SWITCHER_LED_OFF);
             recordTimer->stop();
             settings->setRecordSecond(0);
-            if(settings->playList().size() == 1 && settings->playLedStatus() == E_STATUS_MP4_CLOSE){
+            if(playbackGroupManager->list().size() == 1 && settings->playLedStatus() == E_STATUS_MP4_CLOSE){
+                    settings->setPlayingIndex(0);
                     models->playPause(1);
                     models->playStart();
             }
-        }else if(status == E_STATUS_PROCESS){
-//            QSwitcher::set_led(KEY_LED_RECORDER_REC,SWITCHER_LED_OFF,LEDS_BLINK_2Hz);
         }
     });
 
@@ -191,20 +192,28 @@ void Control::init_connect()
     });
 
     connect(settings,&Settings::playLedStatusChanged,this,[=](int status){
-//        int playback_mode = settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_MODE]->current.toInt();
-//        int auxSource = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_AUX_SOURCE]->third[SETTING_AUX_SOURCE_SOURCE]->current.toInt();
-//        if(status == E_STATUS_MP4_CLOSE && SWITCHER_LED_R == QSwitcher::get_led(KEY_LED_PGM_AUX)){
-//            if(!media_sd->is_online() || auxSource != AUX_SOURCE_SD_CARD || playback_mode != SEQUENTIAL || (playback_mode == SEQUENTIAL && settings->isPlayListLast()))
-//                models->setCutTransition();
-//        }
-
-//        // auto next if playback mode is Sequential
-//        if(status == E_STATUS_MP4_CLOSE && playback_mode == SEQUENTIAL ){//&& rv_swithc_mp4_get_end_state() != 0
-////            models->setPlayNext();
-//            if(settings->playAutoNextFlag())
-//                models->playStart();
-//            settings->setPlayAutoNextFlag(0);
-//        }
+        if(status == E_STATUS_MP4_CLOSE){
+            if(SWITCHER_LED_R == QSwitcher::get_led(KEY_LED_PGM_AUX)){
+                models->setCutTransition();
+            }
+            if(profile->playback()->playbackList() == Playback::ALL_GROUP){
+                if(settings->playingIndex() < playbackGroupManager->list().size() - 1 && playbackGroupManager->list().size() != 0){
+                    settings->setPlayingIndex(settings->playingIndex() + 1);
+                    models->playStart();
+                }else{
+                    models->playPause(1);
+                    models->playStart();
+                }
+            }else if(profile->playback()->playbackList() == Playback::SIGNAL_GROUP){
+                if(!playbackGroupManager->isGroupLast(playbackGroupManager->list()[settings->playingIndex()])){
+                    settings->setPlayingIndex(settings->playingIndex() + 1);
+                    models->playStart();
+                }else{
+                    models->playPause(1);
+                    models->playStart();
+                }
+            }
+        }
     });
 
     QTimer *timer1 = new QTimer;
@@ -490,6 +499,9 @@ void Control::connect_profile()
     //pgm
     connect(profile->mixEffectBlocks()->mixEffectBlock()->program(),&Program::inputChanged,this,[=](int input){
         models->macroInvoke(&Models::pgmIndex,MixEffectBlock::inputIndexToString(input));
+        if(input == MixEffectBlock::AUX){
+            models->playPause(0);
+        }
     });
     //pvw
     connect(profile->mixEffectBlocks()->mixEffectBlock()->preview(),&Preview::inputChanged,this,[=](int input){
@@ -565,6 +577,33 @@ void Control::connect_profile()
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->key(),&Key::onAirChanged,this,[=](bool onAir){
         models->macroInvoke(&Models::keyOnAir,onAir);
+        //key on air时，判断key source是否是aux，如果是aux，自动开始播放
+        if(onAir == false)
+            return ;
+        int keyType = Keys::keyStringToIndex(profile->mixEffectBlocks()->mixEffectBlock()->keys()->key()->type());
+        switch (keyType) {
+        case Keys::LUMA:
+            if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->keySource() == Keys::AUX
+            || profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters()->fillSource() == Keys::AUX){
+                models->playPause(0);
+            }
+            break;
+        case Keys::CHROMA:
+            if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->fillSource() == Keys::AUX){
+                models->playPause(0);
+            }
+            break;
+        case Keys::PATTERN:
+            if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->patternParameters()->fillSource() == Keys::AUX){
+                models->playPause(0);
+            }
+            break;
+        case Keys::PIP:
+            if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->pIPParameters()->fillSource() == Keys::AUX){
+                models->playPause(0);
+            }
+            break;
+        }
     });
     //LumaParameters
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->lumaParameters(),&LumaParameters::fillSourceChanged,this,[=](int fill){
@@ -829,6 +868,12 @@ void Control::connect_profile()
     //DownstreamKeys
     connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::onAirChanged,this,[=](bool onAir){
         models->macroInvoke(&Models::dskOnAir,onAir);
+        if(onAir == false)
+            return ;
+        if(profile->downstreamKeys()->downstreamKey()->keySource() == Keys::AUX ||
+           profile->downstreamKeys()->downstreamKey()->fillSource() == Keys::AUX){
+            models->playPause(0);
+        }
     });
     connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::fillSourceChanged,this,[=](int fillSource){
         models->macroInvoke(&Models::dskSourceFill,fillSource);
@@ -1372,8 +1417,8 @@ void Control::slotKnobChanged(const int knob, int value)
                 int size = 0;
                 int current = 0;
                 if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::SD_CARD){
-                    size = settings->playList().size();
-                    current = settings->playListDialogCurrent();
+                    size = playbackGroupManager->list().size();
+                    current = playbackGroupManager->listCurrent();
                 }
                 else if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::NDI){
                     size = ndi->ndiList().size();
@@ -1392,7 +1437,7 @@ void Control::slotKnobChanged(const int knob, int value)
                         finalValue = 0;
                 }
                 if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::SD_CARD){
-                    settings->setPlayListDialogCurrent(finalValue);
+                    playbackGroupManager->setListCurrent(finalValue);
                 }else if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::NDI){
                     settings->setNdiListDialogCurrent(finalValue);
                 }

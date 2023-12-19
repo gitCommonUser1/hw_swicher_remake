@@ -19,8 +19,6 @@ Dialog {
 
     onVisibleChanged: {
         if(visible){
-//            settings.setPlayListDialogCurrent(0)
-//            settings.setPlayListDialogCurrent(settings.playListCurrent)
             settings.setNdiListDialogCurrent(0)
         }
     }

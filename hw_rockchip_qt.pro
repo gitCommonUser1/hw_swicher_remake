@@ -82,6 +82,7 @@ SOURCES += \
     patternparameters.cpp \
     pipparameters.cpp \
     playback.cpp \
+    playbackgroupmanager.cpp \
     preview.cpp \
     primarydns.cpp \
     program.cpp \
@@ -297,6 +298,7 @@ HEADERS += \
     patternparameters.h \
     pipparameters.h \
     playback.h \
+    playbackgroupmanager.h \
     preview.h \
     primarydns.h \
     profile_include.h \

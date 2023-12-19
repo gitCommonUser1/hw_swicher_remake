@@ -184,7 +184,6 @@ void Settings::init_menuStatus()
     //不发送信号，但是初始化，避免顺序播放逻辑导致开机自动播放
     m_playLedStatus = E_STATUS_MP4_CLOSE;
     setRecordLedStatus(E_STATUS_FAILED);
-    setPlayListCurrent(0);
 
     setKeyboardReg(-1);
 
@@ -1109,7 +1108,7 @@ MenuSecond *Settings::new_Playback_Set()
     monitor->ss_name = ("playback");
 
     third = new MenuThirdPlaybackList(tr("Playback List"),"Playback List",0,0,2,1,DATATYPE_ENUM);
-    third->list_text << tr("Single Group") << tr("All Group");
+    third->list_text << tr("Single Group") << tr("All Groups");
     third->max = third->list_text.size() - 1;
     list_third.append(third);
 

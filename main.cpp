@@ -29,7 +29,7 @@
 #include <execinfo.h>
 #include <pthread.h>
 #include <QFile>
-
+#include "playbackgroupmanager.h"
 #include "osee_syslog.h"
 
 #include "qthread_connect.h"
@@ -44,6 +44,7 @@
 #include "ndi_license.h"
 #include "gostreamsystem.h"
 #include "profile_include.h"
+#include "playbackgroupmanager.h"
 
 
 Models *models;
@@ -57,6 +58,7 @@ KeyboardEvent *keyboardEvent;
 MessageDialogControl *messageDialogControl;
 Ndi *ndi;
 Profile *profile;
+PlaybackGroupManager *playbackGroupManager;
 bool g_running = true;
 
 bool init_settings_is_ok = false;
@@ -339,18 +341,7 @@ int main(int argc, char *argv[])
     sdImages = new SDImages();
     QObject::connect(sdImages,&SDImages::imageListChanged,settings,&Settings::sdImagesChanged);
     QObject::connect(sdImages,&SDImages::videoListChanged,app,[=](QList<QString>list){
-        int currentIndex = settings->playListDialogCurrent();
-        if(currentIndex < settings->playList().size()){
-            QString currentFileName = settings->playList()[currentIndex];
-            for(int i = 0;i < list.size();++i){
-                if(currentFileName == list[i]){
-                    currentIndex = i;
-                    break;
-                }
-            }
-        }
-        settings->setPlayList(list);
-        settings->setPlayListDialogCurrent(currentIndex);
+
     });
     QObject::connect(sdImages,&SDImages::streamKeyListChanged,settings,&Settings::streamKeyListChanged);
     QObject::connect(sdImages,&SDImages::macroListChanged,settings,&Settings::macroListChanged);
@@ -359,14 +350,8 @@ int main(int argc, char *argv[])
     sdImages->flushStreamKeyList();
     sdImages->flushMacroList();
 
-    //开机检测sd卡并授权
-    if(media_sd->is_online()){
-        //generate ndi license
-        if(get_ndi_license_state()){
-            qDebug() << "_____get_ndi_license";
-            qDebug() << get_ndi_license();
-        }
-    }
+    playbackGroupManager = new PlaybackGroupManager();
+    engine.rootContext()->setContextProperty("playbackGroupManager",playbackGroupManager);
 
     QObject::connect(&qthread_uevent,&QThreadUevent::emit_sd_change,app,[=](bool flag){
         if(!flag){
@@ -389,6 +374,8 @@ int main(int argc, char *argv[])
             media_sd->current_usage();
             int second = models->sd_remaintime_calc();
             media_sd->checkGbFree(second);
+
+            playbackGroupManager->clearGroups();
         }else{
             //刚接到信号时，文件系统未初始化完毕
             QTimer::singleShot(500,[=](){
@@ -426,6 +413,14 @@ int main(int argc, char *argv[])
                     dir4.mkdir(SD_MACRO_PATH);
                     system("sync -f " SD_MACRO_PATH);
                 }
+                if(!QFile::exists(GROUP_FILE))
+                {
+                    QFile file(GROUP_FILE);
+                    file.open(QIODevice::WriteOnly);
+                    file.flush();
+                    fsync(file.handle());
+                    file.close();
+                }
 
                 //
 
@@ -443,11 +438,12 @@ int main(int argc, char *argv[])
                 int second = models->sd_remaintime_calc();
                 media_sd->checkGbFree(second);
 
-                if(settings->playList().size() != 0 && settings->playLedStatus() == E_STATUS_MP4_CLOSE){
+                playbackGroupManager->readGroups();
+                if(playbackGroupManager->list().size() != 0 && settings->playLedStatus() == E_STATUS_MP4_CLOSE){
+                    settings->setPlayingIndex(0);
                     models->playPause(1);
                     models->playStart();
                 }
-
                 //generate ndi license
                 if(get_ndi_license_state()){
                     qDebug() << "_____get_ndi_license";
@@ -456,6 +452,15 @@ int main(int argc, char *argv[])
             });
         }
     });
+
+    if(media_sd->is_online())
+    {
+        qthread_uevent.emit_sd_change(true);
+    }
+    else
+    {
+        qthread_uevent.emit_sd_change(false);
+    }
 
     keyboardEvent = new KeyboardEvent();
     qmlRegisterType<KeyboardEvent>("KeyboardEvent", 1, 0, "KeyboardEvent");

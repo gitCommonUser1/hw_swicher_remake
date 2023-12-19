@@ -29,6 +29,7 @@
 #include "ndi_license.h"
 #include "profile_include.h"
 #include "KeyImplement.h"
+#include "playbackgroupmanager.h"
 
 extern Settings *settings;
 extern LeftMenuModel *leftMenuModel;
@@ -39,6 +40,7 @@ extern MyProvider *myProvider;
 extern Media_sd *media_sd;
 extern bool init_settings_is_ok;
 extern Profile *profile;
+extern PlaybackGroupManager* playbackGroupManager;
 
 Models::Models(QObject *parent) : QObject(parent)
 {
@@ -1242,7 +1244,8 @@ void Models::setSrcSelection(QString src, QString selection)
             case SrcSelections::SD_CARD:
                 rv_switch_usb_camera_stop0(0,0);
                 osee_ndi_deinit();
-                if(settings->playList().size() != 0 && settings->playLedStatus() == E_STATUS_MP4_CLOSE){
+                if(playbackGroupManager->list().size() != 0 && settings->playLedStatus() == E_STATUS_MP4_CLOSE){
+                    settings->setPlayingIndex(0);
                     playPause(1);
                     playStart();
                 }
@@ -1814,7 +1817,7 @@ void Models::setLanguage(int language)
         languages["Play Once"] = tr("Play Once");
         languages["Repeat"] = tr("Repeat");
         languages["Single Group"] = tr("Single Group");
-        languages["All Group"] = tr("All Group");
+        languages["All Groups"] = tr("All Groups");
         languages["Sequential"] = tr("Sequential");
         languages["PGM|PVW"] = tr("PGM|PVW");
         languages["PVW|PGM"] = tr("PVW|PGM");
@@ -2345,10 +2348,11 @@ int Models::playStart()
         return -1;
     if(!media_sd->is_online())
         return -1;
-    if((settings->playListCurrent() >= settings->playList().size() && settings->playList().size() != 0) || settings->playList().size() == 0)
+    if(!(settings->playingIndex() < playbackGroupManager->list().size() && settings->playingIndex() >= 0))
         return -1;
 
-    QString play = SD_VIDEO_PATH + settings->playList()[settings->playListCurrent()];
+    QString play = SD_VIDEO_PATH + playbackGroupManager->list()[settings->playingIndex()];
+    qDebug() << play;
     //
     play = play.toLocal8Bit();
 
@@ -2359,6 +2363,13 @@ int Models::playStart()
 
 void Models::playPause(int index)
 {
+    if(profile->setting()->srcSelections()->aux()->selection() != SrcSelections::SD_CARD)
+        return ;
+    if(!media_sd->is_online())
+        return ;
+    if(!(settings->playingIndex() < playbackGroupManager->list().size() && settings->playingIndex() >= 0))
+        return ;
+
     rv_switch_mp4_pause(index,(rk_switch_cb)(playCallback),0);
 }
 
@@ -2380,7 +2391,9 @@ void Models::recordStart()
         return ;
 
     QString fileName = profile->setting()->record()->fileName();
-    fileName = SD_VIDEO_PATH + fileName + "_" + QString::number(QDateTime::currentMSecsSinceEpoch()) + ".mp4";
+    fileName = fileName + "_" + QString::number(QDateTime::currentMSecsSinceEpoch()) + ".mp4";
+    settings->setCurrentRecordFileName(fileName);
+    fileName = SD_VIDEO_PATH + fileName ;
     std::string s_fileName = fileName.toStdString();
     rv_switch_record_start0((char*)(s_fileName.data()),(rk_switch_cb)(recordStartCallback),0);
 }
@@ -2407,41 +2420,35 @@ void Models::recordStop()
     }
     if(recordMinFlag)
         return ;
+    playbackGroupManager->joinGroup(settings->currentRecordFileName(),RECORD_GROUP_NAME);
+    settings->setCurrentRecordFileName("");
     rv_switch_record_stop0((rk_switch_cb)(recordStopCallback),0);
 }
 
 void Models::setPlayNext()
 {
-//    qDebug() << "setPlayNext()";
+    if(profile->setting()->srcSelections()->aux()->selection() != SrcSelections::SD_CARD)
+        return ;
+    if(!media_sd->is_online())
+        return ;
+    if(settings->playingIndex() + 1 >= playbackGroupManager->list().size())
+        return ;
 
-//    if(settings->playListCurrent() >= settings->playList().size() - 1)
-//        return ;
-
-//    settings->setPlayListCurrent(settings->playListCurrent() + 1);
-//    int playback_mode = settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_MODE]->current.toInt();
-//    if(playback_mode == SEQUENTIAL && settings->playLedStatus() != E_STATUS_MP4_CLOSE){
-//        settings->setPlayAutoNextFlag(1);
-//        playStop();
-//    }
-//    else
-//        playStart();
+    settings->setPlayingIndex(settings->playingIndex() + 1);
+    playStart();
 }
 
 void Models::setPlayPrevious()
 {
-//    qDebug() << "setPlayPrevious()";
+    if(profile->setting()->srcSelections()->aux()->selection() != SrcSelections::SD_CARD)
+        return ;
+    if(!media_sd->is_online())
+        return ;
+    if(settings->playingIndex() - 1 < 0 || playbackGroupManager->list().size() <= 1)
+        return ;
 
-//    if(settings->playListCurrent() == 0)
-//        return ;
-
-//    settings->setPlayListCurrent(settings->playListCurrent() - 1);
-//    int playback_mode = settings->listFirst()[MENU_FIRST_PLAYBACK]->second[PLAYBACK_PLAYBACK]->third[MENU_THIRD_PLAYBACK_MODE]->current.toInt();
-//    if(playback_mode == SEQUENTIAL && settings->playLedStatus() != E_STATUS_MP4_CLOSE){
-//        settings->setPlayAutoNextFlag(1);
-//        playStop();
-//    }
-//    else
-//        playStart();
+    settings->setPlayingIndex(settings->playingIndex() - 1);
+    playStart();
 }
 
 void Models::setLiveStatus(int status)

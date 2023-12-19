@@ -15,6 +15,7 @@
 #include "gostreamsystem.h"
 #include "profile_include.h"
 #include <QTimer>
+#include "playbackgroupmanager.h"
 
 extern Settings*settings;
 extern Models*models;
@@ -23,6 +24,7 @@ extern Media_sd *media_sd;
 extern MessageDialogControl *messageDialogControl;
 extern Ndi *ndi;
 extern Profile *profile;
+extern PlaybackGroupManager* playbackGroupManager;
 
 
 //点击时记住最后一次值，如果没有确定修改返回则恢复
@@ -169,7 +171,6 @@ public:
     void doWork(int status = 1){
         if(status != 1)
             return ;
-//        models->sendKeySignalHasOneParameter(&Models::play,0);
         models->playPause(0);
     }
 };
@@ -194,8 +195,7 @@ public:
 
         if(settings->pgmTally() & 0x10)
             return ;
-
-//        models->sendKeySignal(&Models::playNext);
+        models->setPlayNext();
     }
 };
 
@@ -208,8 +208,7 @@ public:
 
         if(settings->pgmTally() & 0x10)
             return ;
-
-//        models->sendKeySignal(&Models::playPrevious);
+        models->setPlayPrevious();
     }
 };
 
@@ -305,7 +304,10 @@ public:
             }else if(settings->listDialogVisible()){
                 if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::SD_CARD){
                     // sd card
-
+                    settings->setPlayingIndex(playbackGroupManager->listCurrent());
+                    models->playPause(1);
+                    models->playStart();
+                    settings->setListDialogVisible(0);
                 }else if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::NDI){
                     // ndi
                     if(ndi->ndiList().size() > settings->ndiListDialogCurrent())

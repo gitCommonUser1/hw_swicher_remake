@@ -7,8 +7,7 @@ Dialog {
 
     property var imagePath: "/mnt/sdcard/videos/"
 
-    property var list: settings.playList
-    property var current: settings.playListDialogCurrent
+    property var current: playbackGroupManager.listCurrent
     property var currentFileColor: Qt.rgba(0/255,128/255,255/255,1)
     property var currentFileButRecordingColor: "red"
     property var fileColor: "white"
@@ -25,11 +24,21 @@ Dialog {
 
     property var rowSpace: 16
 
-    onListChanged: {
-        var lth = list.length
-        playbackListModel.clear()
-        for(var i = 0;i < lth;++i){
-            playbackListModel.append({name:list[i]})
+    Connections{
+        target: playbackGroupManager
+        onGroupsChanged:{
+            playbackListModel.clear()
+            var groupsName = playbackGroupManager.groupsName()
+            for(var i = 0;i < groupsName.length;++i){
+                var group = playbackGroupManager.groupByName(groupsName[i])
+                for(var j = 0;j < group.length;++j){
+                    if(j === 0){
+                        playbackListModel.append({name:group[j],group:groupsName[i]})
+                    }else{
+                        playbackListModel.append({name:group[j],group:""})
+                    }
+                }
+            }
         }
     }
 
@@ -37,8 +46,8 @@ Dialog {
 
     onVisibleChanged: {
         if(visible){
-            settings.setPlayListDialogCurrent(0)
-            settings.setPlayListDialogCurrent(settings.playListCurrent)
+            playbackGroupManager.setListCurrent(0)
+            playbackGroupManager.setListCurrent(settings.playingIndex)
         }
     }
 
@@ -48,7 +57,6 @@ Dialog {
     background:Rectangle{
         color:"transparent"
     }
-
 
     contentItem:Rectangle{
         anchors.fill:parent
@@ -129,9 +137,29 @@ Dialog {
                       color:"transparent"
                       id: menu
                       width: parent.width - x
-                      height: 22
+                      height: {
+                          if(group != "")
+                              22+4+22
+                          else
+                              22+4
+                      }
+                      Text {
+                          visible: group != ""
+                          text: group
+                          color:fileColor
+                          font.pixelSize: fileFontSize
+                          font.bold: true
+                          elide:Text.ElideMiddle
+                          width:350
+                      }
                       Image{
-                          y:6
+                          x:42-17//
+                          y:{
+                              if(group != "")
+                                  22+4+6
+                              else
+                                  6
+                          }
                           source:{
                               if(index == playbackListview.currentIndex){
                                       currentFileIcon
@@ -141,7 +169,13 @@ Dialog {
                           }
                       }
                       Text {
-                          x:25
+                          x:67-17//25
+                          y:{
+                              if(group != "")
+                                  22+4
+                              else
+                                  0
+                          }
                           text: settings.toLocal8bitString(name)
                           color:{
                               if(index == playbackListview.currentIndex){

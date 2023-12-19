@@ -199,6 +199,7 @@ public:
     //
     Q_PROPERTY(int pgmTally READ pgmTally WRITE setPgmTally NOTIFY pgmTallyChanged)
 
+    Q_PROPERTY(QString currentRecordFileName READ currentRecordFileName WRITE setCurrentRecordFileName NOTIFY currentRecordFileNameChanged)
 
     Q_PROPERTY(int audioOnFlag READ audioOnFlag WRITE setAudioOnFlag NOTIFY audioOnFlagChanged)
     Q_PROPERTY(int audioAfvFlag READ audioAfvFlag WRITE setAudioAfvFlag NOTIFY audioAfvFlagChanged)
@@ -265,8 +266,6 @@ public:
     Q_PROPERTY(int liveStreamStatus1 READ liveStreamStatus1 WRITE setLiveStreamStatus1 NOTIFY liveStreamStatus1Changed)
     Q_PROPERTY(int liveStreamStatus2 READ liveStreamStatus2 WRITE setLiveStreamStatus2 NOTIFY liveStreamStatus2Changed)
     Q_PROPERTY(int liveStreamStatus3 READ liveStreamStatus3 WRITE setLiveStreamStatus3 NOTIFY liveStreamStatus3Changed)
-    Q_PROPERTY(int playListCurrent READ playListCurrent WRITE setPlayListCurrent NOTIFY playListCurrentChanged)
-    Q_PROPERTY(QList<QString> playList READ playList WRITE setPlayList NOTIFY playListChanged)
 
     //record time  live time
     Q_PROPERTY(int recordSecond READ recordSecond WRITE setRecordSecond NOTIFY recordSecondChanged)
@@ -283,13 +282,12 @@ public:
 
     //playlist dialog visible
     Q_PROPERTY(int playListDialogVisible READ playListDialogVisible WRITE setPlayListDialogVisible NOTIFY playListDialogVisibleChanged)
-    Q_PROPERTY(int playListDialogCurrent READ playListDialogCurrent WRITE setPlayListDialogCurrent NOTIFY playListDialogCurrentChanged)
+    Q_PROPERTY(int playingIndex READ playingIndex WRITE setPlayingIndex NOTIFY playingIndexChanged)
 
 
     Q_PROPERTY(int listDialogVisible READ listDialogVisible WRITE setListDialogVisible NOTIFY listDialogVisibleChanged)
     Q_PROPERTY(int ndiListDialogVisible READ ndiListDialogVisible WRITE setNdiListDialogVisible NOTIFY ndiListDialogVisibleChanged)
     Q_PROPERTY(int ndiListDialogCurrent READ ndiListDialogCurrent WRITE setNdiListDialogCurrent NOTIFY ndiListDialogCurrentChanged)
-
 
     StreamData streamData;
     std::map<QString,QList<STREAM_PROFILE>> recordData;
@@ -469,10 +467,6 @@ private:
 
 int m_liveLedStatus;
 
-int m_playListCurrent;
-
-QList<QString> m_playList;
-
 int m_playListChanged;
 
 QString m_recordTimeStr;
@@ -515,8 +509,6 @@ QList<int> m_color5Data;
 
 int m_playListDialogVisible;
 
-int m_playListDialogCurrent;
-
 QList<int> m_color6Data;
 
 QList<int> m_chromakeySMPColorYcbcr;
@@ -530,6 +522,10 @@ int m_ndiListDialogVisible;
 int m_ndiListDialogCurrent;
 
 int m_keyboardType;
+
+QString m_currentRecordFileName;
+
+int m_playingIndex;
 
 public:
     //qsettings
@@ -623,16 +619,6 @@ public:
     int liveLedStatus() const
     {
         return m_liveLedStatus;
-    }
-
-    int playListCurrent() const
-    {
-        return m_playListCurrent;
-    }
-
-    QList<QString> playList() const
-    {
-        return m_playList;
     }
 
     int recordSecond() const
@@ -735,11 +721,6 @@ public:
         return m_playListDialogVisible;
     }
 
-    int playListDialogCurrent() const
-    {
-        return m_playListDialogCurrent;
-    }
-
     QList<int> color6Data() const
     {
         return m_color6Data;
@@ -775,6 +756,15 @@ public:
         return m_keyboardType;
     }
 
+    QString currentRecordFileName() const
+    {
+        return m_currentRecordFileName;
+    }
+    int playingIndex() const
+    {
+        return m_playingIndex;
+    }
+
 signals:
 //    void thirdMenuValueChanged();
     void thirdMenuValueChanged(int,int,int);
@@ -807,10 +797,6 @@ signals:
     void recordLedStatusChanged(int recordLedStatus);
 
     void liveLedStatusChanged(int liveLedStatus);
-
-    void playListCurrentChanged(int playListCurrent);
-
-    void playListChanged(QList<QString> playList);
 
     void recordSecondChanged(int recordSecond);
 
@@ -853,8 +839,6 @@ signals:
 
     void playListDialogVisibleChanged(int playListDialogVisible);
 
-    void playListDialogCurrentChanged(int playListDialogCurrent);
-
     void color6DataChanged(QList<int> color6Data);
 
     void chromakeySMPColorYcbcrChanged(QList<int> chromakeySMPColorYcbcr);
@@ -870,6 +854,10 @@ signals:
     void keyboardTypeChanged(int keyboardType);
 
     void keyboardOk(int first,int second,int third,QString value);
+
+    void currentRecordFileNameChanged(QString currentRecordFileName);
+
+    void playingIndexChanged(int playingIndex);
 
 public slots:
 void sdImagesChanged(QList<QString> list);
@@ -1001,41 +989,6 @@ void setLiveLedStatus(int liveLedStatus)
 
     m_liveLedStatus = liveLedStatus;
     emit liveLedStatusChanged(m_liveLedStatus);
-}
-void setPlayListCurrent(int playListCurrent)
-{
-    if (m_playListCurrent == playListCurrent)
-        return;
-    if(playListCurrent >= m_playList.size() && m_playList.size() != 0)
-        return ;
-//    if(playListCurrent < 0)
-//        return ;
-
-    m_playListCurrent = playListCurrent;
-    emit playListCurrentChanged(m_playListCurrent);
-}
-void setPlayList(QList<QString> playList)
-{
-    if (m_playList == playList)
-        return;
-
-    if(playList.size() == 0){
-        setPlayListCurrent(0);
-    }
-
-    m_playList = playList;
-    emit playListChanged(m_playList);
-}
-
-bool isPlayListLast(){
-    if(playListCurrent() < 0 || playListCurrent() >= playList().size())
-        return false;
-    if(playList().size() == 0)
-        return false;
-    if(playListCurrent() == playList().size() - 1)
-        return true;
-    else
-        return false;
 }
 
 void setRecordSecond(int recordSecond)
@@ -1236,14 +1189,6 @@ void setPlayListDialogVisible(int playListDialogVisible)
     m_playListDialogVisible = playListDialogVisible;
     emit playListDialogVisibleChanged(m_playListDialogVisible);
 }
-void setPlayListDialogCurrent(int playListDialogCurrent)
-{
-//    if (m_playListDialogCurrent == playListDialogCurrent)
-//        return;
-
-    m_playListDialogCurrent = playListDialogCurrent;
-    emit playListDialogCurrentChanged(m_playListDialogCurrent);
-}
 
 void setColor6Data(QList<int> color6Data)
 {
@@ -1311,6 +1256,23 @@ void setKeyboardType(int keyboardType)
 
 
 
+void setCurrentRecordFileName(QString currentRecordFileName)
+{
+    if (m_currentRecordFileName == currentRecordFileName)
+        return;
+
+    m_currentRecordFileName = currentRecordFileName;
+    emit currentRecordFileNameChanged(m_currentRecordFileName);
+}
+
+void setPlayingIndex(int playingIndex)
+{
+    if (m_playingIndex == playingIndex)
+        return;
+
+    m_playingIndex = playingIndex;
+    emit playingIndexChanged(m_playingIndex);
+}
 };
 
 #endif // SETTINGS_H

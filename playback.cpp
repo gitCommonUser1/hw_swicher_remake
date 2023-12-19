@@ -2,7 +2,7 @@
 
 static QList<QString> playbackGroupList = {
     "Single Group",
-    "All Group"
+    "All Groups"
 };
 
 Playback::Playback(QObject *parent) : QObject(parent)
