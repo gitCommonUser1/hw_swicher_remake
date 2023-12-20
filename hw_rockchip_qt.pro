@@ -10,6 +10,8 @@ TRANSLATIONS += english.ts \
 
 CONFIG += exceptions
 
+QMAKE_CXXFLAGS_RELEASE += -O3
+
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
