@@ -36,21 +36,36 @@ void MacroRecorder::append(QVariantMap item)
 {
     if(!m_isWorking)
         return ;
-
     auto list = macro->ops();
-    for(int i = list.size() - 1;i >= 0; --i)
+    if(list.size() != 0)
     {
-        qDebug() << " this name: "<<item["id"];
-        qDebug() << " op " << i << " name: "<<item["id"];
-        if(item["id"].toString() == qobject_cast<Op*>(macro->ops()[i])->method()["id"].toString())
+        //特殊情况，这一个和上一个op都是sleep
+        auto last = qobject_cast<Op*>(list[list.size() - 1])->method();
+        if(last["id"].toString().contains("sleep",Qt::CaseInsensitive) &&
+           item["id"].toString().contains("sleep",Qt::CaseInsensitive) )
         {
-            qDebug() << "true!!!!";
-            macro->remove(i);
-            break;
+            //2023.12.20.21.32
+            int sleep = last["value"].toInt();
+            macro->remove(list.size() - 1);
+            item["value"] = item["value"].toInt() + sleep;
         }
-        if(item["id"].toString().indexOf("sleep",Qt::CaseInsensitive) != -1)
+    }
+    else
+    {
+        for(int i = list.size() - 1;i >= 0; --i)
         {
-            break;
+            qDebug() << " this name: "<<item["id"];
+            qDebug() << " op " << i << " name: "<<item["id"];
+            if(item["id"].toString() == qobject_cast<Op*>(list[i])->method()["id"].toString())
+            {
+                qDebug() << "true!!!!";
+                macro->remove(i);
+                break;
+            }
+            if(item["id"].toString().contains("sleep",Qt::CaseInsensitive))
+            {
+                break;
+            }
         }
     }
     Op* op = new Op();

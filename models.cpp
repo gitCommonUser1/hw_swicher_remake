@@ -167,6 +167,8 @@ void Models::init_connect()
     connect(this,&Models::stillSelection,this,&Models::setStillSelection);
     connect(this,&Models::stillLocation,this,&Models::setStillLocation);
 
+    //macro
+
 
     //streams
     connect(this,&Models::streamPlatform,this,&Models::setStreamPlatform);

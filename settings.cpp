@@ -981,6 +981,7 @@ MenuSecond *Settings::new_Macro_Sleep()
 
     third = new MenuThirdMacroSleep(tr("Sleep"),"Sleep",0,500,10000,50,DATATYPE_MS);
     list_third.append(third);
+    third->menuType = ENTER_CALL;
 
     monitor->third = list_third;
     return monitor;

@@ -18,7 +18,9 @@ void MacroRunner::startRun(Macro *item)
 void MacroRunner::stopRun()
 {
     auto thread = getThread();
-    thread->requestInterruption();
+//    thread->requestInterruption();
+    thread->terminate();
+    m_isWorking = false;
     emit workStatusChanged(m_index,m_isWorking);
 }
 
@@ -41,7 +43,7 @@ void MacroRunner::doWork()
     int i = 0;
     qDebug() << "________macro size :" << list.size();
     while(1){
-        if(getThread()->currentThread()->isInterruptionRequested() || i >= list.size()){    //   ||   execute over!
+        if(/*getThread()->currentThread()->isInterruptionRequested() || */i >= list.size()){    //   ||   execute over!
             m_isWorking = false;
             getThread()->quit();
             qDebug("runner over!!");

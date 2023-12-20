@@ -1493,7 +1493,14 @@ class MenuThirdMacroSleep:public MenuThird{
 public:
     using MenuThird::MenuThird;
     void doWork(QVariant value){
-
+        if(value > settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_SLEEP]->max)
+            value = settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_SLEEP]->max;
+        if(value < 0)
+            value = 0;
+        settings->setMenuValue(MENU_FIRST_MACRO,MACRO_MACRO,MENU_THIRD_MACRO_SLEEP,value);
+    }
+    void doEvent() override{
+        models->macroRecord(&Models::mSleep,settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_SLEEP]->current);
     }
 };
 

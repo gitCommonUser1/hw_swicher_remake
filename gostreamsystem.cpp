@@ -76,7 +76,7 @@ void Profile::emitSignal(QObject *object)
         if(property.type() == QVariant::UserType)
         {
 //                这里是子节点列表
-            if(QString(typeName).indexOf("QList") != -1)
+            if(QString(typeName).contains("QList"))
             {
                 QVariant v = object->property(name);
                 QList<QObject*> objects = v.value<QList<QObject*>>();
@@ -171,7 +171,7 @@ void Profile::writeRecursion(QObject *object, QXmlStreamWriter &stream)
             else
             {
 //                这里是子节点列表
-                if(QString(typeName).indexOf("QList") != -1)
+                if(QString(typeName).contains("QList"))
                 {
                     QVariant v = object->property(name);
                     QList<QObject*> stills = v.value<QList<QObject*>>();

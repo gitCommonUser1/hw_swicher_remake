@@ -241,6 +241,9 @@ public:
         }else if(!macroRunner->isWorking() && profile->macroPool()->isMacroIndexExists(index)){
             // run macro
             macroRunner->startRun(profile->macroPool()->macroIndex(index));
+        }else if(macroRunner->isWorking() && macroRunner->index() == index){
+            qDebug() << "stop run!!!!";
+            macroRunner->stopRun();
         }
     }
 };
@@ -453,6 +456,7 @@ public:
         if(status != 1)
             return ;
 //        models->sendKeySignal(&Models::cutTransition,false);
+
     }
 };
 

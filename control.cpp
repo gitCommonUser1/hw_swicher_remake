@@ -503,6 +503,12 @@ void Control::init_connect()
             return ;
         QList<QGenericArgument>args;
         QMetaMethod method = modelsSignals[methodName];
+        if(method == QMetaMethod::fromSignal(&Models::mSleep))
+        {
+            //2023.12.20.21.32
+            QThread::msleep(map["value"].toInt());
+            return ;
+        }
         for(int i = 0;i < method.parameterCount();++i){
             if(map.contains(method.parameterNames()[i])){
                 QGenericArgument arg;
@@ -540,7 +546,7 @@ void Control::init_connect()
             models->macroInvoke(method,args[0],args[1],args[2],args[3]);
             break;
         }
-    });
+    },Qt::DirectConnection);
 }
 
 void Control::connect_profile()

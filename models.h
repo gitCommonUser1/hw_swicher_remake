@@ -105,10 +105,6 @@ public:
     int getOutFormatIndexForEnum(int index);
     int getOutFormat(int index);
 
-    //sleep
-    void setMSleep(int value);
-    void setUserWait();
-
     void setLoadStreamKey(int second);
     void openAllStream();
     void openOneStream(int index);
@@ -275,6 +271,10 @@ signals:
 
     //macro
     /**/
+    //这个地方的参数”value“如果修改了，需要将标记的这几个地方全部修改。
+    //标记为：2023.12.20.21.32   直接全局查找
+    void mSleep(int value);
+    void userWait();
     /**/
 
 
@@ -299,11 +299,6 @@ signals:
     void playPrevious();
 
     void network(int third);
-
-    //sleep
-    void mSleep(int value);
-    void userWait();
-
 
     //playback
     void playbackList(QString list);
@@ -510,6 +505,8 @@ public slots:
 
     //macro
     /**/
+    void setMSleep(int value);
+    void setUserWait();
     /**/
 
 
