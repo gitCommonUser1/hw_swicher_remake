@@ -56,6 +56,11 @@ SOURCES += \
     language.cpp \
     leftmenumodel.cpp \
     lumaparameters.cpp \
+    macro.cpp \
+    macropool.cpp \
+    macrorecorder.cpp \
+    macrorunner.cpp \
+    macroworker.cpp \
         main.cpp \
     marker.cpp \
     messagedialogcontrol.cpp \
@@ -72,6 +77,7 @@ SOURCES += \
     ndilistmodelitem.cpp \
     network.cpp \
     nexttransition.cpp \
+    op.cpp \
     osee_math.cpp \
     outformat.cpp \
     outputcolorspace.cpp \
@@ -269,6 +275,11 @@ HEADERS += \
     language.h \
     leftmenumodel.h \
     lumaparameters.h \
+    macro.h \
+    macropool.h \
+    macrorecorder.h \
+    macrorunner.h \
+    macroworker.h \
     marker.h \
     messagedialogcontrol.h \
     micinput.h \
@@ -285,6 +296,7 @@ HEADERS += \
     ndilistmodelitem.h \
     network.h \
     nexttransition.h \
+    op.h \
     osee_math.h \
     outformat.h \
     outputcolorspace.h \

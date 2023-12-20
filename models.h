@@ -6,6 +6,9 @@
 #include <QDebug>
 #include "settings.h"
 #include <QQmlApplicationEngine>
+#include "macrorecorder.h"
+
+extern MacroRecorder *macroRecorder;
 
 extern Settings*settings;
 
@@ -14,9 +17,13 @@ class Models : public QObject
     Q_OBJECT
 private:
     QQmlApplicationEngine *m_engine;
+    std::map<QString,QMetaMethod> m_signals;
 public:
     explicit Models(QObject *parent = nullptr);
     void init_connect();
+    //为了兼容MACRO，models的信号一定不能有重名（重载）, (好像信号本身无法重载)
+    void init_signals();
+    const std::map<QString,QMetaMethod>& getSignals(){return m_signals;}
 
     void setEngine(QQmlApplicationEngine *engine){
         m_engine = engine;
@@ -573,22 +580,74 @@ public:
     int parameterToInt(QMetaMethod func,QString parameter);
     int isKeyMehotd(QMetaMethod func);
 
+
+    //获取所有参数
+    void pushArgs(){}
+    QVariantList m_args;
+    template<typename T,typename... ARGS>
+    void pushArgs(T t,ARGS... args)
+    {
+        m_args.push_back(t);
+        pushArgs(args...);
+    }
     //新macro调用方法
     template<typename myFunction,typename... ARGS>
     void macroInvoke(myFunction function,ARGS... tail)
     {
+        m_args.clear();
+        pushArgs(tail...);
         //调用
         (this->*function)(tail...);
         //
-//        QMetaMethod method = QMetaMethod::fromSignal(function);
+        QMetaMethod method = QMetaMethod::fromSignal(function);
+        qDebug() << "method name: "<< method.name();
+        qDebug() << "pars:" << method.parameterNames();
+        QVariantMap item;
+        item["id"] = method.name();
+        for(int i = 0;i < method.parameterNames().size();++i)
+        {
+            //
+            //item[method.parameterNames()[i]] = tail...
+            item[method.parameterNames()[i]] = m_args[i];
+        }
+        macroRecorder->append(item);
     }
     template<typename myFunction,typename... ARGS>
     void macroRecord(myFunction function,ARGS... tail)
     {
+        m_args.clear();
+        pushArgs(tail...);
+
+        QMetaMethod method = QMetaMethod::fromSignal(function);
+        qDebug() << "method name: "<< method.name();
+        qDebug() << "pars:" << method.parameterNames();
+        QVariantMap item;
+        item["id"] = method.name();
+        for(int i = 0;i < method.parameterNames().size();++i)
+        {
+            //
+            //item[method.parameterNames()[i]] = tail...
+            item[method.parameterNames()[i]] = m_args[i];
+        }
+        macroRecorder->append(item);
         //不调用
 //        (this->*function)(tail...);
         //
 //        QMetaMethod method = QMetaMethod::fromSignal(function);
+    }
+
+
+    template<typename... ARGS>
+    void macroInvoke(QMetaMethod method,ARGS... tail)
+    {
+        method.invoke(this,tail...);
+        QVariantMap item;
+        item["id"] = method.name();
+        for(int i = 0;i < method.parameterNames().size();++i)
+        {
+            item[method.parameterNames()[i]] = m_args[i];
+        }
+        macroRecorder->append(item);
     }
 };
 

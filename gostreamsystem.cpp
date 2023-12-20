@@ -15,6 +15,7 @@
 #include "streams.h"
 #include "playback.h"
 #include "setting.h"
+#include "macropool.h"
 
 #define PRODUCT_NAME "GoStream Deck"
 
@@ -52,6 +53,8 @@ Profile::Profile(QObject *parent) : QObject(parent)
     m_playback->setObjectName("playback");
     m_setting = new Setting(this);
     m_setting->setObjectName("setting");
+    m_macroPool = new MacroPool(this);
+    m_macroPool->setObjectName("macroPool");
 
     read(this);
 }

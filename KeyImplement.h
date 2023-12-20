@@ -16,6 +16,8 @@
 #include "profile_include.h"
 #include <QTimer>
 #include "playbackgroupmanager.h"
+#include "macrorunner.h"
+#include "macrorecorder.h"
 
 extern Settings*settings;
 extern Models*models;
@@ -25,6 +27,9 @@ extern MessageDialogControl *messageDialogControl;
 extern Ndi *ndi;
 extern Profile *profile;
 extern PlaybackGroupManager* playbackGroupManager;
+extern MacroRunner *macroRunner;
+extern MacroRecorder *macroRecorder;
+
 
 
 //点击时记住最后一次值，如果没有确定修改返回则恢复
@@ -227,7 +232,16 @@ class KeyMem:public KeyAbstractClass{
 public:
     using KeyAbstractClass::KeyAbstractClass;
     void doWork(int status = 1){
-        qDebug() << "_____keyMem index:" << key_index << "clicked!";
+        if(status != 1)
+            return ;
+        int index = key_index - KEY_LED_MEM1 + 1;
+        if(macroRecorder->isWorking() && macroRecorder->index() == index){
+            // stop record
+            macroRecorder->stopRecord();
+        }else if(!macroRunner->isWorking() && profile->macroPool()->isMacroIndexExists(index)){
+            // run macro
+            macroRunner->startRun(profile->macroPool()->macroIndex(index));
+        }
     }
 };
 

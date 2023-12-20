@@ -45,6 +45,7 @@ extern PlaybackGroupManager* playbackGroupManager;
 Models::Models(QObject *parent) : QObject(parent)
 {
     init_connect();
+    init_signals();
 }
 
 void Models::init_connect()
@@ -205,8 +206,21 @@ void Models::init_connect()
     connect(this,&Models::nextTransition,this,&Models::setNextTransition);
     connect(this,&Models::transitionStyle,this,&Models::setTransitionStyle);
     connect(this,&Models::previewTransition,this,&Models::setPreviewTransition);
+    connect(this,&Models::cutTransition,this,&Models::setCutTransition);
+    connect(this,&Models::autoTransition,this,&Models::setAutoTransition);
 
+}
 
+void Models::init_signals()
+{
+    auto metaObj = this->metaObject();
+    for(int i = 0;i < metaObj->methodCount();++i)
+    {
+        if(metaObj->method(i).methodType() == QMetaMethod::Signal)
+        {
+            m_signals[metaObj->method(i).name()] = metaObj->method(i);
+        }
+    }
 }
 
 #define KEYPRESSSLEEP 50000

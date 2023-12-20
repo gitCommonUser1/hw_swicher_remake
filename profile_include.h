@@ -62,5 +62,8 @@
 #include "primarydns.h"
 #include "secondarydns.h"
 #include "playback.h"
+#include "macropool.h"
+#include "macro.h"
+#include "op.h"
 
 #endif // PROFILE_INCLUDE_H

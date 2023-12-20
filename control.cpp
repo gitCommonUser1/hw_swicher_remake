@@ -26,6 +26,10 @@
 #include "gostreamsystem.h"
 #include "profile_include.h"
 #include "playbackgroupmanager.h"
+#include "macrorunner.h"
+#include "macrorecorder.h"
+#include "macro.h"
+#include <QVariant>
 
 extern Settings *settings;
 extern LeftMenuModel *leftMenuModel;
@@ -38,6 +42,9 @@ extern MessageDialogControl *messageDialogControl;
 extern Ndi *ndi;
 extern Profile *profile;
 extern PlaybackGroupManager* playbackGroupManager;
+extern MacroRunner *macroRunner;
+extern MacroRecorder *macroRecorder;
+
 
 //键盘按下时间 ms
 #define KEY_PRESS_INTERVAL 2000
@@ -467,6 +474,82 @@ void Control::init_connect()
             return ;
 
         settings->listFirst()[first]->second[second]->third[third]->doWork(value);
+    });
+
+
+    //macro灯光熄灭
+    for(int i = KEY_LED_MEM1;i <= KEY_LED_MEM8;++i)
+    {
+        QSwitcher::set_led(i,SWITCHER_LED_OFF);
+    }
+
+    qRegisterMetaType<Macro*>("Macro*");
+    // macro manager
+    connect(macroRunner,&MacroRunner::workStatusChanged,this,[=](int index,bool isWorking){
+        index = KEY_LED_MEM1 + index - 1;
+        if(index < KEY_LED_MEM1 || index > KEY_LED_MEM8)
+            return ;
+        if(isWorking)
+            QSwitcher::set_led(index,SWITCHER_LED_ON,LEDS_BLINK_2Hz);
+        else
+            QSwitcher::set_led(index,SWITCHER_LED_ON);
+    });
+    connect(macroRecorder,&MacroRecorder::workStatusChanged,this,[=](int index,bool isWorking){
+        index = KEY_LED_MEM1 + index - 1;
+        if(index < KEY_LED_MEM1 || index > KEY_LED_MEM8)
+            return ;
+        if(isWorking){
+            QSwitcher::set_led(index,SWITCHER_LED_ON,LEDS_BLINK_0_5Hz);
+        }
+        else{
+            QSwitcher::set_led(index,SWITCHER_LED_OFF);
+            profile->macroPool()->append(macroRecorder->data());
+        }
+    });
+    connect(macroRunner,&MacroRunner::runMethod,this,[=](QVariantMap map){
+        auto modelsSignals = models->getSignals();
+        QString methodName = map["id"].toString();
+        if(modelsSignals.find(methodName) == modelsSignals.end())
+            return ;
+        QList<QGenericArgument>args;
+        QMetaMethod method = modelsSignals[methodName];
+        for(int i = 0;i < method.parameterCount();++i){
+            if(map.contains(method.parameterNames()[i])){
+                QGenericArgument arg;
+                int type = map[method.parameterNames()[i]].type();
+                switch (type) {
+                case QVariant::String:
+                    args.push_back(QGenericArgument("QString",map[method.parameterNames()[i]].data()));
+                    break;
+                case QVariant::Int:
+                    args.push_back(QGenericArgument("int",map[method.parameterNames()[i]].data()));
+                    break;
+                case QVariant::Bool:
+                    args.push_back(QGenericArgument("bool",map[method.parameterNames()[i]].data()));
+                    break;
+                case QVariant::Double:
+                    args.push_back(QGenericArgument("double",map[method.parameterNames()[i]].data()));
+                    break;
+                }
+            }
+        }
+        switch (args.size()) {
+        case 0:
+            models->macroInvoke(method);
+            break;
+        case 1:
+            models->macroInvoke(method,args[0]);
+            break;
+        case 2:
+            models->macroInvoke(method,args[0],args[1]);
+            break;
+        case 3:
+            models->macroInvoke(method,args[0],args[1],args[2]);
+            break;
+        case 4:
+            models->macroInvoke(method,args[0],args[1],args[2],args[3]);
+            break;
+        }
     });
 }
 
@@ -1179,6 +1262,30 @@ void Control::connect_profile()
         settings->setMenuValue(MENU_FIRST_STILL_GENERATOR,STILL_GENERATE_UPLOAD,STILL_UPLOAD_LOCATION,location);
     });
     //macro
+    connect(profile->macroPool(),&MacroPool::newMacro,this,[=](int index){
+        int key = KEY_LED_MEM1 + index - 1;
+        if(key > KEY_LED_MEM8 || key < KEY_LED_MEM1)
+            return ;
+        QSwitcher::set_led(KEY_LED_MEM1 + index - 1,SWITCHER_LED_ON);
+    });
+    connect(profile->macroPool(),&MacroPool::removeMacro,this,[=](int index){
+        int key = KEY_LED_MEM1 + index - 1;
+        if(key > KEY_LED_MEM8 || key < KEY_LED_MEM1)
+            return ;
+        QSwitcher::set_led(KEY_LED_MEM1 + index - 1,SWITCHER_LED_OFF);
+    });
+    connect(profile->macroPool(),&MacroPool::moveMacro,this,[=](int src,int dst){
+        int key_dst = KEY_LED_MEM1 + dst - 1;
+        int key_src = KEY_LED_MEM1 + src - 1;
+
+        if(key_src >= KEY_LED_MEM1 && key_src <= KEY_LED_MEM8)
+            QSwitcher::set_led(key_src,SWITCHER_LED_OFF);
+        if(key_dst >= KEY_LED_MEM1 && key_dst <= KEY_LED_MEM8)
+            QSwitcher::set_led(key_dst,SWITCHER_LED_ON);
+    });
+    connect(profile->macroPool(),&MacroPool::swapMacro,this,[=](int src,int dst){
+
+    });
 
     //stream            stream比较特殊，setMenu也在models中调用
     connect(profile->streams()->stream1(),&Stream::platfromChanged,this,[=](QString platfrom){
@@ -1569,6 +1676,11 @@ void Control::slotKeyChanged(const int key, const int value)
                         return ;
                     }
                 }
+                else if(key_pressed_index >= KEY_LED_MEM1 && key_pressed_index <= KEY_LED_MEM8)
+                {
+                    //record macro
+                    macroRecorder->startRecord(key_pressed_index - KEY_LED_MEM1 + 1);
+                }
             }
         });
     }
@@ -1731,10 +1843,6 @@ void Control::slotKeyChanged(const int key, const int value)
 
 void Control::slotKeyStatusChanged(const int key, const int status)
 {
-
-    qDebug() << "key:" << key;
-    qDebug() << "status:" << status;
-
     if(key >= KEY_LED_RECORDER_REC && key <= KEY_LED_PLAYER_PAUSE)
         return ;
 

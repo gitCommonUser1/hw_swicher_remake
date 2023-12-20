@@ -14,6 +14,7 @@ class StillGenerator;
 class Streams;
 class Playback;
 class Setting;
+class MacroPool;
 
 
 class Profile : public QObject
@@ -29,6 +30,7 @@ class Profile : public QObject
     Q_PROPERTY(SuperSources* superSources READ superSources)
     Q_PROPERTY(AudioMixer* audioMixer READ audioMixer)
     Q_PROPERTY(StillGenerator* stillGenerator READ stillGenerator)
+    Q_PROPERTY(MacroPool* macroPool READ macroPool)
     Q_PROPERTY(Streams* streams READ streams)
     Q_PROPERTY(Playback* playback READ playback)
     Q_PROPERTY(Setting* setting READ setting)
@@ -111,6 +113,11 @@ public:
         return m_playback;
     }
 
+    MacroPool* macroPool() const
+    {
+        return m_macroPool;
+    }
+
 public slots:
     void setMajorVersion(int majorVersion)
     {
@@ -173,6 +180,8 @@ private:
     Setting* m_setting;
 
     Playback* m_playback;
+
+    MacroPool* m_macroPool;
 
 signals:
 void productChanged(QString product);

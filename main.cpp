@@ -45,7 +45,8 @@
 #include "gostreamsystem.h"
 #include "profile_include.h"
 #include "playbackgroupmanager.h"
-
+#include "macrorunner.h"
+#include "macrorecorder.h"
 
 Models *models;
 Settings *settings;
@@ -59,6 +60,9 @@ MessageDialogControl *messageDialogControl;
 Ndi *ndi;
 Profile *profile;
 PlaybackGroupManager *playbackGroupManager;
+MacroRunner *macroRunner;
+MacroRecorder *macroRecorder;
+
 bool g_running = true;
 
 bool init_settings_is_ok = false;
@@ -280,9 +284,8 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
 
-
+    //profile
     profile = new Profile;
-
 
     messageDialogControl = new MessageDialogControl;
     engine.rootContext()->setContextProperty("messageDialogControl",messageDialogControl);
@@ -477,6 +480,10 @@ int main(int argc, char *argv[])
     ndi = new Ndi();
     engine.rootContext()->setContextProperty("ndi",ndi);
     engine.rootContext()->setContextProperty("ndiListModelItem",ndi->ndiListModelItem());
+
+    //macro
+    macroRunner = new MacroRunner();
+    macroRecorder = new MacroRecorder();
 
     //控制
     Control control;
