@@ -17,6 +17,7 @@ static QList<QString> srcList = {
 
 Streams::Streams(QObject *parent) : QObject(parent)
 {
+    m_enable = false;
     m_stream1 = new Stream(0,this);
     m_stream1->setObjectName("stream1");
     m_stream1->setOutput(true);

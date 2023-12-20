@@ -8,6 +8,7 @@ class Stream;
 class Streams : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool enable READ enable WRITE setEnable NOTIFY enableChanged)
     Q_PROPERTY(int quality READ quality WRITE setQuality NOTIFY qualityChanged)
     Q_PROPERTY(Stream* stream1 READ stream1)
     Q_PROPERTY(Stream* stream2 READ stream2)
@@ -58,6 +59,11 @@ public:
         return m_quality;
     }
 
+    bool enable() const
+    {
+        return m_enable;
+    }
+
 public slots:
     void setQuality(int quality)
     {
@@ -73,6 +79,15 @@ public slots:
         emit qualityChanged(m_quality);
     }
 
+    void setEnable(bool enable)
+    {
+        if (m_enable == enable)
+            return;
+
+        m_enable = enable;
+        emit enableChanged(m_enable);
+    }
+
 private:
 
     Stream* m_stream1;
@@ -83,9 +98,12 @@ private:
 
     int m_quality;
 
+    bool m_enable;
+
 signals:
 
 void qualityChanged(int quality);
+void enableChanged(bool enable);
 };
 
 #endif // STREAMS_H

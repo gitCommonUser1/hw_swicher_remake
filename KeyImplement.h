@@ -223,7 +223,7 @@ public:
     void doWork(int status = 1){
         if(status != 1)
             return ;
-        settings->setLiveStatus(!settings->liveStatus());
+        profile->streams()->setEnable(!profile->streams()->enable());
     }
 };
 

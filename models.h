@@ -110,7 +110,6 @@ public:
     void setUserWait();
 
     void setLoadStreamKey(int second);
-    void setLiveStatus(int status);
     void openAllStream();
     void openOneStream(int index);
     void closeAllStream();
@@ -287,6 +286,7 @@ signals:
     //stream
 
     /**/
+    void streamEnable(bool enable);
     void streamPlatform(int streamIndex,QString platform);
     void streamServer(int streamIndex,QString server);
     void streamUrl(int streamIndex,QString url);
@@ -519,6 +519,7 @@ public slots:
 
     //stream
     /**/
+    void setStreamEnable(bool enable);
     void setStreamPlatform(int streamIndex,QString platform);
     void setStreamServer(int streamIndex,QString server);
     void setStreamUrl(int streamIndex,QString url);
@@ -575,11 +576,6 @@ public slots:
 
 public:
     int initStillMutex;
-
-    QString parameterToString(QMetaMethod func,int parameter);
-    int parameterToInt(QMetaMethod func,QString parameter);
-    int isKeyMehotd(QMetaMethod func);
-
 
     //获取所有参数
     void pushArgs(){}

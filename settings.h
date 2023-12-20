@@ -273,10 +273,6 @@ public:
     Q_PROPERTY(int liveSecond READ liveSecond WRITE setLiveSecond NOTIFY liveSecondChanged)
     Q_PROPERTY(QString liveTimeStr READ liveTimeStr WRITE setLiveTimeStr NOTIFY liveTimeStrChanged)
 
-
-    Q_PROPERTY(int liveStatus READ liveStatus WRITE setLiveStatus NOTIFY liveStatusChanged)
-
-
     //stream enable list  ->  audio show
     Q_PROPERTY(QList<bool> streamOutputList READ streamOutputList WRITE setStreamOutputList NOTIFY streamOutputListChanged)
 
@@ -501,8 +497,6 @@ int m_liveStreamStatus2;
 
 int m_liveStreamStatus3;
 
-int m_liveStatus;
-
 QList<bool> m_streamOutputList;
 
 QList<int> m_color5Data;
@@ -701,11 +695,6 @@ public:
         return m_liveStreamStatus3;
     }
 
-    int liveStatus() const
-    {
-        return m_liveStatus;
-    }
-
     QList<bool> streamOutputList() const
     {
         return m_streamOutputList;
@@ -829,8 +818,6 @@ signals:
     void liveStreamStatus2Changed(int liveStreamStatus2);
 
     void liveStreamStatus3Changed(int liveStreamStatus3);
-
-    void liveStatusChanged(int liveStatus);
 
     void streamOutputListChanged(QList<bool> streamOutputList);
 
@@ -1138,14 +1125,6 @@ void setLiveStreamStatus3(int liveStreamStatus3)
     emit liveStreamStatus3Changed(m_liveStreamStatus3);
 }
 
-void setLiveStatus(int liveStatus)
-{
-    if (m_liveStatus == liveStatus)
-        return;
-
-    m_liveStatus = liveStatus;
-    emit liveStatusChanged(m_liveStatus);
-}
 void setStreamOutputList(QList<bool> streamOutputList)
 {
     if (m_streamOutputList == streamOutputList)

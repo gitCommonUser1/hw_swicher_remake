@@ -133,8 +133,8 @@ void Control::init_connect()
         enable2 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();// == OUTPUT_ENABLE;
         enable3 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();// == OUTPUT_ENABLE;
 
-        int liveStatus = settings->liveStatus();
-        if(liveStatus != 0)
+        bool liveStatus = profile->streams()->enable();
+        if(liveStatus)
         {
             //start status
             int led_status = E_STATUE_SUCCESS;
@@ -186,16 +186,6 @@ void Control::init_connect()
             }
         }
         //
-    });
-
-    connect(settings,&Settings::liveStatusChanged,this,[=](int status){
-        if(status == 0){
-            //close
-            models->closeAllStream();
-        }else{
-            //open
-            models->openAllStream();
-        }
     });
 
     connect(settings,&Settings::playLedStatusChanged,this,[=](int status){
@@ -1286,8 +1276,10 @@ void Control::connect_profile()
     connect(profile->macroPool(),&MacroPool::swapMacro,this,[=](int src,int dst){
 
     });
-
     //stream            stream比较特殊，setMenu也在models中调用
+    connect(profile->streams(),&Streams::enableChanged,this,[=](bool enable){
+        models->macroInvoke(&Models::streamEnable,enable);
+    });
     connect(profile->streams()->stream1(),&Stream::platfromChanged,this,[=](QString platfrom){
         models->macroInvoke(&Models::streamPlatform,Streams::STREAM1,platfrom);
     });

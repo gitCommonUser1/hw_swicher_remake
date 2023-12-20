@@ -170,6 +170,7 @@ void Models::init_connect()
 
     //streams
     connect(this,&Models::streamPlatform,this,&Models::setStreamPlatform);
+    connect(this,&Models::streamEnable,this,&Models::setStreamEnable);
     connect(this,&Models::streamServer,this,&Models::setStreamServer);
     connect(this,&Models::streamUrl,this,&Models::setStreamUrl);
     connect(this,&Models::streamOutput,this,&Models::setStreamOutput);
@@ -777,6 +778,19 @@ void Models::setStillSelectionCtrl()
     fpga_write(&g_fpga,STILL_SEL,value);
 }
 
+void Models::setStreamEnable(bool enable)
+{
+    if(profile->streams()->enable() != enable)
+    {
+        profile->streams()->setEnable(enable);
+        return ;
+    }
+    if(enable)
+        openAllStream();
+    else
+        closeAllStream();
+}
+
 void Models::setStreamPlatform(int streamIndex, QString platform)
 {
     switch (streamIndex) {
@@ -931,7 +945,7 @@ void Models::setStreamOutput(int streamIndex, bool output)
         break;
     }
 
-    if(settings->liveStatus())
+    if(profile->streams()->enable())
     {
         if(output)
             openOneStream(streamIndex);
@@ -2516,11 +2530,6 @@ void Models::setPlayPrevious()
 
     settings->setPlayingIndex(settings->playingIndex() - 1);
     playStart();
-}
-
-void Models::setLiveStatus(int status)
-{
-    settings->setLiveStatus(status);
 }
 
 void Models::openAllStream()
@@ -5173,179 +5182,3 @@ void Models::setMonitorLevel(int level)
     int value = getMonitorRegValue(level);
     fpga_write(&g_fpga,MON_LEVEL,value);
 }
-
-
-//QString Models::parameterToString(QMetaMethod func, int parameter)
-//{
-//    if(func == QMetaMethod::fromSignal(&Models::liveStatus) || func == QMetaMethod::fromSignal(&Models::record) || func == QMetaMethod::fromSignal(&Models::prev) || func == QMetaMethod::fromSignal(&Models::keyOnAir) || func == QMetaMethod::fromSignal(&Models::dskOnAir)){
-//        if(parameter != 0){
-//            return "true";
-//        }else{
-//            return "false";
-//        }
-//    }else if(func == QMetaMethod::fromSignal(&Models::play)){
-//        if(parameter == 0){
-//            return "true";
-//        }else{
-//            return "false";
-//        }
-//    }else if(func == QMetaMethod::fromSignal(&Models::pgmIndex) || func == QMetaMethod::fromSignal(&Models::pvwIndex)){
-//        if(parameter == 0){
-//            return "In 1";
-//        }else if(parameter == 1){
-//            return "In 2";
-//        }else if(parameter == 2){
-//            return "In 3";
-//        }else if(parameter == 3){
-//            return "In 4";
-//        }else if(parameter == 4){
-//            return "Aux";
-//        }else if(parameter == 5){
-//            return "Black";
-//        }else if(parameter == 6){
-//            return "Still 1";
-//        }else if(parameter == 7){
-//            return "Still 2";
-//        }
-//    }else if(func == QMetaMethod::fromSignal(&Models::transitionIndex)){
-//        if(parameter == 0){
-//            return "Mix";
-//        }else if(parameter == 1){
-//            return "Dip";
-//        }else if(parameter == 2){
-//            return "Wipe";
-//        }
-//    }else if(func == QMetaMethod::fromSignal(&Models::transitionSource)){
-//        QString ret = "";
-//        if(parameter & 0x4){
-//            ret += "BKGD,";
-//        }
-//        if(parameter & 0x2){
-//            ret += "DSK,";
-//        }
-//        if(parameter & 0x1){
-//            ret += "KEY,";
-//        }
-//        if(ret.size() > 0 && ret[ret.size() - 1] == ','){
-//            ret = ret.mid(0,ret.size() - 1);
-//        }
-//        return ret;
-//    }
-//    else{
-//        return QString::number(parameter);
-//    }
-//}
-
-//int Models::parameterToInt(QMetaMethod func, QString parameter)
-//{
-//    if(func == QMetaMethod::fromSignal(&Models::liveStatus) || func == QMetaMethod::fromSignal(&Models::record) || func == QMetaMethod::fromSignal(&Models::prev) || func == QMetaMethod::fromSignal(&Models::keyOnAir) || func == QMetaMethod::fromSignal(&Models::dskOnAir)){
-//        if(parameter == "true"){
-//            return 1;
-//        }else if(parameter == "false"){
-//            return 0;
-//        }else{
-//            return -1;
-//        }
-//    }else if(func == QMetaMethod::fromSignal(&Models::play)){
-//        if(parameter == "true"){
-//            return 0;
-//        }else if(parameter == "false"){
-//            return 1;
-//        }else{
-//            return -1;
-//        }
-//    }else if(func == QMetaMethod::fromSignal(&Models::pgmIndex) || func == QMetaMethod::fromSignal(&Models::pvwIndex)){
-//        if(parameter == "In 1"){
-//            return 0;
-//        }else if(parameter == "In 2"){
-//            return 1;
-//        }else if(parameter == "In 3"){
-//            return 2;
-//        }else if(parameter == "In 4"){
-//            return 3;
-//        }else if(parameter == "Aux"){
-//            return 4;
-//        }else if(parameter == "Black"){
-//            return 5;
-//        }else if(parameter == "Still 1"){
-//            return 6;
-//        }else if(parameter == "Still 2"){
-//            return 7;
-//        }else{
-//            return -1;
-//        }
-//    }else if(func == QMetaMethod::fromSignal(&Models::transitionIndex)){
-//        if(parameter == "Mix"){
-//            return 0;
-//        }else if(parameter == "Dip"){
-//            return 1;
-//        }else if(parameter == "Wipe"){
-//            return 2;
-//        }else{
-//            return -1;
-//        }
-//    }else if(func == QMetaMethod::fromSignal(&Models::transitionSource)){
-//        auto list = parameter.split(",");
-//        int value = 0;
-//        for(int i = 0;i < list.size();++i){
-//            if(list[i] == "KEY"){
-//                value += 1;
-//            }else if(list[i] == "DSK"){
-//                value += 2;
-//            }else if(list[i] == "BKGD"){
-//                value += 4;
-//            }
-//        }
-//        return value;
-//    }
-//    else if(func == QMetaMethod::fromSignal(&Models::transitionPosition)){
-//        bool flag = true;
-//        int value = parameter.toInt(&flag);
-//        if(!flag)
-//            return -1;
-//        if(value >= 0 && value <= 255)
-//            return value;
-//        else
-//            return -1;
-//    }else if(func == QMetaMethod::fromSignal(&Models::mSleep)){
-//        bool flag = true;
-//        int value = parameter.toInt(&flag);
-//        if(!flag)
-//            return -1;
-//        if(value >= 0 && value <= settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_SLEEP]->max.toInt())
-//            return value;
-//        else
-//            return -1;
-//    }
-//    else{
-//        return -1;
-//    }
-//}
-
-//int Models::isKeyMehotd(QMetaMethod func)
-//{
-//    if(func == QMetaMethod::fromSignal(&Models::liveStatus) ||
-//       func == QMetaMethod::fromSignal(&Models::record) ||
-//       func == QMetaMethod::fromSignal(&Models::prev) ||
-//       func == QMetaMethod::fromSignal(&Models::keyOnAir) ||
-//       func == QMetaMethod::fromSignal(&Models::dskOnAir) ||
-//       func == QMetaMethod::fromSignal(&Models::play) ||
-//       func == QMetaMethod::fromSignal(&Models::pgmIndex) ||
-//       func == QMetaMethod::fromSignal(&Models::pvwIndex) ||
-//       func == QMetaMethod::fromSignal(&Models::transitionIndex) ||
-//       func == QMetaMethod::fromSignal(&Models::transitionSource) ||
-//       func == QMetaMethod::fromSignal(&Models::transitionPosition) ||
-//       func == QMetaMethod::fromSignal(&Models::playNext) ||
-//       func == QMetaMethod::fromSignal(&Models::playPrevious) ||
-//       func == QMetaMethod::fromSignal(&Models::ftb) ||
-//       func == QMetaMethod::fromSignal(&Models::autoTransition) ||
-//       func == QMetaMethod::fromSignal(&Models::cutTransition) ||
-//       func == QMetaMethod::fromSignal(&Models::mSleep) ||
-//       func == QMetaMethod::fromSignal(&Models::userWait)
-//        ){
-//        return 0;
-//    }else{
-//        return -1;
-//    }
-//}
-

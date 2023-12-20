@@ -177,7 +177,6 @@ void Settings::init_menuStatus()
     setLiveStreamStatus1(E_STATUS_CLOSE);
     setLiveStreamStatus2(E_STATUS_CLOSE);
     setLiveStreamStatus3(E_STATUS_CLOSE);
-    setLiveStatus(0);
     setLiveLedStatus(E_STATUS_CLOSE);
 
 //    setPlayLedStatus(E_STATUS_MP4_CLOSE);
