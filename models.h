@@ -122,10 +122,6 @@ public:
     int sd_remaintime_calc();
     void sd_format();
 
-    //macro import export
-    void macroImport();
-    void macroExport();
-
 signals:
     void loadStillImage(int flag,QString name);
     void stillImageFileNameChanged(QString name);

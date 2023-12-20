@@ -24,7 +24,6 @@ SDImages::SDImages(QObject *parent) : QObject(parent)
         flushImageList();
         flushVideoList();
         flushStreamKeyList();
-        flushMacroList();
     });
 }
 
@@ -56,14 +55,4 @@ void SDImages::flushStreamKeyList()
     dir.setNameFilters(nameList);
     dir.setFilter(QDir::NoDotAndDotDot | QDir::Files );
     setStreamKeyList(dir.entryList());
-}
-
-void SDImages::flushMacroList()
-{
-    QDir dir(SD_MACRO_PATH);
-    QStringList nameList;
-    nameList << "*.xml";
-    dir.setNameFilters(nameList);
-    dir.setFilter(QDir::NoDotAndDotDot | QDir::Files );
-    setMacroList(dir.entryList());
 }

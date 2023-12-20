@@ -1497,24 +1497,6 @@ public:
     }
 };
 
-class MenuThirdMacroImport:public MenuThird{
-public:
-    using MenuThird::MenuThird;
-    void doWork(QVariant value){
-
-    }
-};
-
-class MenuThirdMacroExport:public MenuThird{
-public:
-    using MenuThird::MenuThird;
-    void doWork(QVariant value){
-
-    }
-};
-
-
-
 class MenuThirdStream1Platform:public MenuThird{
 public:
     using MenuThird::MenuThird;

@@ -16,7 +16,6 @@ class SDImages : public QObject
     Q_PROPERTY(QList<QString> imageList READ imageList WRITE setImageList NOTIFY imageListChanged)
     Q_PROPERTY(QList<QString> videoList READ videoList WRITE setVideoList NOTIFY videoListChanged)
     Q_PROPERTY(QList<QString> streamKeyList READ streamKeyList WRITE setStreamKeyList NOTIFY streamKeyListChanged)
-    Q_PROPERTY(QList<QString> macroList READ macroList WRITE setMacroList NOTIFY macroListChanged)
 
 public:
     explicit SDImages(QObject *parent = nullptr);
@@ -35,7 +34,6 @@ public slots:
     void flushImageList();
     void flushVideoList();
     void flushStreamKeyList();
-    void flushMacroList();
 
     void setImageList(QList<QString> imageList)
     {
@@ -65,15 +63,6 @@ public slots:
         emit streamKeyListChanged(m_streamKeyList);
     }
 
-    void setMacroList(QList<QString> macroList)
-    {
-        if (m_macroList == macroList)
-            return;
-
-        m_macroList = macroList;
-        emit macroListChanged(m_macroList);
-    }
-
 public:
     QList<QString>m_imageList;
     QTimer *timer;
@@ -82,16 +71,10 @@ public:
 
     QList<QString> m_videoList;
     QList<QString> m_streamKeyList;
-    QList<QString> m_macroList;
 
     QList<QString> streamKeyList() const
     {
         return m_streamKeyList;
-    }
-
-    QList<QString> macroList() const
-    {
-        return m_macroList;
     }
 
 signals:
@@ -99,7 +82,6 @@ void imageListChanged(QList<QString>);
 
 void videoListChanged(QList<QString>);
 void streamKeyListChanged(QList<QString> streamKeyList);
-void macroListChanged(QList<QString> macroList);
 };
 
 #endif // SDIMAGES_H

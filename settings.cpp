@@ -982,12 +982,6 @@ MenuSecond *Settings::new_Macro_Sleep()
     third = new MenuThirdMacroSleep(tr("Sleep"),"Sleep",0,500,10000,50,DATATYPE_MS);
     list_third.append(third);
 
-    third = new MenuThirdMacroImport(tr("Import"),"Import",0,0,0,1,DATATYPE_ICON);
-    list_third.append(third);
-
-    third = new MenuThirdMacroExport(tr("Export"),"Export","","macro","","",DATATYPE_TEXT);
-    list_third.append(third);
-
     monitor->third = list_third;
     return monitor;
 }
@@ -2892,22 +2886,4 @@ void Settings::streamKeyListChanged(QList<QString> list)
         }
         thirdMenuValueChanged(MENU_FIRST_STREAM,i,MENU_THIRD_STREAM_UPLOAD_KEY);
     }
-}
-
-void Settings::macroListChanged(QList<QString> list)
-{
-    auto item = m_listFirst[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_IMPORT];
-    int size = list.size();
-    item->list_text.clear();
-    if(size == 0){
-        item->current = 0;
-        item->max = 0;
-    }else{
-        for(int i = 0;i < size;++i){
-            item->list_text.append(list[i]);
-            item->max = item->list_text.size() - 1;
-            item->current = 0;
-        }
-    }
-    thirdMenuValueChanged(MENU_FIRST_MACRO,MACRO_MACRO,MENU_THIRD_MACRO_IMPORT);
 }

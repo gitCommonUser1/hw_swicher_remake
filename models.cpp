@@ -1821,8 +1821,6 @@ void Models::setLanguage(int language)
         languages[settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_UPLOAD]->third[STILL_UPLOAD_LOAD_PICTURE]->name] = tr("Load Picture");
 
         languages[settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_SLEEP]->name] = tr("Sleep");
-        languages[settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_IMPORT]->name] = tr("Import");
-        languages[settings->listFirst()[MENU_FIRST_MACRO]->second[MACRO_MACRO]->third[MENU_THIRD_MACRO_EXPORT]->name] = tr("Export");
 
         languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_PLATFORM]->name] = tr("Platform");
         languages[settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_SERVER]->name] = tr("Server");
@@ -3083,16 +3081,6 @@ void Models::sd_format()
     //    QTimer::singleShot(500,this,[=](){
     //         sd_format();
     //    });
-
-}
-
-void Models::macroImport()
-{
-
-}
-
-void Models::macroExport()
-{
 
 }
 

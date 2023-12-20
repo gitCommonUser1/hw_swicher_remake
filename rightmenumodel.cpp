@@ -133,8 +133,6 @@ void RightMenuModel::init_items()
             data.setSpecial(RightMenuModel::LOCATION);
         else if(settings->lastFirstUnfold() == MENU_FIRST_STILL_GENERATOR && real_second_index == STILL_GENERATE_UPLOAD && i == STILL_UPLOAD_LOAD_PICTURE)
             data.setSpecial(RightMenuModel::LOAD_PICTURE);
-        else if(settings->lastFirstUnfold() == MENU_FIRST_MACRO && real_second_index == MACRO_MACRO && i == MENU_THIRD_MACRO_IMPORT)
-            data.setSpecial(RightMenuModel::WSTRING);
         else if(settings->lastFirstUnfold() == MENU_FIRST_STREAM && i == MENU_THIRD_STREAM_UPLOAD_KEY)
             data.setSpecial(RightMenuModel::WSTRING);
         else if(settings->lastFirstUnfold() == MENU_FIRST_STREAM && i == MENU_THIRD_STREAM_UPLOAD_KEY)

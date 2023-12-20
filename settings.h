@@ -849,7 +849,6 @@ signals:
 public slots:
 void sdImagesChanged(QList<QString> list);
 void streamKeyListChanged(QList<QString> list);
-void macroListChanged(QList<QString> list);
 //弃用
 void setStillImages(QList<QString> stillImages)
 {

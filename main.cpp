@@ -350,11 +350,9 @@ int main(int argc, char *argv[])
 
     });
     QObject::connect(sdImages,&SDImages::streamKeyListChanged,settings,&Settings::streamKeyListChanged);
-    QObject::connect(sdImages,&SDImages::macroListChanged,settings,&Settings::macroListChanged);
     sdImages->flushImageList();
     sdImages->flushVideoList();
     sdImages->flushStreamKeyList();
-    sdImages->flushMacroList();
 
     playbackGroupManager = new PlaybackGroupManager();
     engine.rootContext()->setContextProperty("playbackGroupManager",playbackGroupManager);
@@ -372,8 +370,6 @@ int main(int argc, char *argv[])
             sdImages->videoListChanged(sdImages->m_videoList);
             sdImages->m_streamKeyList.clear();
             sdImages->streamKeyListChanged(sdImages->m_streamKeyList);
-            sdImages->m_macroList.clear();
-            sdImages->macroListChanged(sdImages->m_macroList);
             sdImages->watcher->removePaths(sdImages->watcher->directories());
 
             //sd capacity
@@ -437,7 +433,6 @@ int main(int argc, char *argv[])
                 sdImages->flushImageList();
                 sdImages->flushVideoList();
                 sdImages->flushStreamKeyList();
-                sdImages->flushMacroList();
 
                 //sd capacity
                 media_sd->current_usage();
