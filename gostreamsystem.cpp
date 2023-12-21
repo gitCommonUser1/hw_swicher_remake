@@ -16,6 +16,7 @@
 #include "playback.h"
 #include "setting.h"
 #include "macropool.h"
+#include "macro.h"
 
 #define PRODUCT_NAME "GoStream Deck"
 
@@ -47,14 +48,14 @@ Profile::Profile(QObject *parent) : QObject(parent)
     m_audioMixer->setObjectName("audioMixer");
     m_stillGenerator = new StillGenerator(this);
     m_stillGenerator->setObjectName("stillGenerator");
+    m_macroPool = new MacroPool(this);
+    m_macroPool->setObjectName("macroPool");
     m_streams = new Streams(this);
     m_streams->setObjectName("streams");
     m_playback = new Playback(this);
     m_playback->setObjectName("playback");
     m_setting = new Setting(this);
     m_setting->setObjectName("setting");
-    m_macroPool = new MacroPool(this);
-    m_macroPool->setObjectName("macroPool");
 
     read(this);
 }
@@ -62,6 +63,7 @@ Profile::Profile(QObject *parent) : QObject(parent)
 void Profile::emitSignals()
 {
     emitSignal(this);
+    macroPool()->checkMacro();
 }
 
 void Profile::emitSignal(QObject *object)
@@ -83,7 +85,7 @@ void Profile::emitSignal(QObject *object)
                 //list
                 for(int j = 0;j < objects.size();++j)
                 {
-                    emitSignal(objects[i]);
+                    emitSignal(objects[j]);
                 }
             }
             else
@@ -267,10 +269,17 @@ int Profile::read(QObject *object)
             auto attributes = stream.attributes();
             switch (type) {
             case QXmlStreamReader::StartElement:
-                qDebug() << "start:" << name;
+                qDebug() << "start name:" << name;
+                //情况一： 静态子类
+            {
+                bool  case1Flag = false;
+                qDebug() << "name:" << name;
                 for(int i = 0;i < object->children().size();++i)
                 {
                     auto childrenMetaObj = object->children()[i]->metaObject();
+                    //非静态属性类，continue
+                    if(object->children()[i]->objectName().isEmpty())
+                        continue;
                     if(childrenMetaObj->className() == name)
                     {
                         bool finalFlag = false;
@@ -287,6 +296,7 @@ int Profile::read(QObject *object)
                                         object = object->children()[i];
                                         obj = object->metaObject();
                                         isSet = true;
+                                        case1Flag = true;
                                         break;
                                     }
                                 }
@@ -296,34 +306,90 @@ int Profile::read(QObject *object)
                         {
                             object = object->children()[i];
                             obj = object->metaObject();
+                            case1Flag = true;
                             break;
                         }
                         if(isSet)
                             break;
                     }
                 }
-
-                for(int i = 0; i < obj->propertyCount();++i)
+                if(case1Flag)
                 {
-                    auto property = obj->property(i);
-                    auto propertyName = property.name();
-                    qDebug() << "propertyName: " << propertyName;
-                    if(attributes.hasAttribute(propertyName))
+                    for(int i = 0; i < obj->propertyCount();++i)
                     {
-                        if(property.type()  == QVariant::Int)
-                            property.write(object,attributes.value(propertyName).toInt());
-                        else if(property.type()  == QVariant::Double)
-                            property.write(object,attributes.value(propertyName).toDouble());
-                        else if(property.type()  == QVariant::String)
-                            property.write(object,attributes.value(propertyName).toString());
-                        else if(property.type()  == QVariant::Bool){
-                            if(attributes.value(propertyName).toString().compare("true",Qt::CaseInsensitive) == 0)
-                                property.write(object,true);
-                            else
-                                property.write(object,false);
+                        auto property = obj->property(i);
+                        auto propertyName = property.name();
+                        qDebug() << "propertyName: " << propertyName;
+                        if(property.type() == QVariant::Map){
+                            QVariantMap map;
+                            for(int j = 0;j < attributes.count();++j){
+                                map[attributes[j].name().toString()] = attributes[j].value().toString();
+                            }
+                            property.write(object,map);
+                        }
+                        else if(attributes.hasAttribute(propertyName))
+                        {
+                            if(property.type()  == QVariant::Int)
+                                property.write(object,attributes.value(propertyName).toInt());
+                            else if(property.type()  == QVariant::Double)
+                                property.write(object,attributes.value(propertyName).toDouble());
+                            else if(property.type()  == QVariant::String)
+                                property.write(object,attributes.value(propertyName).toString());
+                            else if(property.type()  == QVariant::Bool){
+                                if(attributes.value(propertyName).toString().compare("true",Qt::CaseInsensitive) == 0)
+                                    property.write(object,true);
+                                else
+                                    property.write(object,false);
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+                //情况二： QList<QObject*> 动态创建
+                //getDynamicChildrenClassName
+                //每个读取xml动态创建子类的类中都有一个getDynamicChildrenClassName槽函数
+            {
+                auto dynamicMetaObject = object->metaObject();
+                if(dynamicMetaObject->indexOfSlot("getDynamicChildrenClassName()") != -1)
+                {
+                    QObject *ret = nullptr;
+                    dynamicMetaObject->method(dynamicMetaObject->indexOfSlot("getDynamicChildrenClassName()")).invoke(object,Qt::DirectConnection,Q_RETURN_ARG(QObject*, ret));
+                    if(ret != nullptr){
+                        object = ret;
+                        obj = object->metaObject();
+                        for(int i = 0; i < obj->propertyCount();++i)
+                        {
+                            auto property = obj->property(i);
+                            auto propertyName = property.name();
+                            qDebug() << "propertyName: " << propertyName;
+                            if(property.type() == QVariant::Map){
+                                QVariantMap map;
+                                for(int j = 0;j < attributes.count();++j){
+                                    map[attributes[j].name().toString()] = attributes[j].value().toString();
+                                }
+                                property.write(object,map);
+                            }
+                            else if(attributes.hasAttribute(propertyName))
+                            {
+                                if(property.type()  == QVariant::Int)
+                                    property.write(object,attributes.value(propertyName).toInt());
+                                else if(property.type()  == QVariant::Double)
+                                    property.write(object,attributes.value(propertyName).toDouble());
+                                else if(property.type()  == QVariant::String)
+                                    property.write(object,attributes.value(propertyName).toString());
+                                else if(property.type()  == QVariant::Bool){
+                                    if(attributes.value(propertyName).toString().compare("true",Qt::CaseInsensitive) == 0)
+                                        property.write(object,true);
+                                    else
+                                        property.write(object,false);
+                                }
+                            }
                         }
                     }
                 }
+            }
+
                 break;
             case QXmlStreamReader::EndElement:
                 if(object != startObject)
@@ -331,7 +397,7 @@ int Profile::read(QObject *object)
                     object = object->parent();
                     obj = object->metaObject();
                 }
-                qDebug() << "end:" << name;
+                qDebug() << "end name:" << name;
                 break;
             default:
                 break;

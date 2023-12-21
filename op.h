@@ -18,7 +18,6 @@ public:
 
 public slots:
 
-
     void setMethod(QVariantMap method)
     {
         m_method = method;

@@ -8,6 +8,17 @@ MacroPool::MacroPool(QObject *parent) : QObject(parent)
     });
 }
 
+void MacroPool::checkMacro()
+{
+    for(int i = 0;i < m_macros.size();++i)
+    {
+        auto macro = qobject_cast<Macro*>(m_macros[i]);
+        if(macro->ops().size() != 0){
+            emit newMacro(macro->index());
+        }
+    }
+}
+
 bool MacroPool::listCompare(QObject *src, QObject *dst)
 {
     auto macroSrc = qobject_cast<Macro*>(src);
@@ -129,4 +140,11 @@ void MacroPool::deleteMacro(Macro *macro)
         delete list[i];
     }
     delete macro;
+}
+
+QObject *MacroPool::getDynamicChildrenClassName()
+{
+    Macro *macro = new Macro(this);
+    m_macros.push_back(macro);
+    return macro;
 }

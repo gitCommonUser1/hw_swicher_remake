@@ -20,3 +20,10 @@ void Macro::remove(int index)
     delete m_ops[index];
     m_ops.removeAt(index);
 }
+
+QObject *Macro::getDynamicChildrenClassName()
+{
+    Op *op = new Op(this);
+    m_ops.append(op);
+    return op;
+}

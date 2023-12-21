@@ -38,6 +38,9 @@ public:
     }
 
 public slots:
+
+    QObject *getDynamicChildrenClassName();
+
     void setIndex(int index)
     {
         if (m_index == index)

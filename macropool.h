@@ -12,6 +12,9 @@ class MacroPool : public QObject
 public:
     explicit MacroPool(QObject *parent = nullptr);
 
+    //读完xml文件后，检查正确的macro，发送亮灯信号
+    void checkMacro();
+
     static bool listCompare(QObject* src,QObject* dst);
 
     bool isMacroIndexExists(int index);
@@ -38,6 +41,8 @@ public slots:
         m_macros = macros;
         emit macrosChanged(m_macros);
     }
+
+    QObject *getDynamicChildrenClassName();
 
 private:
     QList<QObject*> m_macros;
