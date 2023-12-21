@@ -73,6 +73,7 @@ public:
     void doWork(int status = 1){
         if(status != 1)
             return;
+        profile->write(profile);
         int second = settings->lastSecondUnfold();
         if(settings->lastFirstUnfold() == MENU_FIRST_AUDIO_MIXER)
         {

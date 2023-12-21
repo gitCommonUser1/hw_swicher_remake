@@ -2927,16 +2927,16 @@ void Models::setTransitionSource(int source)
     }
 }
 
-void Models::setKeyOnAir(bool status)
+void Models::setKeyOnAir(bool onAir)
 {
-    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->key()->onAir() != status)
+    if(profile->mixEffectBlocks()->mixEffectBlock()->keys()->key()->onAir() != onAir)
     {
-        profile->mixEffectBlocks()->mixEffectBlock()->keys()->key()->setOnAir(status);
+        profile->mixEffectBlocks()->mixEffectBlock()->keys()->key()->setOnAir(onAir);
         return ;
     }
-    if(!status && QSwitcher::get_led(KEY_LED_KEY_ON_AIR) != SWITCHER_LED_OFF){
+    if(!onAir && QSwitcher::get_led(KEY_LED_KEY_ON_AIR) != SWITCHER_LED_OFF){
         keyClick(KEY_LED_KEY_ON_AIR);
-    }else if(status && QSwitcher::get_led(KEY_LED_KEY_ON_AIR) == SWITCHER_LED_OFF){
+    }else if(onAir && QSwitcher::get_led(KEY_LED_KEY_ON_AIR) == SWITCHER_LED_OFF){
         keyClick(KEY_LED_KEY_ON_AIR);
     }
 }

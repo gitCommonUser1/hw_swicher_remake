@@ -132,26 +132,13 @@ void Profile::write(QObject *object)
     ::fsync(file.handle());
 
     file.close();
-
-//    //断电无法保存，c语言方式再写一次
-//    file.setFileName(objName);
-//    file.open(QIODevice::ReadOnly);
-//    QByteArray ba = file.readAll();
-//    file.close();
-
-//    FILE *fp;
-//    fp = fopen(stdObjName.data(), "wt+");
-//    fwrite(ba, 1, ba.size(), fp);
-//    fflush(fp);
-//    fsync(fileno(fp));
-//    fclose(fp);
 }
 
 void Profile::writeRecursion(QObject *object, QXmlStreamWriter &stream)
 {
     auto obj = object->metaObject();
     stream.writeStartElement(obj->className());
-    //par
+    //par 读取所有静态属性
     for(int i = 0;i < obj->propertyCount();++i)
     {
         auto property = obj->property(i);
@@ -163,10 +150,22 @@ void Profile::writeRecursion(QObject *object, QXmlStreamWriter &stream)
             //排除objectName
             if(type != QVariant::UserType)
             {
-                //排除自定义类型，只读取qt内置类型
-                //这里是节点参数列表
-                if(!isHiddenProperty(object,name))
-                    stream.writeAttribute(name,property.read(object).toString());
+                if(type == QVariant::Map)
+                {
+                    //map类型先遍历再写
+                    QVariantMap map = property.read(object).toMap();
+                    for(auto it = map.begin();it != map.end();++it)
+                    {
+                        stream.writeAttribute(it.key(),it.value().toString());
+                    }
+                }
+                else
+                {
+                    //排除自定义类型，只读取qt内置类型
+                    //这里是节点参数列表
+                    if(!isHiddenProperty(object,name))
+                        stream.writeAttribute(name,property.read(object).toString());
+                }
             }
             else
             {

@@ -154,7 +154,7 @@ signals:
     //key type
     /**/
     void keyType(QString type);
-    void keyOnAir(bool status);
+    void keyOnAir(bool onAir);
     /**/
 
     //keys
@@ -382,7 +382,7 @@ public slots:
 
     //key type
     void setKeyType(QString type);
-    void setKeyOnAir(bool status);
+    void setKeyOnAir(bool onAir);
 
     //keys
     void setKeyMaskEnable(QString key,int enable);

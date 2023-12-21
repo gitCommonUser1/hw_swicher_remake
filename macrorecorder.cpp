@@ -48,24 +48,27 @@ void MacroRecorder::append(QVariantMap item)
             int sleep = last["value"].toInt();
             macro->remove(list.size() - 1);
             item["value"] = item["value"].toInt() + sleep;
+            Op* op = new Op();
+            op->setMethod(item);
+            macro->append(op);
+
+            return ;
         }
     }
-    else
+
+    for(int i = list.size() - 1;i >= 0; --i)
     {
-        for(int i = list.size() - 1;i >= 0; --i)
+        qDebug() << " this name: "<<item["id"];
+        qDebug() << " op " << i << " name: "<<item["id"];
+        if(item["id"].toString() == qobject_cast<Op*>(list[i])->method()["id"].toString())
         {
-            qDebug() << " this name: "<<item["id"];
-            qDebug() << " op " << i << " name: "<<item["id"];
-            if(item["id"].toString() == qobject_cast<Op*>(list[i])->method()["id"].toString())
-            {
-                qDebug() << "true!!!!";
-                macro->remove(i);
-                break;
-            }
-            if(item["id"].toString().contains("sleep",Qt::CaseInsensitive))
-            {
-                break;
-            }
+            qDebug() << "true!!!!";
+            macro->remove(i);
+            break;
+        }
+        if(item["id"].toString().contains("sleep",Qt::CaseInsensitive))
+        {
+            break;
         }
     }
     Op* op = new Op();

@@ -667,7 +667,7 @@ void Control::connect_profile()
         settings->setMenuValue(MENU_FIRST_KEY_TYPE,KEY_TYPE_TYPE,TYPE_TYPE,Key::typeStringToIndex(type));
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->key(),&Key::onAirChanged,this,[=](bool onAir){
-        models->macroInvoke(&Models::keyOnAir,onAir);
+//        models->macroInvoke(&Models::keyOnAir,onAir);
         //key on air时，判断key source是否是aux，如果是aux，自动开始播放
         if(onAir == false)
             return ;
@@ -958,7 +958,7 @@ void Control::connect_profile()
     });
     //DownstreamKeys
     connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::onAirChanged,this,[=](bool onAir){
-        models->macroInvoke(&Models::dskOnAir,onAir);
+//        models->macroInvoke(&Models::dskOnAir,onAir);
         if(onAir == false)
             return ;
         if(profile->downstreamKeys()->downstreamKey()->keySource() == Keys::AUX ||
@@ -1628,12 +1628,17 @@ void Control::slotKeyChanged(const int key, const int value)
         return ;
     if(key == KEY_LED_TRANS_FTB)
         return ;
-    if(key == KEY_LED_KEY_ON_AIR)
+    if(key == KEY_LED_KEY_ON_AIR  && value == 1){
+        models->macroRecord(&Models::keyOnAir,!profile->mixEffectBlocks()->mixEffectBlock()->keys()->key()->onAir());
         return ;
-    if(key == KEY_LED_DSK_ON_AIR)
+    }
+    if(key == KEY_LED_DSK_ON_AIR  && value == 1){
+        models->macroRecord(&Models::dskOnAir,!profile->downstreamKeys()->downstreamKey()->onAir());
         return ;
-    if(key >= KEY_LED_KEY && key <= KEY_LED_BKGD)
+    }
+    if(key >= KEY_LED_KEY && key <= KEY_LED_BKGD){
         return ;
+    }
 
     //key long pressed and short pressed
     static int key_pressed_index = 0;
