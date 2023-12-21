@@ -341,6 +341,8 @@ signals:
     void nextTransition(QString source);
     void transitionStyle(QString style);
     void previewTransition(bool preview);
+    //cut和auto 在macro中特殊限制 如果改变函数名称，对应位置需要改变
+    //跳转标记： 2023.12.21.15.40
     void cutTransition();
     void autoTransition();
     void transitionPosition(int value);

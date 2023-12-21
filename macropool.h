@@ -12,6 +12,8 @@ class MacroPool : public QObject
 public:
     explicit MacroPool(QObject *parent = nullptr);
 
+    static bool listCompare(QObject* src,QObject* dst);
+
     bool isMacroIndexExists(int index);
     Macro *macroIndex(int index);
 

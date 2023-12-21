@@ -154,8 +154,13 @@ void Profile::writeRecursion(QObject *object, QXmlStreamWriter &stream)
                 {
                     //map类型先遍历再写
                     QVariantMap map = property.read(object).toMap();
+                    //id提前
+                    if(map.contains("id"))
+                        stream.writeAttribute("id",map["id"].toString());
                     for(auto it = map.begin();it != map.end();++it)
                     {
+                        if(it.key() == "id")
+                            continue;
                         stream.writeAttribute(it.key(),it.value().toString());
                     }
                 }

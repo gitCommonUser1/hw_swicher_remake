@@ -3,7 +3,19 @@
 
 MacroPool::MacroPool(QObject *parent) : QObject(parent)
 {
+    connect(this,&MacroPool::macrosChanged,this,[=](QList<QObject*> macros){
+        std::sort(m_macros.begin(),m_macros.end(),MacroPool::listCompare);
+    });
+}
 
+bool MacroPool::listCompare(QObject *src, QObject *dst)
+{
+    auto macroSrc = qobject_cast<Macro*>(src);
+    auto macroDst = qobject_cast<Macro*>(dst);
+    if(macroSrc->index() < macroDst->index())
+        return true;
+    else
+        return false;
 }
 
 bool MacroPool::isMacroIndexExists(int index)
@@ -37,6 +49,7 @@ void MacroPool::append(Macro *macro)
     }
 
     m_macros.append(macro);
+    emit macrosChanged(m_macros);
     emit newMacro(macro->index());
 }
 
@@ -52,6 +65,7 @@ void MacroPool::remove(int index)
             break;
         }
     }
+    emit macrosChanged(m_macros);
 }
 
 void MacroPool::move(int src, int dst)
@@ -78,6 +92,7 @@ void MacroPool::move(int src, int dst)
         srcMacro->setIndex(dst);
         emit moveMacro(src,dst);
     }
+    emit macrosChanged(m_macros);
 }
 
 void MacroPool::swap(int src, int dst)
@@ -100,6 +115,7 @@ void MacroPool::swap(int src, int dst)
         srcMacro->setIndex(dst);
         dstMacro->setIndex(src);
     }
+    emit macrosChanged(m_macros);
 }
 
 void MacroPool::deleteMacro(Macro *macro)

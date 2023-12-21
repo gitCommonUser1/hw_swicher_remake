@@ -48,12 +48,15 @@ void MacroRecorder::append(QVariantMap item)
             int sleep = last["value"].toInt();
             macro->remove(list.size() - 1);
             item["value"] = item["value"].toInt() + sleep;
-            Op* op = new Op();
-            op->setMethod(item);
-            macro->append(op);
-
-            return ;
+            goto OpPush;
         }
+    }
+
+    //特殊情况 cut 和 auto 可以多次调用
+    //2023.12.21.15.40
+    if(item["id"].toString() == "cutTransition" || item["id"].toString() == "autoTransition")
+    {
+        goto OpPush;
     }
 
     for(int i = list.size() - 1;i >= 0; --i)
@@ -71,6 +74,8 @@ void MacroRecorder::append(QVariantMap item)
             break;
         }
     }
+
+OpPush:
     Op* op = new Op();
     op->setMethod(item);
     macro->append(op);
