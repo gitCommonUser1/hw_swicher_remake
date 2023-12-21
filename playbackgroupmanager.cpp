@@ -22,15 +22,14 @@ PlaybackGroupManager::PlaybackGroupManager(QObject *parent) : QObject(parent)
             }
         }
         setList(list);
-        if(listCurrent() >= list.size())
+        if(list.size() == 0)
+        {
+            setListCurrent(0);
+        }
+        else if(listCurrent() >= list.size())
         {
             setListCurrent(list.size() - 1);
         }
-        if(list.size() == 0)
-        {
-            setListCurrent(-1);
-        }
-
     });
 }
 
@@ -65,10 +64,7 @@ void PlaybackGroupManager::readGroups()
 
     emit groupsChanged(m_groups);
     debugGroups();
-    if(m_list.size() != 0)
-        setListCurrent(0);
-    else
-        setListCurrent(-1);
+    setListCurrent(0);
 }
 
 void PlaybackGroupManager::writeGroups()
