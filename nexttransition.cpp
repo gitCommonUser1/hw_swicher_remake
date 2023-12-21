@@ -10,8 +10,8 @@ static QList<QString> selectionList = {
 
 NextTransition::NextTransition(QObject *parent) : QObject(parent)
 {
-    setSelection({selectionValueToString(2)});
-    setNextSelection({selectionValueToString(2)});
+    setSelection({selectionValueToString(0b100)});
+    setNextSelection({selectionValueToString(0b100)});
 }
 
 QString NextTransition::selectionValueToString(int value)

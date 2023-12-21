@@ -322,8 +322,6 @@ int Profile::read(QObject *object)
                             else
                                 property.write(object,false);
                         }
-
-//                        property.notifySignal().invoke(object,QGenericArgument(" ",property.read(object).data()));
                     }
                 }
                 break;
