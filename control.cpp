@@ -53,16 +53,10 @@ extern MacroRecorder *macroRecorder;
 
 Control::Control(QObject *parent) : QObject(parent)
 {
+    init_rv_switch();
+    init_led();
     init_connect();
     connect_profile();
-
-    //init audio led
-    models->closeAllAudioLed();
-    int resolution = settings->listFirst()[MENU_FIRST_SETTING]->second[SETTING_OUT_FORMAT]->third[SETTING_OUT_FORMAT_FORMAT]->current.toInt();
-    rv_switch_init(models->getOutFormatIndexForEnum(resolution));
-    //5.18版本固定发1080p60，之后的版本改回来
-//    rv_switch_init(0x4);
-    rv_switch_init_video_enc();
 }
 
 void Control::init_connect()
@@ -91,24 +85,18 @@ void Control::init_connect()
             return ;
         }
     });
-
     connect(liveTimer,&QTimer::timeout,this,[=](){
         settings->setLiveSecond(settings->liveSecond()+1);
     });
-
     connect(settings,&Settings::recordSecondChanged,this,[=](){
     settings->setRecordTimeStr(Media_sd::secondToHMS(settings->recordSecond()));
-//        settings->setRecordTimeStr(QDateTime::fromSecsSinceEpoch(settings->recordSecond(),Qt::UTC).toString("hh:mm:ss"));
-        qDebug() << settings->recordTimeStr();
     });
-
     connect(settings,&Settings::liveSecondChanged,this,[=](){
         settings->setLiveTimeStr(Media_sd::secondToHMS(settings->liveSecond()));
-//        settings->setLiveTimeStr(QDateTime::fromSecsSinceEpoch(settings->liveSecond(),Qt::UTC).toString("hh:mm:ss"));
-        qDebug() << settings->liveTimeStr();
     });
 
-    //player led controls
+
+    //player record stream led controls
     connect(settings,&Settings::recordLedStatusChanged,this,[=](int status){
         if(status == E_STATUE_SUCCESS){
             QSwitcher::set_led(KEY_LED_RECORDER_REC,SWITCHER_LED_ON);
@@ -124,15 +112,11 @@ void Control::init_connect()
             }
         }
     });
-
     connect(settings,&Settings::liveLedStatusChanged,this,[=](int status){
-//        qDebug() << "liveLedStatusChanged:" << status;
-
         bool enable1,enable2,enable3;
-        enable1 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM1]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();// == OUTPUT_ENABLE;
-        enable2 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM2]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();// == OUTPUT_ENABLE;
-        enable3 = settings->listFirst()[MENU_FIRST_STREAM]->second[STREAM_STREAM3]->third[MENU_THIRD_STREAM_OUTPUT]->current.toInt();// == OUTPUT_ENABLE;
-
+        enable1 = profile->streams()->stream1()->output();
+        enable2 = profile->streams()->stream2()->output();
+        enable3 = profile->streams()->stream3()->output();
         bool liveStatus = profile->streams()->enable();
         if(liveStatus)
         {
@@ -150,7 +134,6 @@ void Control::init_connect()
             {
                 led_status = settings->liveStreamStatus3();
             }
-
             if(led_status != E_STATUE_SUCCESS)
             {
                 QSwitcher::set_led(KEY_LED_LIVE,SWITCHER_LED_ON,LEDS_BLINK_0_5Hz);
@@ -187,7 +170,6 @@ void Control::init_connect()
         }
         //
     });
-
     connect(settings,&Settings::playLedStatusChanged,this,[=](int status){
         if(status == E_STATUS_MP4_CLOSE){
             if(SWITCHER_LED_R == QSwitcher::get_led(KEY_LED_TRANS_AUTO)){
@@ -248,7 +230,9 @@ void Control::init_connect()
             settings->menuVisibleChanged(settings->menuVisible());
         }
     });
-
+    connect(settings,&Settings::menuSizeChanged,this,[=](int menuSize){
+        models->setMenuSize(menuSize);
+    });
     //playListDialog visible changed
     connect(settings,&Settings::listDialogVisibleChanged,this,[=](bool flag){
         if(flag){
@@ -270,6 +254,7 @@ void Control::init_connect()
         }
     });
 
+    //ndi list
     connect(settings,&Settings::ndiListDialogVisibleChanged,this,[=](bool flag){
 #define NDI_SEARCH_SPACE_TIME 5000
 #define NDI_SEARCH_RESULT_WATI_TIME 1000
@@ -291,12 +276,7 @@ void Control::init_connect()
         }
     });
 
-    connect(settings,&Settings::menuSizeChanged,this,[=](int menuSize){
-        qDebug() << "menuSize: " <<menuSize;
-        models->setMenuSize(menuSize);
-    });
-    //
-
+    //menu control
     connect(settings,&Settings::lastFirstUnfoldChanged,this,[=](int index){
         if(index != -1){
             models->menuUnfold(index);
@@ -304,15 +284,10 @@ void Control::init_connect()
             models->menuFold();
         }
     });
-
     connect(settings,&Settings::lastSecondUnfoldChanged,this,[=](int index){
-        if(settings->lastFirstUnfold() != MENU_FIRST_AUDIO_MIXER){
-
-        }
-        else{
+        if(settings->lastFirstUnfold() == MENU_FIRST_AUDIO_MIXER){
             if(index <= AUDIO_MIXER_PGM){
                 models->menuAudioSelectChanged(index);
-
                 if(index != -1){
                     //如果是大菜单，缩小
                     if(settings->menuVisible() == settings->MENU_SHOW_BIG){
@@ -337,7 +312,6 @@ void Control::init_connect()
 
     //三级菜单修改信号          //int first,int second,int third   这里只更新ui    2023.11.22
     connect(settings,&Settings::thirdMenuValueChanged,this,[=](int first,int second,int third){
-//        settings->listFirst()[first]->second[second]->third[third]->doWork(first,second,third);
         if(settings->lastFirstUnfold() == first && settings->leftListViewCurrent() == first + second + 1)
             models->changeRightMenu(first,second,third);
         //特殊情况，音频修改
@@ -440,16 +414,8 @@ void Control::init_connect()
             return ;
         if(third == -1)
             return ;
-
         settings->listFirst()[first]->second[second]->third[third]->doWork(value);
     });
-
-
-    //macro灯光熄灭
-    for(int i = KEY_LED_MEM1;i <= KEY_LED_MEM8;++i)
-    {
-        QSwitcher::set_led(i,SWITCHER_LED_OFF);
-    }
 
     qRegisterMetaType<Macro*>("Macro*");
     // macro manager
@@ -1480,98 +1446,126 @@ void Control::connect_profile()
     profile->autoSaveInit(profile);
 }
 
+void Control::init_led()
+{
+    //audio灯光熄灭
+    for(int i = KEY_LED_AUDIO_MIC1;i <= KEY_LED_AUDIO_PGM;++i)
+    {
+        QSwitcher::set_led(i,SWITCHER_LED_OFF);
+    }
+    QSwitcher::set_led(KEY_LED_AUDIO_AFV,SWITCHER_LED_OFF);
+    QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_OFF);
+    //macro灯光熄灭
+    for(int i = KEY_LED_MEM1;i <= KEY_LED_MEM8;++i)
+    {
+        QSwitcher::set_led(i,SWITCHER_LED_OFF);
+    }
+    //live灯光熄灭
+    QSwitcher::set_led(KEY_LED_LIVE,SWITCHER_LED_OFF);
+    //play、record灯光熄灭
+    for(int i = KEY_LED_RECORDER_REC;i <= KEY_LED_PLAYER_PAUSE;++i)
+    {
+        QSwitcher::set_led(i,SWITCHER_LED_OFF);
+    }
+}
+
+void Control::init_rv_switch()
+{
+    int resolution = profile->setting()->outFormat()->format()->outFormat();
+    rv_switch_init(models->getOutFormatIndexForEnum(resolution));
+    rv_switch_init_video_enc();
+}
+
 void Control::slotKnobChanged(const int knob, int value)
 {
-        switch (knob) {
-        case KNOB_MENU:
-            if(messageDialogControl->messageDialogVisible()){
-                if(value < 0 && messageDialogControl->optionCurrent() != 0){
-                    messageDialogControl->setOptionCurrent(messageDialogControl->optionCurrent() - 1);
-                }else if(value > 0 && messageDialogControl->optionCurrent() < messageDialogControl->options().size() - 1){
-                    messageDialogControl->setOptionCurrent(messageDialogControl->optionCurrent() + 1);
-                }
+    switch (knob) {
+    case KNOB_MENU:
+        if(messageDialogControl->messageDialogVisible()){
+            if(value < 0 && messageDialogControl->optionCurrent() != 0){
+                messageDialogControl->setOptionCurrent(messageDialogControl->optionCurrent() - 1);
+            }else if(value > 0 && messageDialogControl->optionCurrent() < messageDialogControl->options().size() - 1){
+                messageDialogControl->setOptionCurrent(messageDialogControl->optionCurrent() + 1);
             }
-            else if(settings->keyboardVisible()){
-                if(settings->keyboardKetMoveFlag()){
-                    //-2 left   -1 right
-//                    models->sendKey(value>0?-1:-2);
-                    if(value > 0){
-                        while(value--)
-                            models->sendKey(-1);
-                    }else if(value < 0){
-                        while(value++)
-                            models->sendKey(-2);
-                    }
-                }else{
-                    settings->setKeyboardCurrentIndex(settings->keyboardCurrentIndex() + value);
-                }
-            }else if(settings->listDialogVisible()){
-                int size = 0;
-                int current = 0;
-                if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::SD_CARD){
-                    size = playbackGroupManager->list().size();
-                    current = playbackGroupManager->listCurrent();
-                }
-                else if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::NDI){
-                    size = ndi->ndiList().size();
-                    current = settings->ndiListDialogCurrent();
-                }
-                if(size < 1)
-                    return ;
-                int finalValue = 0;
+        }else if(settings->keyboardVisible()){
+            if(settings->keyboardKetMoveFlag()){
+                //-2 left   -1 right
                 if(value > 0){
-                    finalValue = current + value;
-                    if(finalValue >= size)
-                        finalValue = size - 1;
+                    while(value--)
+                        models->sendKey(-1);
                 }else if(value < 0){
-                    finalValue = current + value;
-                    if(finalValue < 0)
-                        finalValue = 0;
-                }
-                if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::SD_CARD){
-                    playbackGroupManager->setListCurrent(finalValue);
-                }else if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::NDI){
-                    settings->setNdiListDialogCurrent(finalValue);
+                    while(value++)
+                        models->sendKey(-2);
                 }
             }else{
-                models->menuKnob(value);
+                settings->setKeyboardCurrentIndex(settings->keyboardCurrentIndex() + value);
             }
-            break;
-        case KNOB_AUDIO:
-            if(settings->lastFirstUnfold() == MENU_FIRST_AUDIO_MIXER && settings->lastSecondUnfold() != -1){
-                QString source ;
-                switch (settings->lastSecondUnfold()) {
-                case AUDIO_MIXER_MIC1:
-                    source = AudioSource::sourceNameIndexToString(AudioSource::MIC1);
-                    break;
-                case AUDIO_MIXER_MIC2:
-                    source = AudioSource::sourceNameIndexToString(AudioSource::MIC2);
-                    break;
-                case AUDIO_MIXER_IN1:
-                    source = AudioSource::sourceNameIndexToString(AudioSource::IN1);
-                    break;
-                case AUDIO_MIXER_IN2:
-                    source = AudioSource::sourceNameIndexToString(AudioSource::IN2);
-                    break;
-                case AUDIO_MIXER_IN3:
-                    source = AudioSource::sourceNameIndexToString(AudioSource::IN3);
-                    break;
-                case AUDIO_MIXER_IN4:
-                    source = AudioSource::sourceNameIndexToString(AudioSource::IN4);
-                    break;
-                case AUDIO_MIXER_AUX:
-                    source = AudioSource::sourceNameIndexToString(AudioSource::AUX);
-                    break;
-                case AUDIO_MIXER_PGM:
-                    source = AudioSource::sourceNameIndexToString(AudioSource::PGM);
-                    break;
-                }
-                models->addAudioFaderByAudioKnob(source,value);
+        }else if(settings->listDialogVisible()){
+            int size = 0;
+            int current = 0;
+            if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::SD_CARD){
+                size = playbackGroupManager->list().size();
+                current = playbackGroupManager->listCurrent();
             }
-            else
-                models->addMonitorLevelByAudioKnob(value);
-            break;
+            else if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::NDI){
+                size = ndi->ndiList().size();
+                current = settings->ndiListDialogCurrent();
+            }
+            if(size < 1)
+                return ;
+            int finalValue = 0;
+            if(value > 0){
+                finalValue = current + value;
+                if(finalValue >= size)
+                    finalValue = size - 1;
+            }else if(value < 0){
+                finalValue = current + value;
+                if(finalValue < 0)
+                    finalValue = 0;
+            }
+            if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::SD_CARD){
+                playbackGroupManager->setListCurrent(finalValue);
+            }else if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::NDI){
+                settings->setNdiListDialogCurrent(finalValue);
+            }
+        }else{
+            models->menuKnob(value);
         }
+        break;
+    case KNOB_AUDIO:
+        if(settings->lastFirstUnfold() == MENU_FIRST_AUDIO_MIXER && settings->lastSecondUnfold() != -1){
+            QString source ;
+            switch (settings->lastSecondUnfold()) {
+            case AUDIO_MIXER_MIC1:
+                source = AudioSource::sourceNameIndexToString(AudioSource::MIC1);
+                break;
+            case AUDIO_MIXER_MIC2:
+                source = AudioSource::sourceNameIndexToString(AudioSource::MIC2);
+                break;
+            case AUDIO_MIXER_IN1:
+                source = AudioSource::sourceNameIndexToString(AudioSource::IN1);
+                break;
+            case AUDIO_MIXER_IN2:
+                source = AudioSource::sourceNameIndexToString(AudioSource::IN2);
+                break;
+            case AUDIO_MIXER_IN3:
+                source = AudioSource::sourceNameIndexToString(AudioSource::IN3);
+                break;
+            case AUDIO_MIXER_IN4:
+                source = AudioSource::sourceNameIndexToString(AudioSource::IN4);
+                break;
+            case AUDIO_MIXER_AUX:
+                source = AudioSource::sourceNameIndexToString(AudioSource::AUX);
+                break;
+            case AUDIO_MIXER_PGM:
+                source = AudioSource::sourceNameIndexToString(AudioSource::PGM);
+                break;
+            }
+            models->addAudioFaderByAudioKnob(source,value);
+        }
+        else
+            models->addMonitorLevelByAudioKnob(value);
+        break;
+    }
 }
 
 void Control::slotPushChanged(const int push, const int value)
@@ -1627,7 +1621,6 @@ void Control::slotKeyChanged(const int key, const int value)
                 qDebug() << "_______" << key_pressed_index << "  pressed:long" ;
                 timer->stop();
                 t_pressed = 0;
-
                 if(key_pressed_index == KEY_LED_PLAYER_PLAY)
                 {
                     //打开播放列表

@@ -73,13 +73,8 @@ public:
     //音频菜单选择切换
     void menuAudioSelectChanged(int index);
     void menuAudioEnableChnaged(int second,int third);
-    void closeAllAudioLed();
-    //音量控制
-//    void setMonitorLevel(int value);
-//    void setAudioFader(int value);
 
     void initDHCPNetworkData();
-
 
     //fgm tally
     int getPGMTally();
@@ -120,10 +115,7 @@ public:
 
 signals:
     void loadStillImage(int flag,QString name);
-    void stillImageFileNameChanged(QString name);
     void sendKey(int key);
-
-
 
     //color
     /**/

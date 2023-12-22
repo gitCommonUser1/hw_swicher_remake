@@ -504,24 +504,6 @@ void Models::menuAudioEnableChnaged(int second,int third)
     }
 }
 
-void Models::closeAllAudioLed()
-{
-    for(int i = KEY_LED_AUDIO_MIC1;i <= KEY_LED_AUDIO_PGM;++i)
-    {
-        QSwitcher::set_led(i,SWITCHER_LED_OFF);
-    }
-    QSwitcher::set_led(KEY_LED_AUDIO_AFV,SWITCHER_LED_OFF);
-    QSwitcher::set_led(KEY_LED_AUDIO_ON,SWITCHER_LED_OFF);
-}
-
-//void Models::setMonitorLevel(int value)
-//{
-//    double current = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MONITOR]->third[MONITOR_LEVEL]->current.toDouble();
-//    double step = settings->listFirst()[MENU_FIRST_AUDIO_MIXER]->second[AUDIO_MIXER_MONITOR]->third[MONITOR_LEVEL]->step.toDouble();
-//    double finalValue = dround(current + value * step,2);
-//        settings->setMenuValue(MENU_FIRST_AUDIO_MIXER,AUDIO_MIXER_MONITOR,MONITOR_LEVEL,finalValue);
-//}
-
 void Models::setMonitorSource(QString source)
 {
     int value = AudioSource::sourceNameStringToIndex(source);

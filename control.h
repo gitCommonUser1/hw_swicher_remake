@@ -11,6 +11,8 @@ public:
 
     void init_connect();
     void connect_profile();
+    void init_led();
+    void init_rv_switch();
 signals:
 
 public slots:

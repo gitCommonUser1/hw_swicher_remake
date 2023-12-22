@@ -269,8 +269,8 @@ int main(int argc, char *argv[])
         system("sync");
     }
 
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication *app = new QGuiApplication(argc, argv);
     int id = QFontDatabase::addApplicationFont(FONT_PATH);
     /* 指定开发板使用字库的路径 */
@@ -282,9 +282,7 @@ int main(int argc, char *argv[])
         QFont roboto(family);
         app->setFont(roboto);
     }
-
     QQmlApplicationEngine engine;
-
 
     //profile
     profile = new Profile;
@@ -333,6 +331,7 @@ int main(int argc, char *argv[])
 
     models = new Models();
     models->setEngine(&engine);
+
     settings = new Settings();
     settings->init_menuStatus();
 
@@ -348,9 +347,6 @@ int main(int argc, char *argv[])
 
     sdImages = new SDImages();
     QObject::connect(sdImages,&SDImages::imageListChanged,settings,&Settings::sdImagesChanged);
-    QObject::connect(sdImages,&SDImages::videoListChanged,app,[=](QList<QString>list){
-
-    });
     QObject::connect(sdImages,&SDImages::streamKeyListChanged,settings,&Settings::streamKeyListChanged);
     sdImages->flushImageList();
     sdImages->flushVideoList();

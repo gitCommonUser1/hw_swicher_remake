@@ -96,17 +96,6 @@ public:
         return xml;
     }
 
-    //
-    void writeXml(QObject *object);
-    void writeXml(QObject *object,QXmlStreamWriter & stream);
-    //
-    int readXml(QObject *object);
-
-
-    //macro
-    void writeXml(XmlElementManager* xml);
-    int readXml(XmlElementManager* xml);
-
     void readStreamingXml(StreamData&map);
     void readRecordData(std::map<QString,QList<STREAM_PROFILE>> &map);
 
