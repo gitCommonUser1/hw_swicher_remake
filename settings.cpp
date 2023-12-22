@@ -152,8 +152,6 @@ void Settings::reset_settings()
 
 void Settings::init_menuStatus()
 {
-    setKeyIsPressed(0);
-
     setLastFirstUnfold(-1);
     setLastThirdUnfold(-1);
     setLastSecondUnfold(-1);

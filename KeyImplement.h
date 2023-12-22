@@ -316,7 +316,6 @@ public:
             if(messageDialogControl->messageDialogVisible()){
                 messageDialogControl->buttonClicked();
             }else if(settings->keyboardVisible()){
-                settings->setKeyIsPressed(1);
                 models->sendKey(settings->keyboardCurrentIndex());
             }else if(settings->listDialogVisible()){
                 if(profile->setting()->srcSelections()->aux()->selection() == SrcSelections::SD_CARD){
@@ -334,8 +333,6 @@ public:
             }else{
                 enterMenu(settings->leftListViewCurrent());
             }
-        }else if(status == 0){
-            settings->setKeyIsPressed(0);
         }
     }
     void enterMenu(int index){

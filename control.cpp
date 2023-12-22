@@ -216,28 +216,6 @@ void Control::init_connect()
         }
     });
 
-    QTimer *timer1 = new QTimer;
-    timer1->setSingleShot(true);
-    timer1->setInterval(KEY_PRESS_INTERVAL);
-    QTimer *timer2 = new QTimer;
-    connect(timer1,&QTimer::timeout,this,[=](){
-        timer2->start(KEY_AUTO_PRESS_INTERVAL);
-    });
-    connect(timer2,&QTimer::timeout,this,[=](){
-        models->sendKey(settings->keyboardCurrentIndex());
-    });
-    //键盘长按
-    connect(settings,&Settings::keyIsPressedChanged,this,[=](int status){
-        //1 pressed    0 released
-        if(status == 1){
-            timer1->start();
-        }else if(status == 0){
-            timer1->stop();
-            timer2->stop();
-        }
-    });
-
-
     //菜单大小
     connect(settings,&Settings::menuVisibleChanged,this,[=](int visible){
         if(visible == settings->MENU_HIDE){
@@ -1513,8 +1491,6 @@ void Control::slotKnobChanged(const int knob, int value)
 {
         switch (knob) {
         case KNOB_MENU:
-            if(settings->keyIsPressed())
-                return ;
             if(messageDialogControl->messageDialogVisible()){
                 if(value < 0 && messageDialogControl->optionCurrent() != 0){
                     messageDialogControl->setOptionCurrent(messageDialogControl->optionCurrent() - 1);

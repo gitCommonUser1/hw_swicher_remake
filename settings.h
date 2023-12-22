@@ -224,10 +224,6 @@ public:
     //
     Q_PROPERTY(int loadStillProgress READ loadStillProgress WRITE setLoadStillProgress NOTIFY loadStillProgressChanged)
 
-    //key event
-    Q_PROPERTY(int keyIsPressed READ keyIsPressed WRITE setKeyIsPressed NOTIFY keyIsPressedChanged)
-
-
     //menu set
     Q_PROPERTY(int lastFirstUnfold READ lastFirstUnfold WRITE setLastFirstUnfold NOTIFY lastFirstUnfoldChanged)
     Q_PROPERTY(int lastSecondUnfold READ lastSecondUnfold WRITE setLastSecondUnfold NOTIFY lastSecondUnfoldChanged)
@@ -455,8 +451,6 @@ private:
 
     int m_keyboardKetMoveFlag;
 
-    int m_keyIsPressed;
-
     int m_playLedStatus;
 
     int m_recordLedStatus;
@@ -593,11 +587,6 @@ public:
     int keyboardKetMoveFlag() const
     {
         return m_keyboardKetMoveFlag;
-    }
-
-    int keyIsPressed() const
-    {
-        return m_keyIsPressed;
     }
 
     int playLedStatus() const
@@ -779,8 +768,6 @@ signals:
     //keyboard input text
     void setKeyboardInputText(QString title,QString content);
 
-    void keyIsPressedChanged(int keyIsPressed);
-
     void playLedStatusChanged(int playLedStatus);
 
     void recordLedStatusChanged(int recordLedStatus);
@@ -944,14 +931,7 @@ void setKeyboardKetMoveFlag(int keyboardKetMoveFlag)
     m_keyboardKetMoveFlag = keyboardKetMoveFlag;
     emit keyboardKetMoveFlagChanged(m_keyboardKetMoveFlag);
 }
-void setKeyIsPressed(int keyIsPressed)
-{
-    if (m_keyIsPressed == keyIsPressed)
-        return;
 
-    m_keyIsPressed = keyIsPressed;
-    emit keyIsPressedChanged(m_keyIsPressed);
-}
 void setPlayLedStatus(int playLedStatus)
 {
 //    if (m_playLedStatus == playLedStatus)
