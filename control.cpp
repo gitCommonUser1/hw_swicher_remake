@@ -595,14 +595,7 @@ void Control::connect_profile()
         models->macroInvoke(&Models::transitionDipSource,input);
         settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_DIP,TRANSITION_DIP_SOURCE,input);
     });
-    connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters(),&DipParameters::stingerChanged,this,[=](bool stinger){
-        models->macroInvoke(&Models::transitionDipStinger,stinger);
-        settings->setMenuValue(MENU_FIRST_TRANSITION,TRANSITION_DIP,TRANSITION_DIP_STINGER,stinger);
-        if(stinger)
-        {
-            profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->dipParameters()->setInput(TransitionStyle::AUX);
-        }
-    });
+
     //WipeParameters
     connect(profile->mixEffectBlocks()->mixEffectBlock()->transitionStyle()->wipeParameters(),&WipeParameters::rateChanged,this,[=](double rate){
         models->macroInvoke(&Models::transitionRate,TransitionStyle::styleIndexToString(TransitionStyle::WIPE),rate);

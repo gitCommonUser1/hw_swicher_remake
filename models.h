@@ -214,7 +214,6 @@ signals:
     /**/
     /**/
     void transitionDipSource(int source);
-    void transitionDipStinger(bool stinger);
     void transitionWipePattern(int pattern);
     void transitionWipeXPosition(double xPosition);
     void transitionWipeYPosition(double yPosition);
@@ -443,7 +442,6 @@ public slots:
 
     /**/
     void setTransitionDipSource(int source);
-    void setTransitionDipStinger(int stinger);
     void setTransitionWipePattern(int pattern);
     void setTransitionWipeXPosition(double xPosition);
     void setTransitionWipeYPosition(double yPosition);

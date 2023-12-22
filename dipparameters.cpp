@@ -8,6 +8,5 @@ DipParameters::DipParameters(QObject *parent) : QObject(parent)
     m_input_min = 0;
     m_input_max = TransitionStyle::MAX;
 
-    m_stinger = true;
     setInput(TransitionStyle::COLOR1);
 }

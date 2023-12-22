@@ -9,7 +9,6 @@ class DipParameters : public QObject
     Q_OBJECT
     Q_PROPERTY(double rate READ rate WRITE setRate NOTIFY rateChanged)
     Q_PROPERTY(int input READ input WRITE setInput NOTIFY inputChanged)
-    Q_PROPERTY(bool stinger READ stinger WRITE setStinger NOTIFY stingerChanged)
 
 public:
     explicit DipParameters(QObject *parent = nullptr);
@@ -22,11 +21,6 @@ public:
     int input() const
     {
         return m_input;
-    }
-
-    bool stinger() const
-    {
-        return m_stinger;
     }
 
 public slots:
@@ -49,24 +43,12 @@ public slots:
             input = m_input_min;
         if(m_input >= m_input_max)
             input = m_input_max -1;
-        if(m_stinger)
-        {
-            input = TransitionStyle::AUX;
-        }
+
         if (m_input == input)
             return;
 
         m_input = input;
         emit inputChanged(m_input);
-    }
-
-    void setStinger(bool stinger)
-    {
-        if (m_stinger == stinger)
-            return;
-
-        m_stinger = stinger;
-        emit stingerChanged(m_stinger);
     }
 
 private:
@@ -79,13 +61,10 @@ private:
     int m_input_min;
     int m_input_max;
 
-    bool m_stinger;
-
 signals:
 
 void rateChanged(double rate);
 void inputChanged(int input);
-void stingerChanged(bool stinger);
 };
 
 #endif // DIPPARAMETERS_H
