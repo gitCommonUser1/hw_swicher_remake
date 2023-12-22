@@ -2742,11 +2742,11 @@ void Models::setLoadStreamKey(int second)
 void Models::setPgmIndex(QString str)
 {
     int index = MixEffectBlock::inputStringToIndex(str);
-//    if(profile->mixEffectBlocks()->mixEffectBlock()->program()->input() != index)
-//    {
-//        profile->mixEffectBlocks()->mixEffectBlock()->program()->setInput(index);
-//        return ;
-//    }
+    if(profile->mixEffectBlocks()->mixEffectBlock()->program()->input() != index)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->program()->setInput(index);
+        return ;
+    }
     if(QSwitcher::get_led(KEY_LED_PGM_1 + index) == LED_STATUS_OFF)
         keyClick(KEY_LED_PGM_1 + index);
 }
@@ -2754,11 +2754,11 @@ void Models::setPgmIndex(QString str)
 void Models::setPvwIndex(QString str)
 {
     int index = MixEffectBlock::inputStringToIndex(str);
-//    if(profile->mixEffectBlocks()->mixEffectBlock()->preview()->input() != index)
-//    {
-//        profile->mixEffectBlocks()->mixEffectBlock()->preview()->setInput(index);
-//        return ;
-//    }
+    if(profile->mixEffectBlocks()->mixEffectBlock()->preview()->input() != index)
+    {
+        profile->mixEffectBlocks()->mixEffectBlock()->preview()->setInput(index);
+        return ;
+    }
     if(QSwitcher::get_led(KEY_LED_PVW_1 + index) == LED_STATUS_OFF)
         keyClick(KEY_LED_PVW_1 + index);
 }

@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+class QTimer;
+
 class QXmlStreamWriter;
 
 class MixEffectBlocks;
@@ -34,11 +36,18 @@ class Profile : public QObject
     Q_PROPERTY(Streams* streams READ streams)
     Q_PROPERTY(Playback* playback READ playback)
     Q_PROPERTY(Setting* setting READ setting)
+
+private:
+    QTimer *autoSaveTimer;
+
 public:
     explicit Profile(QObject *parent = nullptr);
 
     void emitSignals();
     void emitSignal(QObject *object);
+
+    void autoSaveInit(QObject *object);
+    Q_INVOKABLE void autoSave();
 
     void write(QObject *object);
     void writeRecursion(QObject *object,QXmlStreamWriter &stream);

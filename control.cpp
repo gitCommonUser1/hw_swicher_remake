@@ -581,6 +581,7 @@ void Control::connect_profile()
     //pgm
     connect(profile->mixEffectBlocks()->mixEffectBlock()->program(),&Program::inputChanged,this,[=](int input){
 //        models->macroInvoke(&Models::pgmIndex,MixEffectBlock::inputIndexToString(input));
+        models->pgmIndex(MixEffectBlock::inputIndexToString(input));
         if(input == MixEffectBlock::AUX){
             models->playPause(0);
         }
@@ -588,7 +589,7 @@ void Control::connect_profile()
     //pvw
     connect(profile->mixEffectBlocks()->mixEffectBlock()->preview(),&Preview::inputChanged,this,[=](int input){
 //        models->macroInvoke(&Models::pvwIndex,MixEffectBlock::inputIndexToString(input));
-
+        models->pvwIndex(MixEffectBlock::inputIndexToString(input));
     });
     //nextTransition
     connect(profile->mixEffectBlocks()->mixEffectBlock()->nextTransition(),&NextTransition::selectionChanged,this,[=](QString selection){
@@ -668,6 +669,7 @@ void Control::connect_profile()
     });
     connect(profile->mixEffectBlocks()->mixEffectBlock()->keys()->key(),&Key::onAirChanged,this,[=](bool onAir){
 //        models->macroInvoke(&Models::keyOnAir,onAir);
+        models->keyOnAir(onAir);
         //key on air时，判断key source是否是aux，如果是aux，自动开始播放
         if(onAir == false)
             return ;
@@ -959,6 +961,7 @@ void Control::connect_profile()
     //DownstreamKeys
     connect(profile->downstreamKeys()->downstreamKey(),&DownstreamKey::onAirChanged,this,[=](bool onAir){
 //        models->macroInvoke(&Models::dskOnAir,onAir);
+        models->dskOnAir(onAir);
         if(onAir == false)
             return ;
         if(profile->downstreamKeys()->downstreamKey()->keySource() == Keys::AUX ||
@@ -1501,6 +1504,9 @@ void Control::connect_profile()
         settings->setMenuValue(MENU_FIRST_SETTING,SETTING_LANGUAGE,SETTING_LANGUAGE_LANGUAGE,language);
         models->language(language);
     });
+
+    profile->emitSignals();
+    profile->autoSaveInit(profile);
 }
 
 void Control::slotKnobChanged(const int knob, int value)

@@ -17,6 +17,7 @@
 #include "setting.h"
 #include "macropool.h"
 #include "macro.h"
+#include <QTimer>
 
 #define PRODUCT_NAME "GoStream Deck"
 
@@ -102,6 +103,62 @@ void Profile::emitSignal(QObject *object)
             }
         }
     }
+}
+
+void Profile::autoSaveInit(QObject *object)
+{
+    auto metaObject = object->metaObject();
+    for(int i = 0;i < metaObject->propertyCount();++i)
+    {
+        auto property = metaObject->property(i);
+        auto typeName = property.typeName();
+        auto name = property.name();
+        qDebug() << name;
+        if(property.type() == QVariant::UserType)
+        {
+//                这里是子节点列表
+            if(QString(typeName).contains("QList"))
+            {
+                QVariant v = object->property(name);
+                QList<QObject*> objects = v.value<QList<QObject*>>();
+                //list
+                for(int j = 0;j < objects.size();++j)
+                {
+                    autoSaveInit(objects[j]);
+                }
+            }
+            else
+            {
+                //single
+                autoSaveInit(object->findChild<QObject*>(name));
+            }
+        }
+        else
+        {
+            if(property.hasNotifySignal() && !isHiddenProperty(object,name))
+            {
+                QByteArray normalizedSignature = QMetaObject::normalizedSignature("autoSave()");
+                int methodIndex = this->metaObject()->indexOfMethod(normalizedSignature);
+                QMetaMethod method = this->metaObject()->method(methodIndex);
+                connect(object,property.notifySignal(),this,method);
+            }
+        }
+    }
+
+}
+
+void Profile::autoSave()
+{
+#define WRITE_SPACE 10000
+    if(autoSaveTimer == nullptr)
+    {
+        autoSaveTimer = new QTimer;
+        connect(autoSaveTimer,&QTimer::timeout,this,[=](){
+            this->write(this);
+        });
+        autoSaveTimer->setSingleShot(true);
+    }
+    autoSaveTimer->start(WRITE_SPACE);
 }
 
 void Profile::write(QObject *object)

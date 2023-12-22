@@ -484,7 +484,6 @@ int main(int argc, char *argv[])
     Control control;
     engine.rootContext()->setContextProperty("control",&control);
 
-    profile->emitSignals();
     init_settings_is_ok = true;
 
     //init color
