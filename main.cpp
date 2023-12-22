@@ -189,13 +189,15 @@ bool checkQtKmsIsOk()
     if(out_format == ""){
         read_error = true;
     }else{
-        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_FORMAT,out_format);
+//        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_FORMAT,out_format);
+        profile->setting()->outFormat()->format()->setOutFormat(OutFormat::outputStringToIndex(out_format));
     }
 
     if(read_error){
         // if error set default 1080p60  0x4
         rv_switch_resolutionset(0x4);
-        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_FORMAT,"1080p60");
+//        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_FORMAT,"1080p60");
+        profile->setting()->outFormat()->format()->setOutFormat(OutFormat::OUT_1080p60);
         return false;
     }else{
         return true;

@@ -13,7 +13,7 @@ class FadeToBlack;
 class MixEffectBlock : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int index READ index WRITE setIndex NOTIFY indexChanged)
+    Q_PROPERTY(int index READ index WRITE setIndex FINAL )
     Q_PROPERTY(Program* program READ program)
     Q_PROPERTY(Preview* preview READ preview)
     Q_PROPERTY(NextTransition* nextTransition READ nextTransition)
@@ -80,7 +80,6 @@ public slots:
             return;
 
         m_index = index;
-        emit indexChanged(m_index);
     }
 
 private:
@@ -100,8 +99,6 @@ private:
     FadeToBlack* m_ftb;
 
 signals:
-
-void indexChanged(int index);
 };
 
 #endif // MIXEFFECTBLOCK_H

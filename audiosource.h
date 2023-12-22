@@ -7,7 +7,7 @@
 class AudioSource : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString name READ name WRITE setName FINAL)
     Q_PROPERTY(double fader READ fader WRITE setFader NOTIFY faderChanged)
     Q_PROPERTY(double balance READ balance WRITE setBalance NOTIFY balanceChanged)
     Q_PROPERTY(double input READ input WRITE setInput NOTIFY inputChanged)
@@ -86,7 +86,6 @@ public slots:
             return;
 
         m_name = name;
-        emit nameChanged(m_name);
     }
 
     void setFader(double fader)
@@ -217,7 +216,6 @@ private:
 
 signals:
 
-void nameChanged(QString name);
 void faderChanged(double fader);
 void balanceChanged(double balance);
 void inputChanged(double input);

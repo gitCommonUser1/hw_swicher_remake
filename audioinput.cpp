@@ -1,5 +1,7 @@
 #include "audioinput.h"
 #include "audiosource.h"
+#include <QDebug>
+#include <QThread>
 
 AudioInput::AudioInput(QObject *parent) : QObject(parent)
 {
