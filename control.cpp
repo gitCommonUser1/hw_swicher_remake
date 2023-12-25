@@ -1686,5 +1686,8 @@ void Control::slotKeyStatusChanged(const int key, const int status)
     if(key >= KEY_LED_RECORDER_REC && key <= KEY_LED_PLAYER_PAUSE)
         return ;
 
+    if(settings->listKey().count(key) != 1)
+        return ;
+
     settings->listKey()[key]->doWork(status);
 }
