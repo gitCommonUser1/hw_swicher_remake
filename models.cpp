@@ -2287,13 +2287,13 @@ void Models::initStillUpLoadRvSwitch()
     std::string list[STILLMAX];
     for(int i = 0;i < STILLMAX;++i)
     {
-        QString fileName = settings->stillImages()[i];
-        fileName = fileName.toLocal8Bit();
-        if(fileName != "")
-        {
-            list[i] = STILLPATH + fileName.toStdString();
-            png_path[i] = list[i].c_str();
-        }
+        auto still = qobject_cast<Still*>(profile->stillGenerator()->stills()->stillIndex(i));
+        if(still == nullptr)
+            continue;
+        QString path = still->path();
+        path = path.toLocal8Bit();
+        list[i] = path.toStdString();
+        png_path[i] = list[i].c_str();
     }
     rv_switch_still_upload(png_path,STILLMAX);
 }
@@ -2321,24 +2321,23 @@ void Models::loadStill1()
     if(name == "")
         return ;
 
-    int location_index = settings->listFirst()[MENU_FIRST_STILL_GENERATOR]->second[STILL_GENERATE_UPLOAD]->third[STILL_UPLOAD_LOCATION]->current.toInt();
+    int location_index = profile->stillGenerator()->stillSelection()->location();
 
     QImage image(SD_IMAGE_PATH + name);
     if(image.width() == 1920 && image.height() == 1080)
     {
-
         //2.copy SD卡文件到userdata
-        QString cmd = "cp \'" SD_IMAGE_PATH + name + "\'  \'" STILLPATH + name + "\'";
+        QString cmd = "cp \'" SD_IMAGE_PATH + name + "\'  \'" STILLPATH + QString::number(location_index) + ".png" + "\'";
         qDebug() << "_____-cmd:" << cmd;
         std::string s_cmd = cmd.toStdString();
         system(s_cmd.data());
         system("sync");
 
         //设置加载文件名
-        myProvider->setStillImageFileName(SD_IMAGE_PATH + name);
+        myProvider->setStillImageFileName(STILLPATH + QString::number(location_index) + ".png");
         //1.设置配置文件中location 位置对应文件名
-        settings->setStillImages(location_index,name);
-
+        Still *still = new Still(location_index,name,STILLPATH + QString::number(location_index) + ".png");
+        profile->stillGenerator()->stills()->append(still);
         fpga_write(&g_fpga,STILL_UPLOAD,(1 << 2) + (1 << 1));//110
         emit loadStillImage(1,"fill");
     }
@@ -2346,12 +2345,13 @@ void Models::loadStill1()
     {
         QTimer::singleShot(10,this,[=](){
             QImage image1 = image.scaled(1920,1080);
-            image1.save(STILLPATH + name);
+            image1.save(STILLPATH + QString::number(location_index) + ".png");
             system("sync");
             //设置加载文件名
-            myProvider->setStillImageFileName(STILLPATH + name);
+            myProvider->setStillImageFileName(STILLPATH + QString::number(location_index) + ".png");
             //1.设置配置文件中location 位置对应文件名
-            settings->setStillImages(location_index,name);
+            Still *still = new Still(location_index,name,STILLPATH + QString::number(location_index) + ".png");
+            profile->stillGenerator()->stills()->append(still);
             fpga_write(&g_fpga,STILL_UPLOAD,(1 << 2) + (1 << 1));//110
             emit loadStillImage(1,"fill");
         });

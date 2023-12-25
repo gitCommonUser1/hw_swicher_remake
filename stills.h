@@ -12,6 +12,12 @@ class Stills : public QObject
 public:
     explicit Stills(QObject *parent = nullptr);
 
+    void append(QObject *still);
+    QObject* stillIndex(int index);
+
+
+    static bool listCompare(QObject *src, QObject *dst);
+
 
     QList<QObject*> stills() const
     {
@@ -19,6 +25,8 @@ public:
     }
 
 public slots:
+
+    QObject *getDynamicChildrenClassName();
 
     void setStills(QList<QObject*> stills)
     {

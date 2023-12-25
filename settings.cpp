@@ -113,19 +113,9 @@ void Settings::init_settings()
 //    init_menuStatus();
     init_menuData();
     init_keyData();
-    init_stillImages();
     init_PgmTallyTimer();
 
     connect(&pccmd,SIGNAL(emit_sn_change(QString)),this,SLOT(deviceid_change(QString)));
-}
-
-void Settings::init_stillImages()
-{
-    QSettings set(DATA_STILL_PATH,QSettings::IniFormat);
-    for(int i = 0;i < STILLMAX;++i)
-    {
-        appendStillImages(set.value("still/" + QString::number(i)).toString());
-    }
 }
 
 void Settings::init_chromaColor()
@@ -1526,6 +1516,14 @@ MenuSecond *Settings::new_Setting_Reset()
 
     reset->third = list_third;
     return reset;
+}
+
+QString Settings::getPathByLocationIndex(int index)
+{
+    auto still = qobject_cast<Still*>(profile->stillGenerator()->stills()->stillIndex(index));
+    if(still == nullptr)
+        return OEM_HW_IMAGES "noimage.png";
+    return still->path();
 }
 
 QString Settings::getStreamUrlIndex(int index)

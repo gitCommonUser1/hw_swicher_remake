@@ -6,7 +6,7 @@
 class Still : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int index READ index WRITE setIndex NOTIFY indexChanged)
+    Q_PROPERTY(int index READ index WRITE setIndex)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
 public:
@@ -35,7 +35,6 @@ public slots:
             return;
 
         m_index = index;
-        emit indexChanged(m_index);
     }
 
     void setName(QString name)
@@ -66,8 +65,6 @@ private:
     QString m_path;
 
 signals:
-
-void indexChanged(int index);
 void nameChanged(QString name);
 void pathChanged(QString path);
 };

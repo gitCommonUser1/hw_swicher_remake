@@ -426,10 +426,7 @@ Item {
                                 "file:./images/noimage.png"
                         }
                         else if(type == "fileName_Image_Location"){
-                            if(settings.stillImages[value] != "")
-                                "file:///userdata/stillImages/" + settings.stillImages[value]
-                            else
-                                "file:./images/noimage.png"
+                            "file://" + settings.getPathByLocationIndex(settings.locationIndex)
                         }
                         else
                             ""

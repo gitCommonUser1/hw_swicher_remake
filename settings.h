@@ -84,7 +84,6 @@ public:
 
     explicit Settings(QObject *parent = nullptr);
     void init_settings();
-    void init_stillImages();
     void init_chromaColor();
     void reset_settings();
     void init_menuStatus();
@@ -240,12 +239,13 @@ public:
 
     Q_PROPERTY(int audioMixerSelectedIndex READ audioMixerSelectedIndex WRITE setAudioMixerSelectedIndex NOTIFY audioMixerSelectedIndexChanged)
 
-    //still images
-    Q_PROPERTY(QList<QString> stillImages READ stillImages WRITE setStillImages NOTIFY stillImagesChanged)
-
-
     Q_PROPERTY(int transitionWipePatternIndex READ transitionWipePatternIndex WRITE setTransitionWipePatternIndex NOTIFY transitionWipePatternIndexChanged)
     Q_PROPERTY(int keyPatternWipePatternIndex READ keyPatternWipePatternIndex WRITE setKeyPatternWipePatternIndex NOTIFY keyPatternWipePatternIndexChanged)
+
+
+    //给qml用的stilllocation
+    Q_PROPERTY(int locationIndex READ locationIndex WRITE setLocationIndex NOTIFY locationIndexChanged)
+    Q_INVOKABLE QString getPathByLocationIndex(int index);
 
     //keyboard
     Q_PROPERTY(int keyboardReg READ keyboardReg WRITE setKeyboardReg NOTIFY keyboardRegChanged)
@@ -434,9 +434,6 @@ private:
 
     int m_audioMixerSelectedIndex;
 
-    //still images
-    QList<QString>m_stillImages;
-
     int m_transitionWipePatternIndex;
 
     int m_keyPatternWipePatternIndex;
@@ -515,6 +512,8 @@ QString m_currentRecordFileName;
 
 int m_playingIndex;
 
+int m_locationIndex;
+
 public:
     //qsettings
     QVariant getIniValue(int first,int second,int third);
@@ -547,11 +546,6 @@ public:
     int audioMixerSelectedIndex() const
     {
         return m_audioMixerSelectedIndex;
-    }
-
-    QList<QString> stillImages() const
-    {
-        return m_stillImages;
     }
 
     int transitionWipePatternIndex() const
@@ -743,12 +737,15 @@ public:
         return m_playingIndex;
     }
 
+    int locationIndex() const
+    {
+        return m_locationIndex;
+    }
+
 signals:
 //    void thirdMenuValueChanged();
     void thirdMenuValueChanged(int,int,int);
     void audioMixerSelectedIndexChanged(int audioMixerSelectedIndex);
-
-    void stillImagesChanged(QList<QString> stillImages);
 
     void transitionWipePatternIndexChanged(int transitionWipePatternIndex);
 
@@ -833,40 +830,11 @@ signals:
 
     void playingIndexChanged(int playingIndex);
 
+    void locationIndexChanged(int locationIndex);
+
 public slots:
 void sdImagesChanged(QList<QString> list);
 void streamKeyListChanged(QList<QString> list);
-//弃用
-void setStillImages(QList<QString> stillImages)
-{
-    if (m_stillImages == stillImages)
-        return;
-
-    m_stillImages = stillImages;
-    emit stillImagesChanged(m_stillImages);
-}
-
-void setStillImages(int index,QString text)
-{
-    if(index >= STILLMAX)
-        return ;
-    if(m_stillImages[index] == text)
-        return ;
-
-    m_stillImages[index] = text;
-
-    setIniValue(DATA_STILL_PATH,"still/"+QString::number(index),text);
-
-    emit stillImagesChanged(m_stillImages);
-}
-void appendStillImages(QString text)
-{
-    if(m_stillImages.size() >= STILLMAX)
-        return;
-    m_stillImages.append(text);
-    emit stillImagesChanged(m_stillImages);
-}
-
 void setTransitionWipePatternIndex(int transitionWipePatternIndex)
 {
     if (m_transitionWipePatternIndex == transitionWipePatternIndex)
@@ -1230,6 +1198,14 @@ void setPlayingIndex(int playingIndex)
 
     m_playingIndex = playingIndex;
     emit playingIndexChanged(m_playingIndex);
+}
+void setLocationIndex(int locationIndex)
+{
+    if (m_locationIndex == locationIndex)
+        return;
+
+    m_locationIndex = locationIndex;
+    emit locationIndexChanged(m_locationIndex);
 }
 };
 

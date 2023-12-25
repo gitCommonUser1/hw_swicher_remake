@@ -1196,6 +1196,7 @@ void Control::connect_profile()
     connect(profile->stillGenerator()->stillSelection(),&StillSelection::locationChanged,this,[=](int location){
         models->macroInvoke(&Models::stillLocation,location);
         settings->setMenuValue(MENU_FIRST_STILL_GENERATOR,STILL_GENERATE_UPLOAD,STILL_UPLOAD_LOCATION,location);
+        settings->setLocationIndex(location);
     });
     //macro
     connect(profile->macroPool(),&MacroPool::newMacro,this,[=](int index){
@@ -1440,6 +1441,16 @@ void Control::connect_profile()
     connect(profile->setting()->language(),&Language::languageChanged,this,[=](int language){
         settings->setMenuValue(MENU_FIRST_SETTING,SETTING_LANGUAGE,SETTING_LANGUAGE_LANGUAGE,language);
         models->language(language);
+    });
+
+//    MACRO LIST    STILL LIST  处理 信号立刻写入文件
+    connect(profile->macroPool(),&MacroPool::macrosChanged,this,[=](QList<QObject*> macros){
+        profile->write(profile);
+    });
+    connect(profile->stillGenerator()->stills(),&Stills::stillsChanged,this,[=](QList<QObject*> stills){
+        profile->write(profile);
+        //刷新 location图片
+        emit settings->locationIndexChanged(settings->locationIndex());
     });
 
     profile->emitSignals();

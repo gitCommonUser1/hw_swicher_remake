@@ -73,27 +73,15 @@ void Profile::emitSignal(QObject *object)
     for(int i = 0;i < metaObject->propertyCount();++i)
     {
         auto property = metaObject->property(i);
-        auto typeName = property.typeName();
         auto name = property.name();
+        auto typeName = property.typeName();
         qDebug() << name;
+        if(QString(typeName).contains("QList"))
+            continue;
         if(property.type() == QVariant::UserType)
         {
-//                这里是子节点列表
-            if(QString(typeName).contains("QList"))
-            {
-                QVariant v = object->property(name);
-                QList<QObject*> objects = v.value<QList<QObject*>>();
-                //list
-                for(int j = 0;j < objects.size();++j)
-                {
-                    emitSignal(objects[j]);
-                }
-            }
-            else
-            {
-                //single
-                emitSignal(object->findChild<QObject*>(name));
-            }
+            //single
+            emitSignal(object->findChild<QObject*>(name));
         }
         else
         {
@@ -111,27 +99,15 @@ void Profile::autoSaveInit(QObject *object)
     for(int i = 0;i < metaObject->propertyCount();++i)
     {
         auto property = metaObject->property(i);
-        auto typeName = property.typeName();
         auto name = property.name();
+        auto typeName = property.typeName();
         qDebug() << name;
+        if(QString(typeName).contains("QList"))
+            continue;
         if(property.type() == QVariant::UserType)
         {
-//                这里是子节点列表
-            if(QString(typeName).contains("QList"))
-            {
-                QVariant v = object->property(name);
-                QList<QObject*> objects = v.value<QList<QObject*>>();
-                //list
-                for(int j = 0;j < objects.size();++j)
-                {
-                    autoSaveInit(objects[j]);
-                }
-            }
-            else
-            {
-                //single
-                autoSaveInit(object->findChild<QObject*>(name));
-            }
+            //single
+            autoSaveInit(object->findChild<QObject*>(name));
         }
         else
         {
@@ -144,7 +120,6 @@ void Profile::autoSaveInit(QObject *object)
             }
         }
     }
-
 }
 
 void Profile::autoSave()

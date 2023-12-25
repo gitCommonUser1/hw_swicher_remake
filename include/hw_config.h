@@ -16,6 +16,7 @@
 #define SD_STREAM_KEY_PATH       "/mnt/sdcard/stream_key/"
 #define SD_MACRO_PATH       "/mnt/sdcard/macro/"
 #define OEM_MOUNTED_PATH	"/oem"
+#define OEM_HW_IMAGES "/oem/hw_rockchip_qt/images/"
 
 #define FONT_PATH "./inter.ttf"
 
