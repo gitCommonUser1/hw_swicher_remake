@@ -4253,9 +4253,6 @@ void Models::setChromaKeySample(bool enable)
         setChromaKeyProfile();
         //save color
 //        settings->saveSMPColorAndColor5ToFile();
-        profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setRed(settings->color5Data()[0]);
-        profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setGreen(settings->color5Data()[1]);
-        profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setBlue(settings->color5Data()[2]);
         profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setY(settings->chromakeySMPColorYcbcr()[0]);
         profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setCb(settings->chromakeySMPColorYcbcr()[1]);
         profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->setCr(settings->chromakeySMPColorYcbcr()[2]);

@@ -20,9 +20,6 @@ class ChromaParameters : public QObject
     Q_PROPERTY(double smpXPosition READ smpXPosition WRITE setSmpXPosition NOTIFY smpXPositionChanged)
     Q_PROPERTY(double smpYPosition READ smpYPosition WRITE setSmpYPosition NOTIFY smpYPositionChanged)
     Q_PROPERTY(bool sample READ sample WRITE setSample NOTIFY sampleChanged)
-    Q_PROPERTY(int red READ red WRITE setRed NOTIFY redChanged)
-    Q_PROPERTY(int green READ green WRITE setGreen NOTIFY greenChanged)
-    Q_PROPERTY(int blue READ blue WRITE setBlue NOTIFY blueChanged)
     Q_PROPERTY(int y READ y WRITE setY NOTIFY yChanged)
     Q_PROPERTY(int cb READ cb WRITE setCb NOTIFY cbChanged)
     Q_PROPERTY(int cr READ cr WRITE setCr NOTIFY crChanged)
@@ -96,21 +93,6 @@ public:
     bool sample() const
     {
         return m_sample;
-    }
-
-    int red() const
-    {
-        return m_red;
-    }
-
-    int green() const
-    {
-        return m_green;
-    }
-
-    int blue() const
-    {
-        return m_blue;
     }
 
     int foreground() const
@@ -301,33 +283,6 @@ public slots:
         emit sampleChanged(m_sample);
     }
 
-    void setRed(int red)
-    {
-        if (m_red == red)
-            return;
-
-        m_red = red;
-        emit redChanged(m_red);
-    }
-
-    void setGreen(int green)
-    {
-        if (m_green == green)
-            return;
-
-        m_green = green;
-        emit greenChanged(m_green);
-    }
-
-    void setBlue(int blue)
-    {
-        if (m_blue == blue)
-            return;
-
-        m_blue = blue;
-        emit blueChanged(m_blue);
-    }
-
     void setForeground(int foreground)
     {
         if(foreground > m_foreground_max)
@@ -440,12 +395,6 @@ private:
 
     bool m_sample;
 
-    int m_red;
-
-    int m_green;
-
-    int m_blue;
-
     int m_foreground;
     int m_foreground_min;
     int m_foreground_max;
@@ -479,9 +428,6 @@ void yPositionChanged(double yPosition);
 void smpXPositionChanged(double smpXPosition);
 void smpYPositionChanged(double smpYPosition);
 void sampleChanged(bool sample);
-void redChanged(int red);
-void greenChanged(int green);
-void blueChanged(int blue);
 void foregroundChanged(int foreground);
 void backgroundChanged(int background);
 void keyEdgeChanged(int keyEdge);

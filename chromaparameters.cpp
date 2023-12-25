@@ -43,10 +43,7 @@ ChromaParameters::ChromaParameters(QObject *parent) : QObject(parent)
     m_keyEdge_min = 0;
     m_keyEdge_max = 100;
     setKeyEdge(0);
-    setRed(0);
-    setGreen(0);
-    setBlue(0);
-    setY(0);
-    setCb(0);
-    setCr(0);
+    setY(146);
+    setCb(40);
+    setCr(18);
 }

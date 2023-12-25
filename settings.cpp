@@ -108,6 +108,7 @@ Settings::Settings(QObject *parent) : QObject(parent)
 
 void Settings::init_settings()
 {
+    init_chromaColor();
     initStreamData();
     initRecordData();
 //    init_menuStatus();
@@ -120,17 +121,14 @@ void Settings::init_settings()
 
 void Settings::init_chromaColor()
 {
-    int y = getIniValue(CHROMAKEY_SMP_COLOR_PATH,"y").toInt();
-    int cb = getIniValue(CHROMAKEY_SMP_COLOR_PATH,"cb").toInt();
-    int cr = getIniValue(CHROMAKEY_SMP_COLOR_PATH,"cr").toInt();
-    int r = getIniValue(CHROMAKEY_SMP_COLOR_PATH,"r").toInt();
-    int g = getIniValue(CHROMAKEY_SMP_COLOR_PATH,"g").toInt();
-    int b = getIniValue(CHROMAKEY_SMP_COLOR_PATH,"b").toInt();
-
+    int y = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->y();
+    int cb = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->cb();
+    int cr = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->cr();
+    int r,g,b;
+    ycbcr2Rgb(y,cb,cr,&r,&g,&b);
     QList<int>rgb,ycbcr;
     rgb << r << g << b;
     ycbcr << y << cb << cr;
-
     setChromakeySMPColorYcbcr(ycbcr);
     setColor5Data(rgb);
 }

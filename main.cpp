@@ -484,19 +484,6 @@ int main(int argc, char *argv[])
 
     init_settings_is_ok = true;
 
-    //init color
-    //这里必须调用一次，初始化后color应该是绿色，否则颜色不对
-    //初始化 chroma  smp color
-    int r = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->red();
-    int g = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->green();
-    int b = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->blue();
-    int y = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->y();
-    int cb = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->cb();
-    int cr = profile->mixEffectBlocks()->mixEffectBlock()->keys()->chromaParameters()->cr();
-    settings->setColor5Data({r,g,b});
-    settings->setChromakeySMPColorYcbcr({y,cb,cr});
-
-
     models->initDHCPNetworkData();
 
     RegExp *regExp = new RegExp();
