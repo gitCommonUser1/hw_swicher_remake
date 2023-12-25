@@ -29,10 +29,10 @@ ChromaParameters::ChromaParameters(QObject *parent) : QObject(parent)
     setYPosition(6.00);
     m_smpXPosition_min = -16.0;
     m_smpXPosition_max = 16.0;
-    setSmpXPosition(-16.00);
+    setSmpXPosition(-14.0);
     m_smpYPosition_min = -9.0;
     m_smpYPosition_max = 9.0;
-    setSmpYPosition(-9.00);
+    setSmpYPosition(-7.0);
     setSample(false);
     m_foreground_min = 0;
     m_foreground_max = 100;
