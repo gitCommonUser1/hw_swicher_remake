@@ -190,7 +190,7 @@ bool checkQtKmsIsOk()
         read_error = true;
     }else{
 //        settings->setMenuValue(MENU_FIRST_SETTING,SETTING_OUT_FORMAT,SETTING_OUT_FORMAT_FORMAT,out_format);
-        profile->setting()->outFormat()->format()->setOutFormat(OutFormat::outputStringToIndex(out_format));
+        profile->setting()->outFormat()->format()->setOutFormat(OutFormat::outFormatStringToIndex(out_format));
     }
 
     if(read_error){
